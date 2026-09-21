@@ -641,6 +641,222 @@ const companies = [
   }
 ];
 
+
+// PowerVault course expansion: educational explanations and original exercises.
+const powerVaultExpansion = {
+  "texts": [
+    "Nejdříve si představ konkrétní obchodní službu: zaměstnanec zadá objednávku, aplikace ji zpracuje a databáze uloží změnu. PowerVault obsluhuje až část tohoto řetězce: přijímá blokové požadavky od připojených serverů. Neví, že právě ukládá objednávku. Rozlišuje adresy bloků a operace čtení či zápisu. Význam dat vytváří filesystem, databáze a aplikace nad ním. Proto zelený stav pole ještě nedokazuje funkční obchodní službu.||Block storage poskytuje hostu zařízení podobné disku. File storage naproti tomu sdílí soubory a adresáře, například pomocí SMB nebo NFS. Object storage pracuje s objekty, jejich klíči a metadaty, často přes S3 API. Pokud Windows server uloží sdílenou složku na disk z PowerVaultu, SMB poskytuje Windows server. PowerVault se tím nestává nativním file serverem. To je důležité pro rozdělení odpovědností: problém s oprávněním složky může patřit týmu Windows, zatímco chyba přístupu k blokovému zařízení patří do společné diagnostiky hostu a storage.||Označení entry nebo cost-efficient popisuje pozici produktu, nikoliv toleranci zákazníka k výpadku. I na levnějším poli může ležet velmi důležitá aplikace. Potřebné SLA se musí převést do architektury, podpory a obnovy. PowerStore a PowerMax nelze srovnávat jen podle počtu disků: při výběru se hodnotí datové služby, výkon za poruchy, rozšiřitelnost, provozní model a integrační požadavky. Vyšší řada sama o sobě nezachrání chybějící zálohy nebo jedinou síťovou cestu.||Na discovery workshop si připrav seznam aplikací, vlastníků a špiček. Ptej se, zda noční dávka může trvat déle, zda se objem dat mění skokově a jak dlouho smí být služba nedostupná. Výstupem není jen počet TB. Je to soubor požadavků, proti kterému architekt ověří vhodnost konkrétní konfigurace. SDM později používá stejný soubor jako základ service review.",
+    "Datová cesta má front-end a back-end. Front-end propojuje hosty s porty řadičů. Back-end propojuje řadiče s disky a případnými expanzními skříněmi. Management síť slouží správě a nemusí přenášet aplikační data. Výpadek management přístupu proto nemusí znamenat zastavení I/O, ale omezuje schopnost diagnostiky a řízení. V incidentu vždy přesně pojmenuj, která rovina selhala.||Redundance je vlastnost celé cesty. Dva zdroje zapojené do stejného napájecího prvku mohou sdílet bod poruchy. Dvě síťové karty připojené přes jediný switch nechrání před výpadkem tohoto switche. Dva řadiče bez funkčního multipathingu na hostu nezaručují transparentní pokračování aplikace. V dokumentaci proto kresli skutečné kabely, porty a nezávislé části infrastruktury, nikoli pouze dvě zelené ikony.||Failure domain je oblast, jejíž porucha zasáhne několik komponent současně. Může to být switch, skříň, napájecí větev nebo celá lokalita. Pro každou plánovanou poruchu si polož otázku: co přesně se ztratí a která nezávislá cesta zbývá? Počet kopií či komponent bez znalosti jejich umístění nedává úplnou informaci o odolnosti.||Modelová situace: řadič A hlásí závadu, ale aplikace pracuje. To je dostupná služba ve zhoršeném stavu, nikoliv bezrizikový provoz. SDM zajistí potvrzení přeživší cesty, eskalaci podle kontraktu, dostupnost náhradního dílu a omezení dalších změn. Zákaznická komunikace má oddělit současný dopad od zvýšeného rizika druhé poruchy.",
+    "Základní hierarchie je fyzický disk → disk group → pool → volume → host. Disk group sdružuje média s vybranou ochranou. Pool poskytuje prostor pro logické volumes. Host obvykle nevidí, který fyzický disk právě obsloužil jeho zápis. Toto oddělení umožňuje správci přidělovat kapacitu aplikacím bez přímého přiřazení každé aplikace k jednomu disku.||Dell v doporučení pro ME5/ME52 rozlišuje virtual a linear model. Virtual model umožňuje sdílení kapacity a související datové služby; linear pool je spojen s jednou disk group. Dokument rovněž popisuje přiřazení poolů jednotlivým řadičům. Návrh tedy musí sledovat nejen celkovou volnou kapacitu, ale také rozložení zátěže. Volbu modelu je potřeba potvrdit před implementací podle skutečných požadavků.||Raw kapacita je součet fyzických médií. Usable kapacita zbývá po ochraně a dalších režijních nákladech. Allocated kapacita je prostor přidělený logickým objektům a consumed je skutečně spotřebovaný prostor v daném měřicím bodě. U thin provisioningu může logicky přidělený prostor převýšit fyzicky dostupný. To není dodatečně vytvořená kapacita; je to závazek, který musí hlídat monitoring a plán růstu.||RAID řeší vybrané poruchy disků, ale neochrání před každým smazáním nebo poškozením dat aplikací. Rebuild obnovuje ochranu po poruše a současně spotřebovává prostředky. Zdravotní stav a výkon pole během rebuildu mohou být jiné než za běžného provozu. Nákup podle výsledku ideálního benchmarku proto nevystihuje všechny provozní podmínky.||Cvičný výpočet: z 80 TB použitelné kapacity je spotřebováno 56 TB. Tým zvolil pracovní hranici 64 TB a růst 2 TB měsíčně. Do hranice zbývají přibližně čtyři měsíce. Jestli nákup a realizace trvají tři měsíce, zbývá jen měsíc rezervy. Hranice 80 % je v tomto příkladu interní rozhodnutí, nikoliv univerzální limit Dellu. Do plánu navíc patří nejistota růstu a prostor pro provozní operace.",
+    "Fibre Channel používá oddělenou storage síť. Identita portu se označuje WWPN. Zoning určuje, které porty spolu smějí komunikovat v dané fabric. iSCSI přenáší blokové příkazy přes TCP/IP; initiator má identitu IQN a komunikuje s targetem přes IP adresy. Ani jeden protokol sám o sobě neurčuje, které volume host dostane: to doplňuje konfigurace na poli.||U iSCSI je nutné uvažovat celou síťovou cestu. MTU je maximální velikost přenášeného rámce či paketu v příslušném kontextu. Nastavení větší MTU jen na hostu neznamená, že ji podporuje každý prvek cesty. VLAN odděluje provoz logicky, ale nemusí zajistit samostatnou fyzickou kapacitu ani nezávislost při poruše. SDM proto žádá potvrzení topologie, propustnosti a testu konektivity od síťového týmu.||SAS může sloužit přímému připojení podporovaných hostů k poli. Vynechání SAN switchů snižuje počet prvků, současně však mění možnosti připojení a růstu. Rozhodnutí závisí na podporované topologii, počtu hostů a portů. Nezaměňuj hostitelské SAS připojení s interním propojením diskových skříní: stejná rodina technologie může mít jinou úlohu.||Příklad z dokumentace výrobce: Dell ve VMware best practices ukazuje dva hosty, dva switche a pole ME5084. Každý host má přístup přes oba switche a oba řadiče jsou připojené do obou stran. Níže je zjednodušené překreslení principu, nikoliv instalační schéma s kompletními porty. Nejde o zákaznickou případovou studii. Praktická hodnota je v rozpoznání nezávislých cest a v možnosti připravit test výpadku jedné fabric.",
+    "Initiator zahajuje komunikaci, target ji přijímá. Host object na poli sdružuje identifikátory konkrétního serveru. Mapping určuje, které volume je tomuto hostu prezentováno. LUN je číslo logické jednotky v příslušném přístupovém kontextu; nepoužívej samotné číslo LUN jako celosvětově jedinečný identifikátor dat. V evidenci potřebuješ také zařízení, volume a hosty.||Multipathing spojuje více fyzických cest k témuž zařízení. Operační systém nemá stejné volume považovat za několik nezávislých disků. Důležité je rozlišit dostupnou cestu a preferovanou či optimalizovanou cestu. ALUA pomáhá hostu rozpoznat asymetrii přístupu přes řadiče. Dvě aktivní komponenty automaticky neznamenají, že všechny cesty mají stejné vlastnosti.||Dell pro SAN připojený ME5 ve VMware dokumentaci popisuje Round Robin a využití cest k vlastnícímu řadiči. U přímého zapojení s jedinou cestou k vlastníkovi nelze očekávat stejný přínos rozdělování provozu. Konkrétní nastavení se musí převzít z odpovídajícího návodu a ověřit pro danou kombinaci verzí; tento kurz není změnový runbook.||Cvičný incident: jeden ESXi host vidí méně cest než ostatní, ale VM běží. Nejprve porovnej stejný datastore na více hostech a zjisti čas změny. Poté zkontroluj alarmy HBA, switch portů, zoning a porty pole. Nesnaž se problém řešit současným restartem několika vrstev: ztratíš důkazy a můžeš odstranit poslední funkční cestu. SDM sestaví společnou časovou osu a určí vlastníka každé ověřovací akce.",
+    "VM obsahuje virtuální disk, například soubor VMDK na VMFS datastore. ESXi přistupuje k blokovému zařízení prezentovanému polem a VMFS na něm organizuje soubory virtuálních strojů. Jeden problém na sdíleném zařízení může proto ovlivnit více VM i aplikací. Při incidentu potřebuješ mapu vztahů, nikoliv pouze seznam názvů serverů.||vCenter zajišťuje centrální správu, zatímco běžné I/O virtuálního stroje nevykonává místo ESXi. Výpadek konzole vCenter tedy neznamená automaticky zastavení všech VM. Naopak funkční konzole neprokazuje zdravý datastore. Pro správný rozsah incidentu odděluj správu, výpočetní vrstvu, storage a aplikaci.||Latence říká, jak dlouho operace trvá. IOPS je počet operací za sekundu a throughput objem dat za sekundu. Tyto veličiny je nutné číst spolu s velikostí bloků, poměrem čtení a zápisu a paralelismem. Sto tisíc malých čtení není stejný workload jako sekvenční zápis velkých souborů. Číslo IOPS bez kontextu není univerzální známka rychlosti.||Fronta vzniká, když požadavky čekají na obsloužení. Větší fronta může být důsledkem vyšší zátěže nebo pomalejšího zpracování. Samotné zvýšení limitu fronty nemusí odstranit úzké místo. Při diagnostice porovnej aplikační odezvu, latenci hostu a pole ve stejném čase, včetně běžících backupů a dávkových úloh. Rozdíl mezi měřicími body pomáhá specialistovi zúžit oblast problému.||Cvičný scénář: každou noc se prodlouží dávka a ráno je vše zdravé. Denní screenshot konzole incident nevysvětlí. Připrav časové řady kolem noční špičky, seznam dotčených datastore a plán záloh. Cílem prvního callu je dohodnout měření a ověřit hypotézy, ne bez důkazu objednat rychlejší disky.",
+    "Monitoring potřebuje tři pohledy: zdraví komponent, chování služby a vývoj kapacity. Zdravotní alarm upozorní na disk či řadič, výkonová metrika na latenci nebo zatížení a kapacitní trend na budoucí vyčerpání. Každý alarm má mít vlastníka a reakční postup. Notifikace do nečtené schránky je technicky odeslaná, ale provozně neúčinná.||Časová synchronizace pomocí NTP umožňuje spojit události z různých systémů. Pokud je čas na switchi posunutý, může analýza zaměnit příčinu a následek. DNS pomáhá překládat jména a musí být součástí dokumentace management závislostí. Výpadek podpůrné služby vždy posuzuj podle skutečné vazby; ne každá závislost managementu leží přímo v datové cestě.||Support bundle je soubor diagnostických informací pro analýzu. Při předání podpoře přilož identifikaci zařízení, verze, čas incidentu a časové pásmo, dopad, poslední změny a provedené kroky. Citlivá data se předávají schváleným kanálem. SDM má zajistit úplnost a dostupnost podkladů, nemusí sám interpretovat všechny interní logy.||Měsíční report má končit rozhodnutím. U incidentů uveď opakování a otevřené příčiny. U kapacity čas do pracovního limitu a stav rozšíření. U podpory datum konce a vlastníka obnovy. U lifecycle plánovanou verzi a blokující závislosti. U záloh dolož obnovu relevantní služby; počet úspěšných jobů není totožný s důkazem obnovitelnosti.||Cvičný úkol: připrav jednostránkový service review pro pole bez zákaznického výpadku, ale s vadným diskem, rostoucí kapacitou a firmware mimo interní standard. Rozděl současný dopad, budoucí riziko a schválené kroky. U každé akce napiš vlastníka, termín a důkaz, kterým bude uzavřena.",
+    "Změnový plán je smlouva o tom, co se provede a jak se pozná úspěch. Obsahuje rozsah zařízení, výchozí stav, podporovanou cestu, závislosti, implementační kroky, kontrolní body a odpovědnosti. Nestačí napsat „upgrade firmware“. Musí být jasné, kdy se pokračuje, kdy se zastavuje a kdo rozhoduje při neočekávaném stavu.||Rollback není automaticky downgrade. Některé změny mají omezenou vratnost, proto se předem ověřuje výrobcem podporovaný postup. Pokud jednoduchý návrat neexistuje, plán musí popsat zastavení, eskalaci a obnovu služby. Tvrzení „změna je bezvýpadková“ je podmíněné zdravím prostředí, podporovanou konfigurací a správně fungující redundancí.||Akceptace má technickou i provozní část. Technická ověří dostupnost zařízení, cesty, datastore a aplikační funkci v dohodnutém rozsahu. Provozní ověří monitoring, přístupy, dokumentaci, podporu, kontakty a předání týmu. PM hlídá dodání těchto výstupů a SDM jejich použitelnost při skutečném incidentu.||Pro nácvik připrav plán rozšíření: kdo potvrdí kompatibilitu médií, kdo schválí kapacitní model, kdy dorazí díly, kdo provede implementaci a kdo ověří kapacitu až na straně konzumenta. Přidaný disk nemusí automaticky znamenat zvětšený filesystem aplikace. Změna má několik vrstev a každá potřebuje vlastní validaci.||Závěrečná ústní zkouška: během pěti minut vysvětli zákazníkovi cestu od VM k disku, během dalších pěti popiš ztrátu jedné cesty a nakonec navrhni důkazy pro převzetí služby. Pokud umíš rozlišit potvrzené skutečnosti, hypotézy a chybějící údaje, máš dobrý základ pro vedení technické debaty. Praktická oprávnění a zásahy ale dál náleží vyškoleným specialistům podle dohodnutých rolí."
+  ],
+  "terms": [
+    [
+      "alua",
+      "ALUA",
+      "Mechanismus, kterým storage hostu oznamuje různé stavy přístupových cest. Souvisí s vlastnictvím poolu, řadiči a multipathingem; dostupné cesty nemusí být stejně optimalizované."
+    ],
+    [
+      "initiator",
+      "Initiator",
+      "Koncový bod, který zahajuje storage komunikaci. FC používá například port HBA s WWPN, iSCSI softwarový nebo hardwarový initiator s IQN."
+    ],
+    [
+      "target",
+      "Target",
+      "Koncový bod storage komunikace poskytující přístup k logickým jednotkám. Přístup dále řídí konfigurace sítě a mapping na poli."
+    ],
+    [
+      "wwpn",
+      "WWPN",
+      "World Wide Port Name: identifikátor portu Fibre Channel. Používá se při identifikaci hostů a v zoningu."
+    ],
+    [
+      "iqn",
+      "IQN",
+      "iSCSI Qualified Name: identita iSCSI uzlu. Není totožná s jeho IP adresou."
+    ],
+    [
+      "mapping",
+      "Mapping",
+      "Přiřazení volume konkrétnímu hostu či skupině hostů na poli. Doplňuje síťovou dostupnost; samotný zoning volume nepřidělí."
+    ],
+    [
+      "disk-group",
+      "Disk group",
+      "Skupina disků s daným způsobem ochrany, která dodává kapacitu poolu. Konkrétní pravidla závisí na storage modelu a produktu."
+    ],
+    [
+      "rebuild",
+      "Rebuild",
+      "Obnovení datové ochrany po poruše média. Spotřebovává prostředky a do jeho dokončení může být odolnost snížená."
+    ],
+    [
+      "round-robin",
+      "Round Robin",
+      "Politika střídání podporovaných datových cest. Přesná pravidla a doporučení závisí na poli, hostu a topologii."
+    ],
+    [
+      "support-bundle",
+      "Support bundle",
+      "Diagnostický balík logů a konfigurace pro podporu. K analýze patří také čas, verze, dopad a popis změn."
+    ],
+    [
+      "front-end",
+      "Front-end",
+      "V kontextu pole rozhraní směrem k hostům. Nezaměňovat s uživatelským rozhraním webové aplikace."
+    ],
+    [
+      "back-end",
+      "Back-end",
+      "V kontextu pole vnitřní propojení k médiím a expanzním skříním. Odlišná část cesty od hostitelských portů."
+    ]
+  ],
+  "questions": [
+    [
+      "Aplikace přes SMB ukládá na Windows server s diskem z ME5. Kdo poskytuje SMB?",
+      [
+        "Windows server",
+        "ME5 automaticky",
+        "FC switch",
+        "HBA"
+      ],
+      0,
+      "Pole poskytuje blokové zařízení; souborovou službu v této topologii poskytuje Windows."
+    ],
+    [
+      "Dva zdroje používají jedinou napájecí větev. Co musíš prověřit?",
+      [
+        "Pouze počet disků",
+        "Společný bod poruchy napájení",
+        "Jméno datastore",
+        "Velikost VMDK"
+      ],
+      1,
+      "Počet komponent neprokazuje nezávislost jejich závislostí."
+    ],
+    [
+      "Co spojuje více cest ke stejnému blokovému zařízení?",
+      [
+        "DNS",
+        "SMB",
+        "Multipathing",
+        "Thin provisioning"
+      ],
+      2,
+      "Multipathing umožňuje hostu pracovat s více cestami jako s cestami k témuž zařízení."
+    ],
+    [
+      "K čemu slouží ALUA?",
+      [
+        "K zálohování VM",
+        "K překladu DNS",
+        "K vytvoření VLAN",
+        "K rozlišení stavů přístupu přes řadiče"
+      ],
+      3,
+      "ALUA pomáhá hostu rozeznat asymetrii přístupových cest."
+    ],
+    [
+      "Zoning je hotový, ale volume není prezentováno hostu. Co ověřit?",
+      [
+        "Mapping na poli",
+        "Barvu kabelu",
+        "Retenci záloh",
+        "Heslo aplikace"
+      ],
+      0,
+      "Síťový přístup nenahrazuje přiřazení volume hostu."
+    ],
+    [
+      "Spotřeba je 56 TB, pracovní limit 64 TB, růst 2 TB měsíčně. Kolik času zbývá?",
+      [
+        "Osm měsíců",
+        "Čtyři měsíce",
+        "Dva roky",
+        "Nelze počítat ani odhad"
+      ],
+      1,
+      "(64−56)/2 = 4 měsíce. Jde o odhad při konstantním růstu, nikoli záruku."
+    ],
+    [
+      "Co znamená úspěšný RAID rebuild?",
+      [
+        "Existuje offsite záloha",
+        "Aplikace je vždy konzistentní",
+        "Obnovila se příslušná datová ochrana",
+        "Bylo splněno RTO"
+      ],
+      2,
+      "RAID ochrana není záloha ani ověření aplikační obnovy."
+    ],
+    [
+      "VM běží, ale jeden host ztratil cestu. Jak stav popsat?",
+      [
+        "Bez rizika",
+        "Všechny VM jsou vypnuté",
+        "Jistě vadný disk",
+        "Služba dostupná, redundance degradovaná"
+      ],
+      3,
+      "Aktuální dostupnost a odolnost vůči další poruše jsou rozdílné vlastnosti."
+    ],
+    [
+      "Co je správný první krok u pravidelného nočního zpomalení?",
+      [
+        "Sjednotit časovou osu metrik a plánovaných úloh",
+        "Restartovat celé pole",
+        "Nakoupit disky bez měření",
+        "Ignorovat problém, protože ráno zmizí"
+      ],
+      0,
+      "Korelace metrík a událostí umožní testovat příčiny namísto hádání."
+    ],
+    [
+      "Znamená výpadek vCenter automaticky zastavení diskového I/O všech VM?",
+      [
+        "Ano vždy",
+        "Ne, běžné I/O obsluhují hosty ESXi",
+        "Ano pouze u FC",
+        "Ano pouze u iSCSI"
+      ],
+      1,
+      "Řídicí rovina a datová cesta mají odlišné role."
+    ],
+    [
+      "Jak číst rollback ve změnovém plánu firmware?",
+      [
+        "Vždy jako downgrade",
+        "Jako restart bez kontroly",
+        "Jako předem ověřený podporovaný návrat nebo postup obnovy",
+        "Jako smazání konfigurace"
+      ],
+      2,
+      "Vratnost změny nelze předpokládat. Je nutné ověřit podporovaný postup."
+    ],
+    [
+      "Co dokládá provozní převzetí?",
+      [
+        "Zapnutá konzole",
+        "Pouze dodací list",
+        "Počet TB",
+        "Funkce, monitoring, dokumentace, support, role a akceptační důkazy"
+      ],
+      3,
+      "Převzetí musí zajistit, že službu dokáže provozní tým skutečně podporovat."
+    ]
+  ]
+};
+powerVaultExpansion.texts.forEach((text,i)=>{productTrainingExtras.powervault.chapters[i][1] += "||"+text; productTrainingExtras.powervault.chapters[i][3] = ["Připrav discovery otázky a rozděl požadavky na kapacitu, výkon, dostupnost a obnovu.","Nakresli společné body poruchy od hostu až po napájení.","Spočítej čas do kapacitního limitu a rezervu proti dodací lhůtě.","Vyznač obě fabric a vysvětli dopad výpadku každé z nich.","Sestav plán diagnostiky ztracené cesty bez zásahu do přeživší cesty.","Propoj jednu aplikaci s VM, datastore, volume a poolem.","Připrav service review se třemi rozhodnutími a jejich vlastníky.","Sepiš akceptační kritéria a podmínky zastavení změny."][i];});
+productTrainingExtras.powervault.estimated = "Rozšířený výklad + 8 cvičení";
+powerVaultExpansion.terms.forEach(([id,term,definition])=>{ if(!glossary.some(g=>g.id===id)) glossary.push({id,term,definition,category:"PowerVault · datová cesta a provoz"}); if(!glossaryAliases.some(([label])=>label.toLowerCase()===term.toLowerCase()))glossaryAliases.push([term,id]); if(!products.find(p=>p.id==="powervault").terms.includes(id))products.find(p=>p.id==="powervault").terms.push(id); });
+const powerVaultQuestions = powerVaultExpansion.questions.map(([question,answers,correct,explanation],i)=>({id:200+i,topic:"PowerVault",question,answers,correct,explanation}));
+quizQuestions.push(...powerVaultQuestions);
+
 const state = {
   route: location.hash.slice(1) || "dashboard",
   productFilter: "Vše",
@@ -655,7 +871,7 @@ const state = {
 };
 
 const nav = [
-  ["PŘEHLED", null], ["dashboard", "⌂", "Můj přehled"], ["training", "▶", "Základní školení", trainingBlocks.length], ["path", "↗", "Studijní cesta"],
+  ["PŘEHLED", null], ["dashboard", "⌂", "Můj přehled"], ["training", "▶", "Školení", trainingBlocks.length + products.length], ["path", "↗", "Studijní cesta"],
   ["ZNALOSTI", null], ["products", "▦", "Produkty", products.length], ["architecture", "◇", "Architektury", 5], ["glossary", "Aa", "Slovník", glossary.length], ["companies", "⌘", "Portfolio firem"],
   ["PROCVIČOVÁNÍ", null], ["quiz", "✓", "Test znalostí", quizQuestions.length], ["sources", "↗", "Zdroje"]
 ];
@@ -881,18 +1097,38 @@ function productTrainingChapters(product) {
 }
 
 function productTrainingQuestions(product) {
+  if(product.id === "powervault") return shuffle(powerVaultQuestions);
   const others = products.filter(p=>p.id!==product.id);
-  const pick = key => shuffle(others.map(p=>p[key]).filter((v,i,a)=>v&&a.indexOf(v)===i)).slice(0,3);
+  const pick = key => shuffle(others.map(p=>p[key]).filter((v,i,a)=>v&&v!==product[key]&&a.indexOf(v)===i)).slice(0,3);
   const questions = [
     {topic:product.name,question:`Jaká je hlavní role produktu ${product.name}?`,answers:shuffle([product.role,...pick("role")]),correctValue:product.role,explanation:product.oneLiner},
     {topic:product.name,question:`Jaký model škálování nejlépe odpovídá produktu ${product.name}?`,answers:shuffle([product.scaling,...pick("scaling")]),correctValue:product.scaling,explanation:`Pro tento modul je klíčové zařazení: ${product.scaling}.`},
     {topic:product.name,question:`Která rozhraní nebo protokoly jsou pro ${product.name} relevantní?`,answers:shuffle([product.protocols,...pick("protocols")]),correctValue:product.protocols,explanation:`Produktový modul uvádí: ${product.protocols}.`},
-    {topic:product.name,question:`Do které oblasti je ${product.name} v této KB zařazen?`,answers:shuffle([product.category,...shuffle([...new Set(others.map(p=>p.category))]).slice(0,3)]),correctValue:product.category,explanation:`${product.name} je zde zařazen do oblasti ${product.category}.`},
+    {topic:product.name,question:`Do které oblasti je ${product.name} v této KB zařazen?`,answers:shuffle([product.category,...pick("category")]),correctValue:product.category,explanation:`${product.name} je zde zařazen do oblasti ${product.category}.`},
     {topic:product.name,question:"Co je nejlepší první krok při návrhu nebo změně produktu?",answers:["Začít maximální konfigurací","Potvrdit workload, požadavky, závislosti a podporovanou kombinaci","Přeskočit support matrix","Řešit pouze pořizovací cenu"],correctValue:"Potvrdit workload, požadavky, závislosti a podporovanou kombinaci",explanation:"Produkt se navrhuje z požadavků a ověřené podporované architektury."},
     {topic:product.name,question:"Kdy je produktová implementace provozně akceptovaná?",answers:["Po zapnutí zařízení","Po instalaci management konzole","Po ověření funkce, závislostí, monitoringu, dokumentace, podpory a akceptačních kritérií","Po vytvoření objednávky"],correctValue:"Po ověření funkce, závislostí, monitoringu, dokumentace, podpory a akceptačních kritérií",explanation:"Technická instalace je jen část připravenosti služby."}
   ].map(q=>({...q,correct:q.answers.indexOf(q.correctValue)}));
   const existing = quizQuestions.filter(q=>q.topic.toLowerCase().includes(product.id.replace("-"," ")) || q.topic.toLowerCase()===product.name.toLowerCase() || (product.id==="powervault"&&q.topic==="PowerVault"));
   return shuffle([...existing,...questions]).slice(0,8);
+}
+
+
+function powerVaultDiagram(chapter) {
+  const references = {
+    2: ["Dell: výběr poolů a disk groups", "https://www.dell.com/support/kbdoc/en-us/000426601/powervault-me5-me52-pool-and-disk-group-selection-guidance?lang=en"],
+    3: ["Dell: SAN-attached storage — referenční topologie", "https://infohub.delltechnologies.com/en-uk/l/dell-powervault-me5-series-vmware-vsphere-best-practices/san-attached-storage/"],
+    4: ["Dell: doporučený multipathing pro ME5 a VMware", "https://infohub.delltechnologies.com/en-us/l/dell-powervault-me5-series-vmware-vsphere-best-practices/recommended-multipathing-mpio-settings/"]
+  };
+  const chains = {
+    2: ["Kapacitní hierarchie", ["Disky", "Disk group", "Pool", "Volume", "Host"], "Šipky vyjadřují logické vztahy. Nejde o pořadí, v jakém fyzicky protéká každý zápis."],
+    5: ["Od aplikace k médiím", ["Aplikace ve VM", "Virtuální disk", "VMFS datastore", "ME5 volume", "Pool a disky"], "Zjednodušený příklad VMFS nad blokovým úložištěm. ESXi a síť zajišťují přístup mezi datastore a polem; vCenter zajišťuje správu."],
+    7: ["Životní cyklus změny", ["Požadavky", "Kompatibilita", "Pre-check", "Implementace", "Validace a předání"], "Na každém kontrolním bodu existuje podmínka pokračování, zastavení a odpovědná osoba. Vlastní výukové schéma."]
+  };
+  let result = "";
+  if(chains[chapter]) { const [title,labels,caption]=chains[chapter]; result = `<figure class="course-diagram"><figcaption><strong>${title}</strong></figcaption><ol class="dependency-chain">${labels.map(label=>`<li>${label}</li>`).join("")}</ol><p>${caption}</p></figure>`; }
+  if(chapter===3) result = `<figure class="course-diagram"><figcaption><strong>Dvě nezávislé fabric mezi hosty a polem</strong></figcaption><svg viewBox="0 0 720 340" role="img" aria-labelledby="pv-topology-title pv-topology-desc"><title id="pv-topology-title">Redundantní SAN topologie</title><desc id="pv-topology-desc">Dva hosty se připojují do fabric A i B. Každá fabric je připojena k oběma řadičům ME5. Jde o zjednodušenou topologii podle Dell dokumentace.</desc><g stroke="#1884ce" stroke-width="3" fill="none"><path d="M180 75 L180 145 M180 75 L540 145 M540 75 L180 145 M540 75 L540 145"/><path d="M180 195 L180 265 M180 195 L540 265 M540 195 L180 265 M540 195 L540 265"/></g><g fill="#e8f4fc" stroke="#1884ce" stroke-width="2"><rect x="85" y="25" width="190" height="50" rx="10"/><rect x="445" y="25" width="190" height="50" rx="10"/><rect x="85" y="145" width="190" height="50" rx="10"/><rect x="445" y="145" width="190" height="50" rx="10"/><rect x="85" y="265" width="190" height="50" rx="10"/><rect x="445" y="265" width="190" height="50" rx="10"/></g><g fill="#17364a" font-size="19" text-anchor="middle" font-family="sans-serif"><text x="180" y="57">Host 1</text><text x="540" y="57">Host 2</text><text x="180" y="177">Fabric A</text><text x="540" y="177">Fabric B</text><text x="180" y="297">ME5 řadič A</text><text x="540" y="297">ME5 řadič B</text></g></svg><p>Vlastní schematické překreslení principu z příkladu Dell se dvěma hosty, dvěma switchi a ME5084. Konkrétní porty, kabeláž a podporované kombinace určuje implementační dokumentace.</p></figure>`;
+  if(references[chapter]) result += `<p class="chapter-source">Zdroj k technickému doplnění: <a href="${references[chapter][1]}" target="_blank" rel="noreferrer">${references[chapter][0]} ↗</a>. Ověřeno 21. 9. 2026. Modelová cvičení jsou vlastní výukové situace, nejsou záznamem zákaznických incidentů.</p>`;
+  return result;
 }
 
 function productTrainingView(id) {
@@ -903,9 +1139,9 @@ function productTrainingView(id) {
   const result = state.productTrainingProgress[id];
   const prereq = trainingBlocks.find(b=>b.id===productTrainingPrerequisites[id]);
   const sources = extra?.sources || [[`Oficiální zdroj: ${product.name}`,product.source]];
-  return `<button class="action-link" data-route="training">← Zpět na všechna školení</button><header class="course-hero product-course-hero"><div><p class="eyebrow">Produktové školení · ${extra?.estimated||"4–6 hodin"}</p><h1>${product.name}</h1><p>${product.oneLiner}</p></div><div class="course-goal"><span>Doporučený základ</span><p>${prereq?.title||"Jak funguje IT služba"}</p><button class="secondary-button" data-training="${prereq?.id||"foundations"}">Otevřít základní blok</button></div></header>
+  return `<button class="action-link" data-route="training">← Zpět na všechna školení</button><header class="course-hero product-course-hero"><div><p class="eyebrow">Produktové školení · ${extra?.estimated||"Úvodní produktový blok"}</p><h1>${product.name}</h1><p>${product.oneLiner}</p></div><div class="course-goal"><span>Doporučený základ</span><p>${prereq?.title||"Jak funguje IT služba"}</p><button class="secondary-button" data-training="${prereq?.id||"foundations"}">Otevřít základní blok</button></div></header>
   <nav class="chapter-index">${chapters.map((chapter,i)=>`<a href="#product-chapter-${id}-${i+1}"><span>${String(i+1).padStart(2,"0")}</span>${chapter[0].replace(/^\d+\.\s*/,"")}</a>`).join("")}</nav>
-  <div class="training-content">${chapters.map(([title,text,points=[],example=product.scenario],i)=>`<section class="lesson-chapter" id="product-chapter-${id}-${i+1}"><div class="chapter-no">${String(i+1).padStart(2,"0")}</div><div><p class="eyebrow">${product.name} · kapitola ${i+1}</p><h2>${title}</h2><div class="lesson-text">${text.split("||").map(paragraph=>`<p>${annotateTrainingText(paragraph)}</p>`).join("")}</div>${points.length?`<h3>Co si zapamatovat</h3><ul>${points.map(x=>`<li>${annotateTrainingText(x)}</li>`).join("")}</ul>`:""}<div class="lesson-example"><span>PRAKTICKÝ ÚKOL</span><p>${annotateTrainingText(example)}</p></div></div></section>`).join("")}</div>
+  <div class="training-content">${chapters.map(([title,text,points=[],example=product.scenario],i)=>`<section class="lesson-chapter" id="product-chapter-${id}-${i+1}"><div class="chapter-no">${String(i+1).padStart(2,"0")}</div><div><p class="eyebrow">${product.name} · kapitola ${i+1}</p><h2>${title}</h2><div class="lesson-text">${text.split("||").map(paragraph=>`<p>${annotateTrainingText(paragraph)}</p>`).join("")}</div>${id==="powervault"?powerVaultDiagram(i):""}${points.length?`<h3>Co si zapamatovat</h3><ul>${points.map(x=>`<li>${annotateTrainingText(x)}</li>`).join("")}</ul>`:""}<div class="lesson-example"><span>MODELOVÉ CVIČENÍ · VLASTNÍ SCÉNÁŘ</span><p>${annotateTrainingText(example)}</p></div></div></section>`).join("")}</div>
   <section class="official-study"><div><p class="eyebrow">Primární studijní zdroje</p><h2>Pokračuj v oficiální dokumentaci</h2><p>Pro implementaci vždy ověř přesný model, firmware/software release, build a datum dokumentu.</p></div><div>${sources.map(([name,url])=>`<a href="${url}" target="_blank" rel="noreferrer">${name}<span>↗</span></a>`).join("")}</div></section>
   <section class="course-test-cta"><div><p class="eyebrow">Produktový test</p><h2>Ověř si ${product.name}</h2><p>Pro splnění produktu potřebuješ alespoň 80 %. Výsledek se promítne do Studijní cesty.</p>${result?`<p><strong>Nejlepší výsledek: ${result.best}%</strong></p>`:""}</div><button class="primary-button" data-product-test="${id}">${result?"Opakovat test":"Spustit test"}</button></section>`;
 }
@@ -1058,6 +1294,8 @@ function toast(message) {
 }
 
 document.addEventListener("click", e => {
+  const chapterLink = e.target.closest('.chapter-index a');
+  if(chapterLink) { e.preventDefault(); document.getElementById(chapterLink.getAttribute('href').slice(1))?.scrollIntoView({behavior:"smooth",block:"start"}); return; }
   const route = e.target.closest("[data-route]"); if (route) return routeTo(route.dataset.route);
   const training = e.target.closest("[data-training]"); if (training) { if (termDialog.open) termDialog.close(); return routeTo(`training/${training.dataset.training}`); }
   const productTraining = e.target.closest("[data-product-training]"); if (productTraining) { if (termDialog.open) termDialog.close(); return routeTo(`product-training/${productTraining.dataset.productTraining}`); }

@@ -465,3 +465,6 @@ body { background: radial-gradient(circle at 82% 0, rgba(8,127,197,.1), transpar
   .weekly-plan > div:first-child { grid-column: auto; }
   .chapter-index { grid-template-columns: 1fr; }
 }
+
+/* Learning diagrams remain readable on mobile and with keyboard navigation. */
+.course-diagram{margin:28px 0;padding:22px;border:1px solid #c6deed;border-radius:16px;background:#f3f9fd}.course-diagram svg{display:block;width:100%;height:auto;margin:20px 0}.course-diagram p,.chapter-source{font-size:.9rem;line-height:1.65;color:#496174}.dependency-chain{display:flex;align-items:stretch;gap:22px;list-style:none;padding:0!important;margin:22px 0;flex-wrap:wrap}.dependency-chain li{position:relative;flex:1;min-width:110px;border:1px solid #8ec5e8;border-radius:9px;padding:14px!important;background:white;text-align:center;font-weight:600}.dependency-chain li:not(:last-child):after{content:"→";position:absolute;right:-19px;color:#0077bc}.lesson-chapter{scroll-margin-top:24px}.chapter-source a{text-decoration:underline}.chapter-index a:focus-visible{outline:3px solid #1884ce;outline-offset:4px}@media(max-width:600px){.dependency-chain{flex-direction:column;gap:24px}.dependency-chain li:not(:last-child):after{content:"↓";right:50%;bottom:-25px}.course-diagram{padding:14px}}
