@@ -410,6 +410,22 @@ body { background: radial-gradient(circle at 82% 0, rgba(8,127,197,.1), transpar
 .course-result.passed { border-color: #77c6a6; }
 .course-result.failed { border-color: #efb0b4; }
 .course-result.failed .result-score { color: var(--red); }
+.product-training-head { display: flex; align-items: end; justify-content: space-between; gap: 20px; margin: 46px 0 18px; padding-top: 32px; border-top: 1px solid var(--line); }
+.product-training-head p { max-width: 760px; margin-bottom: 0; color: var(--muted); line-height: 1.6; }
+.product-training-head > span { flex: none; padding: 8px 11px; border-radius: 99px; background: #e8f5fb; color: #29779f; font-size: .78rem; font-weight: 800; }
+.product-training-grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(260px,1fr)); gap: 13px; }
+.product-training-card { display: flex; flex-direction: column; min-height: 285px; padding: 20px; border: 1px solid var(--line-soft); border-radius: 15px; background: #fff; box-shadow: 0 12px 28px rgba(19,62,88,.07); }
+.product-training-card.deep { border-color: #7ec3e2; background: linear-gradient(145deg,#fff,#eaf7fc); }
+.product-training-card h3 { margin: 18px 0 8px; font-size: 1.22rem; }
+.product-training-card p { color: var(--muted); line-height: 1.5; font-size: .86rem; }
+.product-training-card > small { margin: auto 0 15px; color: #7690a0; line-height: 1.4; }
+.training-score { margin-bottom: 11px; color: var(--green); font-size: .78rem; font-weight: 800; }
+.product-course-hero .secondary-button { margin-top: 12px; background: rgba(255,255,255,.12); border-color: rgba(255,255,255,.45); color: #fff; }
+.official-study { display: grid; grid-template-columns: minmax(240px,.7fr) minmax(320px,1.3fr); gap: 28px; margin-top: 20px; padding: clamp(24px,4vw,38px); border: 1px solid #b9dbea; border-radius: 19px; background: #edf8fc; }
+.official-study p { color: var(--muted); line-height: 1.6; }
+.official-study > div:last-child { display: grid; gap: 8px; }
+.official-study a { display: flex; justify-content: space-between; gap: 12px; padding: 13px 15px; border: 1px solid #c4dfeb; border-radius: 10px; background: #fff; color: #176d9b; text-decoration: none; }
+.official-study a:hover { border-color: var(--blue); }
 
 @media (max-width: 1100px) {
   .welcome-hero, .diagram-card { grid-template-columns: 1fr; }
@@ -439,6 +455,8 @@ body { background: radial-gradient(circle at 82% 0, rgba(8,127,197,.1), transpar
   .lesson-chapter { grid-template-columns: 1fr; }
   .chapter-no { font-size: 1.5rem; }
   .course-test-cta { align-items: flex-start; flex-direction: column; }
+  .product-training-head { align-items: flex-start; flex-direction: column; }
+  .official-study { grid-template-columns: 1fr; }
 }
 @media (max-width: 430px) {
   .hero-actions > *, .scale-grid button { width: 100%; }

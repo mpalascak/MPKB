@@ -575,6 +575,34 @@ const trainingBlocks = [
   }
 ];
 
+const productTrainingExtras = {
+  powervault: {
+    estimated: "12–16 hodin",
+    sources: [
+      ["Dell PowerVault ME5 Administrator’s Guide", "https://www.dell.com/support/manuals/en-us/powervault-me5084/me5_series_ag"],
+      ["Dell PowerVault ME5 Deployment Guide", "https://www.dell.com/support/manuals/en-us/powervault-me5012/me5_series_dg"],
+      ["Dell PowerVault ME5 Support Matrix", "https://www.dell.com/support/product-details/en-us/product/powervault-me5012/resources/manuals"],
+      ["Dell ME5: VMware vSphere Best Practices", "https://infohub.delltechnologies.com/en-au/t/dell-powervault-me5-series-vmware-vsphere-best-practices/"]
+    ],
+    chapters: [
+      ["1. Pozice PowerVaultu v portfoliu", "PowerVault ME je externí blokové úložiště zaměřené na cenově efektivní provoz menších a středních prostředí, poboček, samostatných aplikací a vybraných virtualizačních workloadů. Jeho úlohou není nahradit každou funkci vyšších enterprise platforem. Hodnotu přináší tam, kde zákazník potřebuje spolehlivé sdílené block storage, předvídatelnou správu a podporované FC, iSCSI nebo SAS připojení bez nákladů a komplexity nejvyšších produktových řad.||Při produktové debatě se nezačíná názvem pole, ale požadavky workloadu. Potřebujeme znát hosty a operační systémy, datový model, kapacitu, I/O profil, dostupnost, očekávaný růst, způsob zálohování, support a provozní dovednosti týmu. PowerVault může být vhodný pro konkrétní databázi nebo VMware cluster, ale samotné označení „virtualizace“ ke správnému návrhu nestačí."],
+      ["2. Hardware a dual-controller architektura", "Systém tvoří controller enclosure, dva řadičové moduly, hostitelské porty, management porty, cache, interní diskové propojení, napájecí a chladicí moduly a podporovaná média. Podle modelu lze připojovat expanzní enclosure. Dual-controller konfigurace omezuje dopad poruchy řadiče, ale vysoká dostupnost vzniká až společně s redundantním zapojením hostů, správným multipathingem a podporovanou konfigurací.||Každý kabel a port patří do konkrétní datové cesty. Dokumentace musí ukázat HBA nebo NIC hostu, switch/fabric, port řadiče a prezentovaný volume. Cílem je odstranit společné body poruchy a umožnit maintenance jednotlivých komponent bez ztráty přístupu. Stav „oba řadiče jsou online“ neprokazuje, že host skutečně používá všechny očekávané cesty."],
+      ["3. Virtual a linear storage, disk groups a pooly", "ME5 podporuje virtual a linear storage model. V praxi musí návrh respektovat přesnou verzi, typy médií, RAID, počet disků, požadovaný výkon a doporučení Dellu. Disky se sdružují do disk groups a ty vytvářejí kapacitní a výkonový základ poolu. Volume je logický prostředek vytvořený nad tímto základem a následně prezentovaný hostu.||Volba ochrany ovlivňuje usable kapacitu, zápisový výkon, dobu rebuildu a počet současně tolerovaných poruch. Pool nesmí být hodnocen pouze podle volného prostoru; důležité jsou také rozložení disk groups, tier, stav médií a rezerva pro interní operace. Každé rozšíření musí mít předem potvrzený cílový stav, podporovanou kombinaci disků a plán validace."],
+      ["4. FC, iSCSI a SAS připojení", "Fibre Channel používá HBA, WWPN, FC switche, zoning a target porty pole. Pro vysokou dostupnost se běžně navrhují dvě nezávislé fabric. iSCSI přenáší blokový provoz přes Ethernet/IP a vyžaduje vyhrazené nebo správně řízené VLAN, adresaci, odpovídající MTU, switche a iSCSI initiatory. SAS lze využít pro přímé podporované připojení v určitých scénářích.||Dell Deployment Guide popisuje přesné hostitelské postupy pro Windows, Linux, ESXi a další platformy. SDM musí vyžadovat ověření Support Matrix pro konkrétní HBA/NIC, transceiver, firmware, driver, operační systém a protokol. Obecné tvrzení, že FC nebo iSCSI je podporované, nenahrazuje kontrolu celé kombinace."],
+      ["5. Hosty, initiatory, volumes a multipathing", "Na poli se identifikátory initiatorů sdružují do hostů a podle potřeby host groups. Volume se připojuje pouze ke správným hostům. Na FC fabric se přístup omezuje zoningem a na poli mappingem/maskingem. Host následně provede rescan, rozpozná zařízení a použije podporovaný multipathing.||U VMware prostředí pokračuje postup vytvořením nebo rozšířením datastore. U Windows nebo Linuxu může následovat partition, filesystem nebo předání volume databázi. Akceptace proto končí až na úrovni konzumenta. Je potřeba ověřit očekávaný počet cest, aktivní/optimalizované stavy, failover a návrat po obnovení komponenty."],
+      ["6. VMware vSphere integrace", "Oficiální Dell best practices řeší HBA, fyzickou konektivitu, iSCSI vSwitch a VMkernel adaptéry, MPIO, virtual SCSI controllery, velikost datastore a počet VM. Doporučení se musí číst pro konkrétní release a architekturu. Univerzální nastavení převzaté z jiného pole může být nevhodné.||V provozu je nutné mapovat VM na datastore, datastore na zařízení ESXi, zařízení na ME5 volume a volume na disk group/pool. Při výkonovém incidentu se porovnávají metriky hostu, datastoru, cest a pole na stejné časové ose. VMware alarm, storage event a uživatelský symptom musí být spojeny konkrétními objekty."],
+      ["7. Management, monitoring a support", "PowerVault Manager slouží k prvotní konfiguraci, provisioningu, monitoringu a administraci. Guided setup podle Dell dokumentace zahrnuje management síť, DNS, NTP, uživatele, notifikace, SupportAssist, storage konfiguraci, hosty a volumes. Tyto kroky jsou také základem provozního předání.||Provoz musí mít bezpečné účty a role, aktuální kontakty, notifikace přes e-mail/SNMP/syslog, přístup k logům, evidenci sériových čísel a platný support entitlement. SupportAssist nebo související observability služba pomáhá s telemetrií a podporou, ale nenahrazuje lokální monitoring, proces incidentu ani odpovědnost za reakci na alarm."],
+      ["8. Lifecycle, změny a role SDM", "Firmware změna začíná ověřením release notes, Support Matrix, známých problémů a podporované upgrade cesty. Plán zahrnuje pre-check, zálohu konfigurace, potvrzení zdraví pole a všech cest, komunikační okno, implementaci, monitoring, funkční validaci a rollback nebo eskalační postup. Bez aktuálního support bundle a kontaktu na podporu roste riziko prodlouženého incidentu.||SDM vede service map, přehled kapacity, incidentů, změn, firmware, supportu a rizik. U degradované komponenty rozlišuje dostupnost služby od ztráty redundance. Při capacity review sleduje trend, bezpečný práh a lead time. Při incidentu koordinuje host, SAN/IP, storage a aplikační tým a vyžaduje společnou časovou osu. Technické rozhodnutí ponechává specialistovi, ale hlídá důkaz, vlastníka a termín." ]
+    ]
+  }
+};
+
+const productTrainingPrerequisites = {
+  powervault: "datacenter", powerstore: "datacenter", powermax: "datacenter", powerscale: "datacenter", objectscale: "datacenter", powerflex: "virtualization-storage",
+  vxrail: "virtualization-storage", datadomain: "virtualization-storage", ppdm: "virtualization-storage", "cyber-recovery": "service-delivery",
+  vsphere: "datacenter", vsan: "virtualization-storage", nsx: "virtualization-storage", vdefend: "virtualization-storage", vcf: "service-delivery", "dell-private-cloud": "service-delivery", san: "datacenter"
+};
+
 const companies = [
   {
     name: "KSP Computer & Services", status: "Ověřeno z veřejného webu",
@@ -619,8 +647,10 @@ const state = {
   search: "",
   quiz: null,
   courseQuiz: null,
+  productQuiz: null,
   progress: JSON.parse(localStorage.getItem("infrabase-progress") || "{}"),
   courseProgress: JSON.parse(localStorage.getItem("infrabase-course-progress") || "{}"),
+  productTrainingProgress: JSON.parse(localStorage.getItem("infrabase-product-training") || "{}"),
   notes: JSON.parse(localStorage.getItem("infrabase-notes") || "{}")
 };
 
@@ -638,6 +668,7 @@ const termDialog = document.querySelector("#termDialog");
 function saveState() {
   localStorage.setItem("infrabase-progress", JSON.stringify(state.progress));
   localStorage.setItem("infrabase-course-progress", JSON.stringify(state.courseProgress));
+  localStorage.setItem("infrabase-product-training", JSON.stringify(state.productTrainingProgress));
   localStorage.setItem("infrabase-notes", JSON.stringify(state.notes));
   updateProgressUI();
 }
@@ -762,6 +793,7 @@ function productDetail(id) {
     <section class="article-section"><h2>Modelová situace</h2><div class="callout">${p.scenario}</div></section>
   </article>
   <aside class="detail-aside">
+    <div class="side-card"><h3>Produktové školení</h3><p>Projdi výklad, praktický scénář a závěrečný test.</p><button class="primary-button wide" data-product-training="${p.id}">Otevřít školení</button></div>
     <div class="side-card"><h3>Související pojmy</h3><div class="term-links">${p.terms.map(id => { const t=glossary.find(g=>g.id===id); return t ? `<button class="term-link" data-term="${id}">${t.term}</button>` : ""; }).join("")}</div></div>
     <div class="side-card"><h3>Moje poznámky</h3><textarea class="note-area" id="productNote" data-note="${p.id}" placeholder="Co si potřebuji zapamatovat?">${escapeHtml(note)}</textarea><button class="secondary-button wide" id="saveNote">Uložit poznámku</button></div>
     <div class="side-card"><h3>Stav modulu</h3><button class="${state.progress[p.id] ? "secondary-button" : "primary-button"} wide" data-mastery="${p.id}">${state.progress[p.id] ? "Označit jako nerozpracované" : "Označit jako zvládnuté"}</button></div>
@@ -778,7 +810,9 @@ function trainingOverview() {
   const passed = trainingBlocks.filter(b => state.courseProgress[b.id]?.passed).length;
   return `<div class="page-head"><div><p class="eyebrow">Řízený základní kurz</p><h1>Od úplných základů k technické debatě</h1><p class="lede">Studuj blok po bloku. Každý obsahuje rozsáhlý výklad, příklady a pojmy ve slovníku. Další blok se otevře po dosažení alespoň 80 % v závěrečném testu.</p></div><span class="status-pill">${passed}/${trainingBlocks.length} bloků dokončeno</span></div>
   <section class="course-rule"><div><strong>1. Studuj</strong><span>Projdi všechny kapitoly a otevři neznámé pojmy ve slovníku.</span></div><div><strong>2. Vysvětli</strong><span>Zkus každou kapitolu převyprávět vlastními slovy.</span></div><div><strong>3. Otestuj se</strong><span>Test má 8 otázek a hranici úspěchu 80 %.</span></div><div><strong>4. Pokračuj</strong><span>Úspěšný výsledek automaticky odemkne další blok.</span></div></section>
-  <div class="course-map">${trainingBlocks.map((block,index)=>{const unlocked=isTrainingUnlocked(index);const result=state.courseProgress[block.id];return `<article class="course-card ${unlocked?"":"locked"}"><div class="course-order">${String(block.order).padStart(2,"0")}</div><div><div class="course-meta"><span>${block.duration}</span><span>${block.chapters.length} kapitol</span>${result?`<span>Nejlépe ${result.best}%</span>`:""}</div><h2>${block.title}</h2><p class="course-subtitle">${block.subtitle}</p><p>${block.objective}</p>${unlocked?`<button class="${result?.passed?"secondary-button":"primary-button"}" data-training="${block.id}">${result?.passed?"Zopakovat blok":"Otevřít školení"}</button>`:`<div class="lock-message">🔒 Nejdříve dokonči předchozí blok</div>`}</div></article>`}).join("")}</div>`;
+  <div class="course-map">${trainingBlocks.map((block,index)=>{const unlocked=isTrainingUnlocked(index);const result=state.courseProgress[block.id];return `<article class="course-card ${unlocked?"":"locked"}"><div class="course-order">${String(block.order).padStart(2,"0")}</div><div><div class="course-meta"><span>${block.duration}</span><span>${block.chapters.length} kapitol</span>${result?`<span>Nejlépe ${result.best}%</span>`:""}</div><h2>${block.title}</h2><p class="course-subtitle">${block.subtitle}</p><p>${block.objective}</p>${unlocked?`<button class="${result?.passed?"secondary-button":"primary-button"}" data-training="${block.id}">${result?.passed?"Zopakovat blok":"Otevřít školení"}</button>`:`<div class="lock-message">🔒 Nejdříve dokonči předchozí blok</div>`}</div></article>`}).join("")}</div>
+  <section class="product-training-head"><div><p class="eyebrow">Produktová akademie</p><h2>Školení ke každému produktu</h2><p>Produkty zůstávají v KB jako rychlá reference. Zde mají samostatnou výukovou cestu s architekturou, provozem, scénářem, oficiální dokumentací a testem.</p></div><span>${Object.values(state.productTrainingProgress).filter(x=>x.passed).length}/${products.length} dokončeno</span></section>
+  <div class="product-training-grid">${products.map(p=>{const extra=productTrainingExtras[p.id];const progress=state.productTrainingProgress[p.id];const prereq=trainingBlocks.find(b=>b.id===productTrainingPrerequisites[p.id]);return `<article class="product-training-card ${extra?"deep":""}"><div class="course-meta"><span>${p.category}</span><span>${extra?"Rozšířený kurz":"Základní kurz"}</span></div><h3>${p.name}</h3><p>${p.oneLiner}</p><small>Doporučený základ: ${prereq?.title||"Jak funguje IT služba"}</small>${progress?`<div class="training-score">Nejlépe ${progress.best}% ${progress.passed?"· splněno":""}</div>`:""}<button class="${progress?.passed?"secondary-button":"primary-button"} wide" data-product-training="${p.id}">${progress?.passed?"Zopakovat kurz":"Otevřít kurz"}</button></article>`}).join("")}</div>`;
 }
 
 function annotateTrainingText(text) {
@@ -835,6 +869,60 @@ function courseTestResult(block) {
   return `<div class="quiz-shell"><section class="quiz-card course-result ${passed?"passed":"failed"}"><p class="eyebrow">Výsledek bloku ${block.order}</p><div class="result-score">${pct} %</div><h2>${passed?"Blok je splněný.":"Ještě jednou projdi slabá místa."}</h2><p class="lede">Správně ${qz.score} z ${qz.questions.length}. Hranice úspěchu je 80 %. ${passed&&next?`Odemkl se blok „${next.title}“.`:passed?"Dokončil jsi celé základní školení.":"Výklad i test můžeš opakovat bez omezení."}</p><div class="filter-row" style="margin-top:25px">${passed&&next?`<button class="primary-button" data-training="${next.id}">Pokračovat dalším blokem</button>`:`<button class="primary-button" data-training="${block.id}">${passed?"Zopakovat školení":"Vrátit se k výkladu"}</button>`}<button class="secondary-button" data-course-test="${block.id}">Opakovat test</button><button class="secondary-button" data-route="training">Přehled školení</button></div></section></div>`;
 }
 
+function productTrainingChapters(product) {
+  const extra = productTrainingExtras[product.id];
+  if (extra?.chapters) return extra.chapters;
+  return [
+    ["1. Pozice a problém, který produkt řeší", `${product.oneLiner}||Produkt patří do oblasti ${product.category}. Při rozhodování se neporovnává pouze podle názvu nebo maximálních parametrů. Je potřeba znát workload, datový model, požadovanou dostupnost, růst, integrační body, provozní dovednosti a podporu.`, ["Začni potřebou zákazníka, ne produktem.", `Hlavní role: ${product.role}.`, `Typická úroveň: ${product.level}.`], product.scenario],
+    ["2. Architektura a technické vztahy", product.sections.map(([title,text])=>`${title}: ${text}`).join("||"), [`Škálování: ${product.scaling}.`, `Rozhraní a protokoly: ${product.protocols}.`, "Ověř přesný model, verzi a support matrix."], `Nakresli produkt uprostřed a doplň všechny hosty, sítě, identity, monitoring, backup a podpůrné týmy, na kterých závisí.`],
+    ["3. Provozní pohled SDM/PM", `Provoz produktu zahrnuje monitoring zdraví, kapacity a výkonu, incidenty, změny, firmware nebo software lifecycle, podporu výrobce, dokumentaci, zálohování konfigurace a pravidelné ověřování obnovy či redundance.||SDM musí znát vlastníky jednotlivých vrstev a předem dohodnutou eskalační cestu. PM musí při implementaci zajistit integrační test, provozní předání, dokumentaci, školení a akceptační kritéria.`, ["Produktová konzole není jediným zdrojem pravdy o službě.", "Technické dokončení instalace není provozní akceptace.", "Každé riziko potřebuje vlastníka, termín a podmínku uzavření."], product.scenario],
+    ["4. Praktický scénář a příprava na call", `Použij modelovou situaci produktu a rozděl ji na fakta, neznámé informace, rizika, vlastníky a další kroky. Připrav otázky na rozsah dopadu, časovou osu, poslední změny, health, kapacitu, redundanci a support.||Na závěr dokážeš produkt vysvětlit ve třech úrovních: jednou větou vedení, pěti minutami zákazníkovi a technickou mapou specialistovi.`, ["Odděluj fakta od hypotéz.", "Ptej se na důkaz a měřicí bod.", "Uzavírej call konkrétními vlastníky a termíny."], product.scenario]
+  ];
+}
+
+function productTrainingQuestions(product) {
+  const others = products.filter(p=>p.id!==product.id);
+  const pick = key => shuffle(others.map(p=>p[key]).filter((v,i,a)=>v&&a.indexOf(v)===i)).slice(0,3);
+  const questions = [
+    {topic:product.name,question:`Jaká je hlavní role produktu ${product.name}?`,answers:shuffle([product.role,...pick("role")]),correctValue:product.role,explanation:product.oneLiner},
+    {topic:product.name,question:`Jaký model škálování nejlépe odpovídá produktu ${product.name}?`,answers:shuffle([product.scaling,...pick("scaling")]),correctValue:product.scaling,explanation:`Pro tento modul je klíčové zařazení: ${product.scaling}.`},
+    {topic:product.name,question:`Která rozhraní nebo protokoly jsou pro ${product.name} relevantní?`,answers:shuffle([product.protocols,...pick("protocols")]),correctValue:product.protocols,explanation:`Produktový modul uvádí: ${product.protocols}.`},
+    {topic:product.name,question:`Do které oblasti je ${product.name} v této KB zařazen?`,answers:shuffle([product.category,...shuffle([...new Set(others.map(p=>p.category))]).slice(0,3)]),correctValue:product.category,explanation:`${product.name} je zde zařazen do oblasti ${product.category}.`},
+    {topic:product.name,question:"Co je nejlepší první krok při návrhu nebo změně produktu?",answers:["Začít maximální konfigurací","Potvrdit workload, požadavky, závislosti a podporovanou kombinaci","Přeskočit support matrix","Řešit pouze pořizovací cenu"],correctValue:"Potvrdit workload, požadavky, závislosti a podporovanou kombinaci",explanation:"Produkt se navrhuje z požadavků a ověřené podporované architektury."},
+    {topic:product.name,question:"Kdy je produktová implementace provozně akceptovaná?",answers:["Po zapnutí zařízení","Po instalaci management konzole","Po ověření funkce, závislostí, monitoringu, dokumentace, podpory a akceptačních kritérií","Po vytvoření objednávky"],correctValue:"Po ověření funkce, závislostí, monitoringu, dokumentace, podpory a akceptačních kritérií",explanation:"Technická instalace je jen část připravenosti služby."}
+  ].map(q=>({...q,correct:q.answers.indexOf(q.correctValue)}));
+  const existing = quizQuestions.filter(q=>q.topic.toLowerCase().includes(product.id.replace("-"," ")) || q.topic.toLowerCase()===product.name.toLowerCase() || (product.id==="powervault"&&q.topic==="PowerVault"));
+  return shuffle([...existing,...questions]).slice(0,8);
+}
+
+function productTrainingView(id) {
+  const product = products.find(p=>p.id===id);
+  if (!product) return notFound();
+  const extra = productTrainingExtras[id];
+  const chapters = productTrainingChapters(product);
+  const result = state.productTrainingProgress[id];
+  const prereq = trainingBlocks.find(b=>b.id===productTrainingPrerequisites[id]);
+  const sources = extra?.sources || [[`Oficiální zdroj: ${product.name}`,product.source]];
+  return `<button class="action-link" data-route="training">← Zpět na všechna školení</button><header class="course-hero product-course-hero"><div><p class="eyebrow">Produktové školení · ${extra?.estimated||"4–6 hodin"}</p><h1>${product.name}</h1><p>${product.oneLiner}</p></div><div class="course-goal"><span>Doporučený základ</span><p>${prereq?.title||"Jak funguje IT služba"}</p><button class="secondary-button" data-training="${prereq?.id||"foundations"}">Otevřít základní blok</button></div></header>
+  <nav class="chapter-index">${chapters.map((chapter,i)=>`<a href="#product-chapter-${id}-${i+1}"><span>${String(i+1).padStart(2,"0")}</span>${chapter[0].replace(/^\d+\.\s*/,"")}</a>`).join("")}</nav>
+  <div class="training-content">${chapters.map(([title,text,points,example],i)=>`<section class="lesson-chapter" id="product-chapter-${id}-${i+1}"><div class="chapter-no">${String(i+1).padStart(2,"0")}</div><div><p class="eyebrow">${product.name} · kapitola ${i+1}</p><h2>${title}</h2><div class="lesson-text">${text.split("||").map(paragraph=>`<p>${annotateTrainingText(paragraph)}</p>`).join("")}</div><h3>Co si zapamatovat</h3><ul>${points.map(x=>`<li>${annotateTrainingText(x)}</li>`).join("")}</ul><div class="lesson-example"><span>PRAKTICKÝ ÚKOL</span><p>${annotateTrainingText(example)}</p></div></div></section>`).join("")}</div>
+  <section class="official-study"><div><p class="eyebrow">Primární studijní zdroje</p><h2>Pokračuj v oficiální dokumentaci</h2><p>Pro implementaci vždy ověř přesný model, firmware/software release, build a datum dokumentu.</p></div><div>${sources.map(([name,url])=>`<a href="${url}" target="_blank" rel="noreferrer">${name}<span>↗</span></a>`).join("")}</div></section>
+  <section class="course-test-cta"><div><p class="eyebrow">Produktový test</p><h2>Ověř si ${product.name}</h2><p>Pro splnění produktu potřebuješ alespoň 80 %. Výsledek se promítne do Studijní cesty.</p>${result?`<p><strong>Nejlepší výsledek: ${result.best}%</strong></p>`:""}</div><button class="primary-button" data-product-test="${id}">${result?"Opakovat test":"Spustit test"}</button></section>`;
+}
+
+function startProductTest(id) {
+  const product=products.find(p=>p.id===id); if(!product)return;
+  state.productQuiz={productId:id,questions:productTrainingQuestions(product),index:0,score:0,selected:null,answered:false};
+  routeTo(`product-test/${id}`);
+}
+
+function productTestView(id) {
+  const qz=state.productQuiz; const product=products.find(p=>p.id===id);
+  if(!qz||!product||qz.productId!==id)return productTrainingView(id);
+  if(qz.index>=qz.questions.length){const pct=Math.round(qz.score/qz.questions.length*100);const old=state.productTrainingProgress[id]||{best:0,passed:false};const passed=pct>=80;state.productTrainingProgress[id]={best:Math.max(old.best,pct),passed:old.passed||passed};saveState();return `<div class="quiz-shell"><section class="quiz-card course-result ${passed?"passed":"failed"}"><p class="eyebrow">${product.name}</p><div class="result-score">${pct}%</div><h2>${passed?"Produktové školení je splněné.":"Vrať se k výkladu a test zopakuj."}</h2><p class="lede">Správně ${qz.score} z ${qz.questions.length}. Hranice úspěchu je 80 %.</p><div class="filter-row" style="margin-top:25px"><button class="primary-button" data-product-training="${id}">Zpět ke školení</button><button class="secondary-button" data-product-test="${id}">Opakovat test</button><button class="secondary-button" data-route="path">Studijní cesta</button></div></section></div>`;}
+  const q=qz.questions[qz.index];return `<div class="quiz-shell"><div class="quiz-progress">${qz.questions.map((_,i)=>`<span class="${i<=qz.index?"active":""}"></span>`).join("")}</div><section class="quiz-card"><div class="quiz-meta"><span>${product.name}</span><span>Otázka ${qz.index+1} z ${qz.questions.length}</span></div><h2>${q.question}</h2><div class="answers">${q.answers.map((a,i)=>{let cls=qz.selected===i?"selected":"";if(qz.answered){if(i===q.correct)cls="correct";else if(i===qz.selected)cls="wrong";}return `<button class="answer ${cls}" data-product-answer="${i}" ${qz.answered?"disabled":""}><span class="answer-letter">${String.fromCharCode(65+i)}</span><span>${a}</span></button>`}).join("")}</div>${qz.answered?`<div class="explanation"><strong>${qz.selected===q.correct?"Správně.":"Správná odpověď je "+String.fromCharCode(65+q.correct)+"."}</strong> ${q.explanation}</div>`:""}<div class="quiz-actions">${qz.answered?`<button class="primary-button" id="nextProductQuestion">${qz.index===qz.questions.length-1?"Vyhodnotit":"Další otázka"}</button>`:""}</div></section></div>`;
+}
+
 function pathView() {
   const levels = [
     { n:"00", title:"Úplný začátečník", time:"1–2 týdny", ids:[], goal:"Přestat se ztrácet v základních slovech a umět nakreslit jednoduché datacentrum.", learn:["Co je server, CPU, RAM, disk, síť, operační systém a aplikace","Rozdíl mezi hardwarem, softwarem, službou a daty","Co znamenají dostupnost, výkon, kapacita, latence, záloha a obnova","Jak se ptát, když pojmu nerozumíš, bez předstírání znalosti"], practice:["Nakresli cestu uživatele k aplikaci a jejím datům","Vysvětli laikovi, proč záloha není totéž co vysoká dostupnost","Vytvoř vlastní slovníček 30 pojmů a každý popiš jednou větou"], gate:"Bez nápovědy vysvětlíš server, síť, storage, VM, backup a incident a správně je propojíš."},
@@ -848,7 +936,7 @@ function pathView() {
   return `<div class="page-head"><div><p class="eyebrow">Od základů k technické debatě</p><h1>Tvoje cesta od laika k technicky sebejistému SDM</h1><p class="lede">Cílem není stát se přes noc storage nebo VMware specialistou. Cílem je rozumět systému, klást přesné otázky, rozeznat riziko a vést debatu tak, aby specialisté mohli efektivně rozhodovat.</p></div><span class="status-pill">7 úrovní · přibližně 4–7 měsíců</span></div>
   <section class="path-principle"><div><span>01</span><strong>Pochop</strong><small>Pojmy a vztahy vlastními slovy</small></div><i>→</i><div><span>02</span><strong>Nakresli</strong><small>Architekturu a datový tok</small></div><i>→</i><div><span>03</span><strong>Nacvič</strong><small>Modelovou situaci bez rizika</small></div><i>→</i><div><span>04</span><strong>Shadowuj</strong><small>Sleduj specialistu v praxi</small></div><i>→</i><div><span>05</span><strong>Veď</strong><small>Převezmi část reálné agendy</small></div></section>
   <section class="weekly-plan"><div><p class="eyebrow">Udržitelný rytmus</p><h2>Každý týden 3–5 hodin</h2></div><div><b>2× 35 min</b><span>výklad a pojmy</span></div><div><b>1× 45 min</b><span>diagram nebo lab</span></div><div><b>1× 30 min</b><span>test a opakování</span></div><div><b>1× 30 min</b><span>reflexe reálného callu</span></div></section>
-  <div class="maturity-roadmap">${levels.map(level=>{const done=level.ids.filter(id=>state.progress[id]).length;return `<section class="maturity-level"><header><div class="level-index">${level.n}</div><div><p class="eyebrow">${level.time}${level.ids.length?` · ${done}/${level.ids.length} modulů`:""}</p><h2>${level.title}</h2><p>${level.goal}</p></div></header><div class="level-content"><div><h3>Co musíš pochopit</h3><ul>${level.learn.map(x=>`<li>${x}</li>`).join("")}</ul></div><div><h3>Jak to dostat do ruky</h3><ul>${level.practice.map(x=>`<li>${x}</li>`).join("")}</ul>${level.ids.length?`<div class="term-links">${level.ids.map(id=>{const p=products.find(x=>x.id===id);return `<button class="term-link" data-product="${id}">${state.progress[id]?"✓ ":""}${p.name}</button>`}).join("")}</div>`:""}</div></div><div class="readiness-gate"><span>READY GATE</span><p>${level.gate}</p></div></section>`}).join("")}</div>
+  <div class="maturity-roadmap">${levels.map(level=>{const done=level.ids.filter(id=>state.productTrainingProgress[id]?.passed).length;return `<section class="maturity-level"><header><div class="level-index">${level.n}</div><div><p class="eyebrow">${level.time}${level.ids.length?` · ${done}/${level.ids.length} produktových školení`:""}</p><h2>${level.title}</h2><p>${level.goal}</p></div></header><div class="level-content"><div><h3>Co musíš pochopit</h3><ul>${level.learn.map(x=>`<li>${x}</li>`).join("")}</ul></div><div><h3>Jak to dostat do ruky</h3><ul>${level.practice.map(x=>`<li>${x}</li>`).join("")}</ul>${level.ids.length?`<div class="term-links">${level.ids.map(id=>{const p=products.find(x=>x.id===id);return `<button class="term-link" data-product-training="${id}">${state.productTrainingProgress[id]?.passed?"✓ ":""}${p.name} — školení</button>`}).join("")}</div>`:""}</div></div><div class="readiness-gate"><span>READY GATE</span><p>${level.gate}</p></div></section>`}).join("")}</div>
   <section class="article-section practice-bridge"><p class="eyebrow">Most do skutečné praxe</p><h2>Jak získat zkušenost dříve, než dostaneš plnou odpovědnost</h2><div class="bridge-grid"><div><b>1. Poslech</b><p>Na callu sleduj jeden konkrétní tok: incident, change nebo kapacitu. Nesnaž se zachytit všechno.</p></div><div><b>2. Rekonstrukce</b><p>Po callu nakresli, co se dělo, a odděl fakta od domněnek. Nech specialistu opravit chyby.</p></div><div><b>3. Simulace</b><p>Před změnou si nanečisto projdi plán, rollback, validační kroky, komunikaci a eskalaci.</p></div><div><b>4. Částečné vedení</b><p>Převezmi agendu, rekapitulaci, rizika a další kroky. Technické rozhodnutí ponech vlastníkovi.</p></div><div><b>5. Samostatné vedení</b><p>Veď rutinní service review a bezpečné změny. Specialistu zapojuj podle předem domluvených hranic.</p></div><div><b>6. Zpětná vazba</b><p>Po každé důležité situaci udělej krátké PIR: co jsem přehlédl, na co jsem se měl zeptat a co příště změním.</p></div></div></section>`;
 }
 
@@ -938,6 +1026,8 @@ function render() {
   const [base, arg] = state.route.split("/");
   if (state.search) view.innerHTML = searchView(state.search);
   else if (base === "dashboard") view.innerHTML = dashboardView();
+  else if (base === "product-test" && arg) view.innerHTML = productTestView(arg);
+  else if (base === "product-training" && arg) view.innerHTML = productTrainingView(arg);
   else if (base === "training-test" && arg) view.innerHTML = courseTestView(arg);
   else if (base === "training" && arg) view.innerHTML = trainingBlockView(arg);
   else if (base === "training") view.innerHTML = trainingOverview();
@@ -970,6 +1060,10 @@ function toast(message) {
 document.addEventListener("click", e => {
   const route = e.target.closest("[data-route]"); if (route) return routeTo(route.dataset.route);
   const training = e.target.closest("[data-training]"); if (training) { if (termDialog.open) termDialog.close(); return routeTo(`training/${training.dataset.training}`); }
+  const productTraining = e.target.closest("[data-product-training]"); if (productTraining) { if (termDialog.open) termDialog.close(); return routeTo(`product-training/${productTraining.dataset.productTraining}`); }
+  const productTest = e.target.closest("[data-product-test]"); if (productTest) return startProductTest(productTest.dataset.productTest);
+  const productAnswer = e.target.closest("[data-product-answer]"); if (productAnswer && state.productQuiz && !state.productQuiz.answered) { state.productQuiz.selected=Number(productAnswer.dataset.productAnswer); state.productQuiz.answered=true; if(state.productQuiz.selected===state.productQuiz.questions[state.productQuiz.index].correct)state.productQuiz.score++; return render(); }
+  if (e.target.closest("#nextProductQuestion")) { state.productQuiz.index++; state.productQuiz.selected=null; state.productQuiz.answered=false; return render(); }
   const courseTest = e.target.closest("[data-course-test]"); if (courseTest) return startCourseTest(courseTest.dataset.courseTest);
   const courseAnswer = e.target.closest("[data-course-answer]"); if (courseAnswer && state.courseQuiz && !state.courseQuiz.answered) { state.courseQuiz.selected=Number(courseAnswer.dataset.courseAnswer); state.courseQuiz.answered=true; if(state.courseQuiz.selected===state.courseQuiz.questions[state.courseQuiz.index].correct)state.courseQuiz.score++; return render(); }
   if (e.target.closest("#nextCourseQuestion")) { state.courseQuiz.index++; state.courseQuiz.selected=null; state.courseQuiz.answered=false; return render(); }
