@@ -351,6 +351,38 @@ const glossary = [
   ["witness", "Witness", "Rozhodovací komponenta v některých distribuovaných topologiích; zpravidla není plnou další kopií všech dat."],
   ["workload-domain", "VCF Workload Domain", "Logický a lifecycle celek s vlastním vCenter a jedním nebo více clustery pro vybrané workloady."],
   ["wwpn", "WWPN", "World Wide Port Name: jednoznačný identifikátor Fibre Channel portu."],
+  ["application", "Aplikace", "Software, který poskytuje konkrétní funkci uživateli nebo jinému systému. Aplikace obvykle závisí na operačním systému, síti, datech a infrastruktuře."],
+  ["availability", "Dostupnost", "Schopnost služby plnit požadovanou funkci v dohodnutém čase. Vyjadřuje se často procentem a musí mít přesně definovaný způsob měření."],
+  ["bandwidth", "Bandwidth / šířka pásma", "Maximální teoretická nebo smluvená přenosová kapacita komunikační cesty. Sama o sobě neříká skutečnou rychlost aplikace."],
+  ["capacity", "Kapacita", "Množství zdroje, které je k dispozici nebo se spotřebovává, například úložný prostor, RAM, CPU čas či síťová propustnost."],
+  ["cpu", "CPU", "Central Processing Unit: procesor vykonávající instrukce programů. U serveru jsou důležité počty socketů, jader, frekvence a architektura."],
+  ["database", "Databáze", "Systém pro strukturované ukládání a řízený přístup k datům. Databázová služba zahrnuje software, data, logy, konfiguraci i provozní závislosti."],
+  ["datacenter", "Datacentrum", "Prostředí pro bezpečný provoz IT infrastruktury: servery, storage, sítě, napájení, chlazení, fyzická ochrana a provozní procesy."],
+  ["dns", "DNS", "Domain Name System překládá jména na IP adresy a poskytuje další záznamy. Porucha DNS může vyřadit službu i tehdy, když její servery běží."],
+  ["failure-domain", "Failure domain", "Skupina komponent, které může zasáhnout jedna společná porucha, například server, rack, napájecí větev, datový sál nebo lokalita."],
+  ["firmware", "Firmware", "Nízká softwarová vrstva zařízení uložená v jeho nevolatilní paměti. Řídí hardware a musí být kompatibilní s ovladači a ostatními komponentami."],
+  ["filesystem", "Filesystem", "Struktura, kterou operační systém používá k organizaci souborů a adresářů nad blokovým zařízením nebo vzdálenou souborovou službou."],
+  ["gateway", "Default gateway", "Síťový uzel, kterému zařízení předává provoz určený mimo vlastní IP subnet."],
+  ["hardware", "Hardware", "Fyzické součásti IT systému, například server, procesor, paměť, disk, síťový adaptér, switch nebo napájecí zdroj."],
+  ["incident", "Incident", "Neplánované přerušení služby nebo snížení její kvality. Cílem incident managementu je co nejrychlejší obnova služby a řízení dopadu."],
+  ["iops", "IOPS", "Počet vstupně-výstupních operací za sekundu. Bez velikosti bloků, poměru čtení/zápisu a latence nemá samotná hodnota úplný význam."],
+  ["ip-address", "IP adresa", "Logická síťová adresa rozhraní v IP síti. Společně s maskou určuje, která část označuje síť a která konkrétní zařízení."],
+  ["latency", "Latence", "Doba mezi požadavkem a odpovědí nebo mezi odesláním a doručením dat. U storage se běžně sleduje v milisekundách či mikrosekundách."],
+  ["memory", "RAM", "Rychlá pracovní paměť používaná běžícími programy. Je volatilní: po ztrátě napájení její obsah běžně zaniká."],
+  ["nic", "NIC", "Network Interface Card: fyzický nebo virtuální síťový adaptér připojující zařízení k síti."],
+  ["ntp", "NTP", "Network Time Protocol synchronizuje čas systémů. Přesný čas je nutný pro logy, autentizaci, certifikáty, clustery a vyšetřování incidentů."],
+  ["operating-system", "Operační systém", "Základní software spravující hardware a poskytující služby aplikacím, například procesy, paměť, zařízení, filesystem a síť."],
+  ["problem-management", "Problem management", "Proces hledání a řízení základních příčin opakovaných nebo významných incidentů. Výsledkem může být workaround i trvalá náprava."],
+  ["protocol", "Protokol", "Dohodnutá pravidla komunikace mezi systémy, včetně formátu zpráv, pořadí kroků a reakcí na chyby."],
+  ["redundancy", "Redundance", "Záměrné zdvojení nebo rozmnožení komponent či cest, aby porucha jedné části nemusela přerušit službu."],
+  ["server", "Server", "Počítač nebo softwarový proces poskytující služby jiným systémům. Fyzický server obvykle obsahuje CPU, RAM, síťová rozhraní, lokální storage a management."],
+  ["service", "IT služba", "Výsledek poskytovaný zákazníkovi nebo uživateli prostřednictvím kombinace lidí, procesů, aplikací, dat a technologií."],
+  ["sla", "SLA", "Service Level Agreement: dohoda o měřitelné úrovni služby, například dostupnosti, době reakce nebo obnovy, včetně podmínek a výjimek."],
+  ["software", "Software", "Programový kód, konfigurace a související data, které dávají hardwaru konkrétní funkci."],
+  ["spof", "Single Point of Failure", "Komponenta bez dostatečné náhrady, jejíž jediná porucha způsobí nedostupnost služby nebo ztrátu požadované funkce."],
+  ["subnet", "IP subnet", "Logická část IP sítě definovaná síťovou adresou a maskou. Zařízení ve stejném subnetu spolu obvykle komunikují přímo na druhé vrstvě."],
+  ["throughput", "Throughput / propustnost", "Skutečné množství dat přenesené za jednotku času, například MB/s nebo Gb/s. Ovlivňuje jej celý řetězec komponent."],
+  ["workload", "Workload", "Konkrétní aplikační nebo výpočetní zátěž se svými požadavky na CPU, paměť, síť, storage, dostupnost a ochranu dat."],
   ["zero-trust", "Zero Trust", "Bezpečnostní princip průběžného ověřování, minimálních oprávnění a omezení implicitní důvěry."],
   ["zoning", "FC zoning", "Konfigurace FC fabric určující, které iniciátory a targety se mohou navzájem vidět."],
 ].map(([id, term, definition]) => ({ id, term, definition }));
@@ -377,6 +409,103 @@ const quizQuestions = [
   ["Security", "Co musí předcházet tvrdé mikrosegmentaci?", ["Smazání všech VLAN", "Mapování skutečných aplikačních toků", "Vypnutí monitoringu", "Zrušení backupu"], 1, "Bez znalosti toků lze zablokovat dávky, management i obnovu."],
   ["SDM", "Kdy je infrastrukturní změna opravdu akceptovaná?", ["Jakmile instalátor napíše Completed", "Po ověření managementu, datové cesty, aplikace, monitoringu a redundance", "Po objednání hardwaru", "Po vytvoření ticketu"], 1, "Technické dokončení kroku není totéž jako funkční a provozní akceptace."],
 ].map(([topic, question, answers, correct, explanation], index) => ({ id: index + 1, topic, question, answers, correct, explanation }));
+
+quizQuestions.push(...[
+  ["Kurz 1", "Co nejlépe vystihuje IT službu?", ["Jeden fyzický server", "Kombinace lidí, procesů, aplikací, dat a technologií přinášející uživateli výsledek", "Pouze aplikace v prohlížeči", "Libovolný produkt s podporou"], 1, "Služba je end-to-end výsledek. Samotný produkt nebo server je pouze jedna z jejích závislostí."],
+  ["Kurz 1", "Jaký je hlavní rozdíl mezi RAM a trvalým úložištěm?", ["RAM je obvykle volatilní pracovní paměť, storage uchovává data dlouhodobě", "RAM slouží jen pro síť", "Storage je vždy rychlejší než RAM", "Žádný"], 0, "RAM drží aktivní pracovní stav, zatímco storage je určeno pro dlouhodobé uložení dat."],
+  ["Kurz 1", "Co dělá operační systém?", ["Pouze zálohuje data", "Spravuje hardware a poskytuje služby aplikacím", "Nahrazuje datacentrum", "Funguje pouze jako firewall"], 1, "Operační systém zprostředkovává procesor, paměť, zařízení, filesystem a síť aplikacím."],
+  ["Kurz 1", "Proč může porucha DNS vyřadit aplikaci, i když její server běží?", ["DNS vypne CPU", "Klienti nemusí přeložit jméno služby na správnou adresu", "DNS smaže databázi", "DNS je fyzické napájení"], 1, "Funkční server není užitečný, pokud jej závislé systémy nedokážou najít."],
+  ["Kurz 1", "Co je single point of failure?", ["Každá redundantní komponenta", "Jediná nechráněná komponenta, jejíž porucha přeruší službu", "Jakýkoli alarm", "Testovací server"], 1, "SPOF je místo, kde jedna porucha stačí ke ztrátě požadované funkce."],
+  ["Kurz 1", "Které tvrzení o dostupnosti je správné?", ["Je to pouze stav zapnutí serveru", "Musí být definována pro konkrétní službu, čas a způsob měření", "Je vždy 100 %", "Je totožná s výkonem"], 1, "Dostupnost bez definice služby, měřicího okna a výjimek není jednoznačná."],
+  ["Kurz 1", "Co znamená workload?", ["Jméno výrobce", "Konkrétní zátěž se svými požadavky na zdroje a provoz", "Pouze velikost disku", "Seznam zaměstnanců"], 1, "Workload popisuje chování a nároky aplikace či výpočtu."],
+  ["Kurz 1", "Jaký je nejlepší první krok při neznámém odborném pojmu na callu?", ["Předstírat porozumění", "Požádat o upřesnění významu v daném kontextu a zapsat rozhodnutí", "Změnit téma", "Automaticky eskalovat P1"], 1, "Stejný pojem může mít v různých produktech jiný význam. Přesná otázka snižuje riziko nedorozumění."],
+
+  ["Kurz 2", "Které tři technologické vrstvy tvoří klasickou 3-tier architekturu?", ["Compute, network a storage", "DNS, DHCP a NTP", "CPU, licence a smlouva", "Backup, archiv a tisk"], 0, "Compute zpracovává, síť propojuje a storage trvale ukládá data."],
+  ["Kurz 2", "Jaký je rozdíl mezi bandwidth a throughput?", ["Žádný", "Bandwidth je dostupná kapacita cesty, throughput skutečně dosažený přenos", "Throughput je pouze latence", "Bandwidth se týká jen disků"], 1, "Teoretická šířka pásma sama nezaručuje skutečně dosažený přenos."],
+  ["Kurz 2", "Co určuje IP subnet?", ["Skupinu adres ve stejné logické síti", "RAID úroveň", "Retenci backupu", "Počet CPU jader"], 0, "Síťová adresa a maska určují rozsah adres a přímou lokální komunikaci."],
+  ["Kurz 2", "K čemu slouží default gateway?", ["Ukládá soubory", "Předává provoz mimo lokální subnet", "Synchronizuje čas", "Spouští VM"], 1, "Zařízení posílá provoz do jiných sítí přes gateway/router."],
+  ["Kurz 2", "Co je failure domain?", ["Skupina komponent zasažitelná jednou společnou poruchou", "Seznam hesel", "Jeden soubor", "Měsíční report"], 0, "Správný návrh odděluje kopie a redundantní cesty do různých failure domains."],
+  ["Kurz 2", "Proč je synchronizace času důležitá?", ["Jen kvůli vzhledu hodin", "Pro korelaci logů, autentizaci, certifikáty a clustery", "Nahrazuje backup", "Zvyšuje kapacitu disků"], 1, "Rozdílný čas komplikuje provoz i bezpečnost a může způsobit funkční chyby."],
+  ["Kurz 2", "Který údaj nejlépe popisuje odezvu?", ["Latence", "Kapacita", "Počet racků", "Retence"], 0, "Latence měří dobu od požadavku k odpovědi; propustnost a IOPS popisují jiné rozměry výkonu."],
+  ["Kurz 2", "Co musí SDM udělat při hledání bottlenecku?", ["Obvinit storage", "Najít první vrstvu, kde se metriky zhoršují, a pracovat s důkazy", "Restartovat vše", "Ignorovat aplikační vrstvu"], 1, "End-to-end datová cesta vyžaduje korelovat telemetrii více vrstev."],
+
+  ["Kurz 3", "Co je hypervisor?", ["Vrstva vytvářející a provozující virtuální stroje nad fyzickým hardwarem", "Typ zálohovací pásky", "DNS záznam", "FC kabel"], 0, "Hypervisor rozděluje fyzické zdroje mezi virtuální stroje a řídí jejich běh."],
+  ["Kurz 3", "Co poskytuje block storage hostu?", ["Hierarchii souborů přes SMB", "Blokové zařízení, nad kterým host vytváří vyšší strukturu", "HTTP stránku", "Pouze metadata objektů"], 1, "Host typicky vidí LUN/volume jako disk a přidává filesystem nebo datastore."],
+  ["Kurz 3", "Jakou roli má multipathing?", ["Spravuje více podporovaných cest host–storage", "Zakládá uživatele", "Komprimuje VM", "Nahrazuje RAID"], 0, "Multipathing zajišťuje failover cest a podle konfigurace také rozložení I/O."],
+  ["Kurz 3", "Co znamená scale-out?", ["Výměnu názvu produktu", "Přidávání uzlů do distribuovaného systému", "Pouze přidání disků do jedné police", "Smazání clusteru"], 1, "Scale-out rozšiřuje systém o další nody, často zároveň s kapacitou a výkonem."],
+  ["Kurz 3", "Proč snapshot není automaticky backup?", ["Často sdílí systém a failure domain s produkcí", "Nemá čas vytvoření", "Nelze jej nikdy obnovit", "Je vždy na pásce"], 0, "Snapshot je užitečný bodový stav, ale nemusí přežít ztrátu nebo kompromitaci zdrojového systému."],
+  ["Kurz 3", "Co typicky udělá HA při pádu ESXi hostu?", ["Restartuje VM na dostupném hostu", "Provede vMotion z mrtvého hostu", "Obnoví datacentrum ze zálohy", "Změní DNS doménu"], 0, "HA reaguje na poruchu restartem VM; vMotion potřebuje fungující zdroj."],
+  ["Kurz 3", "Která trojice musí být při hodnocení storage výkonu čtena společně?", ["IOPS, throughput a latence", "DNS, NTP a DHCP", "RPO, barva a hmotnost", "CPU, SLA a faktura"], 0, "Jedna metrika bez charakteru workloadu a ostatních rozměrů může být zavádějící."],
+  ["Kurz 3", "Co je datastore ve VMware kontextu?", ["Logický prostor, kde mohou být uloženy soubory a objekty virtuálních strojů", "Fyzický rack", "Uživatelská role", "Síťový router"], 0, "Datastore zpřístupňuje ESXi prostor nad podporovaným storage backendem."],
+
+  ["Kurz 4", "Co je hlavní cíl incident managementu?", ["Najít vždy kořenovou příčinu před obnovou", "Co nejrychleji obnovit službu a řídit dopad", "Provést nákup hardwaru", "Zrušit SLA"], 1, "Kořenovou příčinu může následně řešit problem management; incident se soustředí na obnovu."],
+  ["Kurz 4", "Kdy je technická změna úspěšná?", ["Když skončí instalační krok", "Když jsou splněna technická i funkční validační kritéria a služba je provozně převzatá", "Po založení ticketu", "Když neexistuje rollback"], 1, "Hotový příkaz není důkazem funkční služby, monitoringu ani zachované redundance."],
+  ["Kurz 4", "Co má obsahovat kvalitní eskalace?", ["Pouze větu nefunguje to", "Dopad, časovou osu, symptomy, důkazy, provedené kroky a konkrétní požadavek", "Jen jméno zákazníka", "Pouze screenshot"], 1, "Strukturovaný kontext zkracuje čas specialisty k diagnóze a rozhodnutí."],
+  ["Kurz 4", "Jaký je vztah incidentu a problému?", ["Jsou vždy totožné", "Incident obnovuje službu, problem management hledá a řídí příčinu", "Problem je vždy P1", "Incident se týká jen hardware"], 1, "Jeden problém může způsobit více incidentů a workaround může službu obnovit před trvalou opravou."],
+  ["Kurz 4", "Co má SDM sledovat při kapacitním řízení?", ["Trend spotřeby, headroom, limity a dobu potřebnou k rozšíření", "Pouze dnešní volnou kapacitu", "Jen pořizovací cenu", "Počet schůzek"], 0, "Kapacita se řídí s předstihem, protože nákup, dodání a změna mají vlastní lead time."],
+  ["Kurz 4", "K čemu slouží RACI?", ["K přiřazení odpovědností za činnosti a rozhodnutí", "K měření latence", "K vytvoření RAID skupiny", "K překladu DNS"], 0, "RACI rozlišuje vykonavatele, konečnou odpovědnost, konzultované a informované strany."],
+  ["Kurz 4", "Jak má SDM reagovat, když technické rozhodnutí přesahuje jeho kompetenci?", ["Rozhodnout bez důkazů", "Přesně formulovat otázku, dopad a termín a zapojit vlastníka nebo specialistu", "Debatu ukončit bez záznamu", "Převzít roli výrobce"], 1, "Silný SDM zná hranice role a zajistí včasné rozhodnutí správného vlastníka."],
+  ["Kurz 4", "Co je účelem PIR po významné změně nebo incidentu?", ["Hledat viníka", "Zachytit výsledek, odchylky, poučení a následná opatření", "Smazat logy", "Nahradit monitoring"], 1, "Post-implementation/incident review převádí zkušenost do konkrétního zlepšení."],
+].map(([topic, question, answers, correct, explanation], index) => ({ id: 21 + index, topic, question, answers, correct, explanation })));
+
+const trainingBlocks = [
+  {
+    id: "foundations", order: 1, title: "Jak funguje IT služba", subtitle: "Od hardwaru a softwaru k dostupné službě", duration: "6–8 hodin", topic: "Kurz 1",
+    objective: "Získat společný jazyk. Po tomto bloku dokážeš rozložit službu na lidi, procesy, aplikace, data a infrastrukturu a vysvětlit, proč běžící server ještě neznamená fungující službu.",
+    chapters: [
+      ["1. Od obchodní potřeby k IT službě", "Zákazník nekupuje CPU, disk nebo virtuální stroj jako konečný výsledek. Potřebuje například dostupné internetové bankovnictví, evidenci dokumentů nebo výrobní systém. IT služba vzniká teprve spojením uživatelů, procesů, aplikací, dat, identity, sítě, infrastruktury, podpory a dodavatelů. SDM proto sleduje službu end-to-end: kdo ji používá, co musí fungovat, jaký má výpadek dopad a kdo vlastní jednotlivé závislosti.", ["Produkt je stavební prvek; služba je výsledek pro zákazníka.", "Technická dostupnost komponenty a obchodní dostupnost služby mohou být odlišné.", "Každá služba potřebuje vlastníka, podporu, měření a dohodnutý způsob eskalace."], "E-shop může mít funkční webové servery, ale zákazník nenakoupí, pokud nefunguje databáze, DNS, identita nebo platební brána."],
+      ["2. Hardware, software a firmware", "Hardware je fyzická část systému: server, CPU, RAM, disky, síťové karty, switche, kabely, zdroje a ventilátory. Software jsou instrukce a konfigurace, které hardwaru dávají funkci. Firmware leží blízko hardwaru a řídí konkrétní zařízení. Tyto vrstvy mají vlastní verze a kompatibilitu; upgrade jedné může vyžadovat změnu ovladače, hypervisoru nebo management nástroje.", ["Server není jedna součástka, ale systém vzájemně závislých komponent.", "Firmware není totéž co běžná aplikace, ale stále podléhá lifecycle a bezpečnostním opravám.", "Support matrix je důležitější než předpoklad, že novější verze musí automaticky fungovat."], "Nový firmware HBA může vyžadovat podporovanou verzi driveru v ESXi. Samostatně úspěšný upgrade může vytvořit nepodporovanou kombinaci."],
+      ["3. CPU, RAM a trvalá data", "CPU vykonává instrukce, RAM drží právě používaný pracovní stav a storage uchovává data dlouhodobě. Nedostatek CPU se může projevit čekáním na výpočet, nedostatek RAM stránkováním nebo ukončováním procesů a pomalá storage vysokou I/O latencí. Stejný uživatelský symptom proto může mít různé příčiny.", ["Kapacita a výkon jsou různé vlastnosti.", "Volná kapacita neprokazuje dostatečný výkon.", "Metriky musí být čteny v čase a v kontextu workloadu."], "Report se ráno generuje pomalu. Příčinou může být CPU databáze, nedostatek RAM, čekání na disk nebo síťová komunikace, nikoli automaticky storage."],
+      ["4. Operační systém a aplikace", "Operační systém spravuje procesy, paměť, zařízení, filesystem, uživatele a síť. Aplikace nad ním poskytuje konkrétní obchodní funkci a často používá další služby: databázi, message broker, souborové úložiště, API nebo identity provider. Provozní mapa proto musí obsahovat více než jméno serveru.", ["Aplikace může být rozdělena do mnoha komponent a serverů.", "Filesystem organizuje data nad blokovým zařízením nebo využívá vzdálenou file službu.", "Konfigurace je součástí služby a musí být řízena stejně pečlivě jako programový kód."], "Webová aplikace používá front-end, aplikační server a databázi. Výpadek kterékoliv vrstvy může uživatel vnímat jako stejnou chybu stránky."],
+      ["5. Síť jako systém závislostí", "Síť přenáší komunikaci mezi klienty a službami. Zařízení má síťové rozhraní, IP adresu a subnet; do jiných sítí posílá provoz přes gateway. DNS překládá jména, NTP sjednocuje čas a protokoly určují pravidla komunikace. Síťová dostupnost tedy není pouze stav kabelu.", ["IP adresa identifikuje rozhraní, DNS jméno poskytuje stabilnější logický název.", "Port v TCP/UDP kontextu identifikuje službu; fyzický switch port je jiný pojem.", "Firewall může cestu fyzicky zachovat, ale logicky komunikaci zakázat."], "Server odpovídá na ping, ale aplikace není dostupná, protože DNS vrací starou adresu nebo firewall blokuje aplikační port."],
+      ["6. Data, databáze a ochrana", "Data jsou často nejcennější částí služby. Databáze spravuje strukturu, transakce a souběžný přístup; filesystem organizuje soubory; storage zajišťuje fyzické nebo logické uložení. Redundance chrání dostupnost proti vybraným poruchám, snapshot zachytí bodový stav a backup vytváří ochrannou kopii pro obnovu. Tyto mechanismy se doplňují, ale nejsou zaměnitelné.", ["RAID není backup.", "Snapshot ve stejné failure domain nemusí přežít ztrátu nebo kompromitaci pole.", "Obnovitelnost se dokazuje testem restore, ne jen zeleným stavem backup jobu."], "Dva redundantní řadiče udrží provoz při poruše jednoho řadiče, ale nevrátí databázi před chybnou hromadnou změnu dat."],
+      ["7. Dostupnost, redundance a failure domains", "Dostupnost se navrhuje podle potřeb služby. Redundance odstraňuje vybrané single points of failure, ale funguje pouze tehdy, když záložní cesta neleží ve stejné failure domain a je pravidelně testována. Dva kabely ve stejném switchi nejsou ochrana proti ztrátě tohoto switche; dvě kopie v jednom sále nejsou ochrana proti ztrátě lokality.", ["Každá redundantní komponenta potřebuje mechanismus detekce a přepnutí.", "Degradovaný systém může být dostupný, ale už bez rezervy pro další poruchu.", "Plánovaná údržba je praktický test architektury i provozních postupů."], "Pole funguje na jednom řadiči po poruše druhého. Služba je dostupná, ale riziko je vyšší a oprava má jinou prioritu než běžná kosmetická chyba."],
+      ["8. Role SDM/PM v technické debatě", "SDM nemusí nahradit specialistu. Musí udržet společný kontext, oddělit fakta od hypotéz, hlídat dopad, odpovědnosti, termíny, rizika a komunikaci. Dobrá technická otázka obsahuje systém, čas, symptom, rozsah, změny, dostupné důkazy a konkrétní rozhodnutí, které potřebujeme získat.", ["Přiznat neznámý pojem je bezpečnější než skrýt nedorozumění.", "Technický vlastník rozhoduje o odborném řešení; SDM zajišťuje, že rozhodnutí vznikne včas a je dohledatelné.", "Každý call má skončit rekapitulací vlastníků, termínů a podmínek uzavření."], "Místo otázky „Je storage v pořádku?“ se ptej: „Od 10:15 roste write latency u dvou LUN ze 2 na 25 ms; změna začala po spuštění dávky. Potřebujeme potvrdit vrstvu vzniku a další diagnostický krok.“"]
+    ]
+  },
+  {
+    id: "datacenter", order: 2, title: "Datacentrum a datová cesta", subtitle: "Compute, síť, storage, výkon a poruchové domény", duration: "8–10 hodin", topic: "Kurz 2",
+    objective: "Umět nakreslit klasickou infrastrukturu, sledovat cestu požadavku a rozlišit kapacitu, výkon, odezvu a dostupnost.",
+    chapters: [
+      ["1. Fyzické datacentrum", "Datacentrum není jen místnost se servery. Zahrnuje racky, napájecí větve, UPS, generátory, chlazení, kabeláž, fyzickou bezpečnost, požární ochranu a provozní režim. Tyto části tvoří failure domains stejně jako IT komponenty.", ["Dvě zařízení ve stejném racku mohou sdílet napájení i chlazení.", "Inventář musí znát fyzické umístění a závislosti.", "Změna příkonu nebo hustoty může ovlivnit kapacitu sálu."], "Nový storage systém se vejde do racku rozměrem, ale projekt musí ověřit napájení, chlazení, nosnost, porty a kabelové trasy."],
+      ["2. Compute vrstva", "Compute tvoří fyzické servery, procesory, RAM, lokální adaptéry a jejich management. Workload může běžet přímo na operačním systému nebo ve virtuálním stroji. Sizing musí pracovat se špičkami, rezervou, NUMA, licencemi i požadavky na dostupnost.", ["Průměrné vytížení může skrýt krátké kritické špičky.", "Přidělené vCPU není totéž co fyzické jádro.", "Maintenance vyžaduje kapacitu pro přesun nebo restart workloadů."], "Cluster běží běžně na 75 % RAM. Při odstavení jednoho hostu už nemusí zbýt kapacita pro všechny VM."],
+      ["3. Ethernet a IP síť", "Ethernet propojuje zařízení na linkové vrstvě, VLAN odděluje broadcast domény a IP umožňuje komunikaci mezi subnety přes routing. Dostupnost vzniká kombinací redundantních adaptérů, switchů, uplinků a správné konfigurace.", ["Dvě NIC nejsou redundance, pokud obě končí ve stejném switchi bez odpovídajícího návrhu.", "MTU musí být konzistentní podél celé cesty.", "Fyzická underlay nese logické overlay sítě."], "Jedna chybná VLAN na trunku může vyřadit jen část provozu, zatímco management zůstane dostupný."],
+      ["4. Storage a SAN", "Externí storage odděluje data od compute hostů. SAN propojuje hostitelské iniciátory s target porty pole; zoning a LUN masking omezují viditelnost. Multipathing spravuje více cest a musí být konzistentní na hostu, fabric i poli.", ["FC a iSCSI jsou blokové transporty s odlišnou fabric.", "LUN není automaticky filesystem ani datastore.", "Redundantní cesta musí být validována řízeným testem."], "Host vidí LUN čtyřmi cestami přes dvě fabric a dva řadiče. Ztráta jedné fabric nesmí přerušit I/O."],
+      ["5. Datová cesta", "Požadavek prochází aplikací, operačním systémem, hypervisorem, ovladačem, adaptérem, sítí, portem pole, řadičem, cache a médii. Každá vrstva přidává fronty a latenci. Diagnostika proto koreluje časové řady, nikoli izolovaný screenshot.", ["Symptom na konci cesty neurčuje místo příčiny.", "Stejná časová osa je podmínkou korelace metrik.", "Změna workloadu může být příčinou i bez infrastrukturní poruchy."], "Storage reportuje nízkou odezvu, ale VM čeká na CPU. Aplikační latency proto roste mimo storage vrstvu."],
+      ["6. Výkon bez zkratek", "IOPS říká počet operací, throughput objem dat a latency dobu odezvy. Výsledek ovlivňuje velikost bloku, read/write poměr, sekvenčnost, paralelismus, cache a ochrana dat. Každé tvrzení o výkonu musí uvést workload a měřicí bod.", ["Vysoké IOPS malých bloků nemusí znamenat vysoký throughput.", "Nízká průměrná latence může skrýt vysoké percentily.", "Bottleneck je nejslabší část aktuální end-to-end cesty."], "8k databázové random I/O a 1MB sekvenční backup nelze porovnávat pouze podle počtu IOPS."],
+      ["7. Kapacita a růst", "Raw kapacita je součet médií, usable zohledňuje ochranu a rezervy a effective může zahrnovat úspory z komprese či deduplikace. Plán pracuje s trendem, špičkou, bezpečným prahem a lead time nákupu a implementace.", ["Marketingový redukční poměr není garantovaný pro každý dataset.", "Volná kapacita musí respektovat provozní rezervy a rebuild.", "Rozšíření může vyžadovat licence, porty, rack a změnové okno."], "Při růstu 5 TB měsíčně a tříměsíčním dodání je 12 TB volného prostoru už aktivní kapacitní riziko."],
+      ["8. Pozorovatelnost a důkazy", "Monitoring sbírá metriky, logy, události a stavy. Alert upozorňuje na podmínku, není sám o sobě diagnóza. Baseline ukazuje normální chování a umožňuje odlišit výjimku od běžné špičky.", ["Alarm bez vlastníka a reakčního postupu je jen hluk.", "Čas, rozsah a korelace jsou důležitější než jeden izolovaný údaj.", "Monitoring musí pokrývat i závislosti a datovou cestu."], "Alert na vysoké CPU je relevantní až po spojení s dobou trvání, konkrétními procesy, dopadem a chováním služby."]
+    ]
+  },
+  {
+    id: "virtualization-storage", order: 3, title: "Virtualizace a storage", subtitle: "VMware, LUN, datastore, HA a základ produktového portfolia", duration: "10–12 hodin", topic: "Kurz 3",
+    objective: "Rozumět tomu, jak virtualizace sdílí hardware a storage, jak vzniká dostupnost clusteru a kde se potkávají odpovědnosti VMware, SAN a storage týmů.",
+    chapters: [
+      ["1. Proč virtualizujeme", "Hypervisor odděluje operační systémy od fyzického serveru a umožňuje sdílet zdroje, standardizovat provoz a přesouvat workloady. Virtualizace však fyzické limity neruší; vytváří další řídicí vrstvu a nové závislosti.", ["VM je sada virtuálních zařízení a souborů nebo objektů.", "Konsolidace zvyšuje dopad poruchy hostu.", "Overcommit je řízené riziko, nikoli bezplatná kapacita."], "Deset VM sdílí dva fyzické procesory. Přidělených 80 vCPU neznamená 80 fyzických jader."],
+      ["2. ESXi, vCenter a cluster", "ESXi provozuje VM, vCenter centrálně spravuje hosty a cluster seskupuje zdroje a pravidla. Management rovina může být nedostupná, zatímco VM běží; provozní stav proto musí rozlišit management a data plane.", ["vCenter není datová cesta běžného I/O virtuálního stroje.", "Cluster vyžaduje konzistentní síť, storage a kompatibilitu hostů.", "Oprávnění a certifikáty jsou součástí provozuschopnosti."], "Výpadek vCenter omezí správu a některé operace, ale existující VM na ESXi mohou dál poskytovat službu."],
+      ["3. HA, DRS a vMotion", "HA restartuje VM po poruše hostu, DRS vyvažuje umístění podle zdrojů a pravidel a vMotion živě přesouvá běžící VM mezi kompatibilními hosty. Každá funkce řeší jiný problém a má vlastní předpoklady.", ["vMotion není mechanismus pro přesun z mrtvého hostu.", "HA potřebuje rezervní kapacitu a dostupná data VM.", "DRS pravidla mohou dostupnost posílit i nechtěně omezit."], "Před údržbou se VM přesunou vMotion; při náhlém pádu hostu je HA restartuje jinde."],
+      ["4. LUN, VMFS a datastore", "Storage pole prezentuje hostům LUN. ESXi nad ním může vytvořit VMFS datastore, který sdílí více hostů. Mapování pokračuje od virtuálního disku VM přes datastore a multipath až k volume, poolu a fyzickým médiím.", ["Jméno datastore nemusí být shodné se jménem LUN na poli.", "Změna velikosti vyžaduje kroky na poli i v konzumentovi.", "Dokumentace mapování výrazně urychluje incidenty."], "Storage rozšíří volume, ale datastore zůstane původní velikosti, dokud administrátor nerozšíří VMFS."],
+      ["5. Block, file a object", "Block poskytuje blokové zařízení, file sdílí hierarchii souborů a object pracuje s objekty a metadaty přes API. Nejde o pořadí kvality; každý model odpovídá jiným aplikacím, způsobu přístupu a škálování.", ["FC/iSCSI jsou běžné block transporty.", "NFS/SMB jsou file protokoly.", "S3 je dominantní object API, ale kompatibilita má konkrétní rozsah."], "Databáze může požadovat blokový volume, tým sdílené dokumenty SMB a analytický datový lake S3."],
+      ["6. PowerVault v architektuře", "PowerVault ME je cost-efficient externí block storage. SDM musí znát připojené hosty, porty, fabric, volumes, kapacitu, firmware, alerty, support entitlement a závislé služby. Produkt se neposuzuje izolovaně od serverů a SAN.", ["Dual-controller pole stále potřebuje správný multipathing.", "Scale-up rozšíření kapacity může narazit na limit řadičů nebo portů.", "Firmware change vyžaduje ověřenou kompatibilitu celé cesty."], "Nová police zvýší raw kapacitu, ale projekt musí naplánovat RAID/pool, volume, host mapping, rozšíření datastore a validaci."],
+      ["7. HCI a vSAN", "HCI spojuje compute a storage do clusterových nodů. vSAN skládá média hostů do distribuovaného datastore a politiky určují ochranu objektů. Porucha nebo maintenance nodu proto ovlivňuje compute i storage zdroje.", ["Dostupná VM může běžet během resyncu v degradované ochraně.", "Síť je kritickou součástí distribuované storage.", "Kapacita clusteru musí počítat s ochranou a maintenance."], "Po odstavení nodu běží VM jinde, ale data se mohou resynchronizovat a cluster má dočasně menší rezervu."],
+      ["8. Záloha versus dostupnost", "HA zkracuje výpadek po poruše infrastruktury, replikace kopíruje změny, snapshot zachycuje bodový stav a backup chrání obnovu. RPO a RTO se potvrzují pro konkrétní službu a obnovovací scénář.", ["Synchronní replikace může replikovat logickou chybu.", "Backup bez restore testu nedokazuje obnovitelnost.", "Obnova aplikace zahrnuje pořadí a konzistenci více komponent."], "Po ransomwaru může HA i replikace šířit nebo udržovat zašifrovaný stav; čistá obnova potřebuje chráněné kopie a postup."]
+    ]
+  },
+  {
+    id: "service-delivery", order: 4, title: "Provoz služby pro SDM a PM", subtitle: "Incident, change, kapacita, rizika a technická komunikace", duration: "8–10 hodin", topic: "Kurz 4",
+    objective: "Vést provozní a projektovou debatu na slušné technické úrovni, držet rozhodnutí a rizika a zapojovat specialisty s přesným zadáním.",
+    chapters: [
+      ["1. Service map a vlastnictví", "Service map propojuje obchodní službu, aplikace, data, infrastrukturu, lokality, dodavatele a podpůrné týmy. RACI doplňuje, kdo práci provádí, kdo nese konečnou odpovědnost, kdo je konzultován a kdo informován.", ["Bez mapy závislostí nelze spolehlivě určit dopad změny.", "Technický vlastník a komunikační vlastník mohou být různé role.", "Kontakty a eskalační cesty musí být aktuální před incidentem."], "PowerVault spravuje storage tým, SAN jiný tým a VMware třetí. SDM propojuje jejich kroky k obnově jedné aplikace."],
+      ["2. Incident management", "Incident začíná detekcí nebo hlášením a pokračuje triage, stanovením dopadu a priority, diagnostikou, workaroundem, obnovou a komunikací. Major incident potřebuje rytmus aktualizací, rozhodovací log a jednoznačné řízení.", ["Priorita vychází z dopadu a naléhavosti, ne z hlasitosti žadatele.", "Symptom není automaticky kořenová příčina.", "Časová osa a změny před incidentem jsou zásadní důkazy."], "Jedna VM je pomalá, ale ostatní na stejném datastore ne. Rozsah je důležitý pro směrování diagnostiky."],
+      ["3. Problem management", "Problem management hledá a řídí příčiny incidentů, známé chyby a workaroundy. Root cause analysis má pracovat s důkazy a systémovými podmínkami, nikoli jen s poslední chybou člověka.", ["Obnova služby může předcházet nalezení příčiny.", "Workaround snižuje dopad, ale nemusí odstranit problém.", "Nápravné opatření potřebuje vlastníka, termín a ověření účinnosti."], "Restart obnovuje službu každý týden. Problem record má zjistit, proč zdroje unikají, a odstranit opakování."],
+      ["4. Change management", "Změna musí mít účel, rozsah, závislosti, riziko, implementační kroky, validaci, komunikační plán a rollback. CAB posuzuje připravenost a obchodní riziko; nenahrazuje technický návrh.", ["Rollback musí být proveditelný v dostupném čase.", "Úspěch se měří předem definovanými kritérii.", "Po změně se ověřuje služba, monitoring i redundance."], "Firmware pole je technicky aktualizovaný, ale změna není uzavřena, dokud hosté vidí všechny cesty a aplikace projde validačním testem."],
+      ["5. Kapacita a lifecycle", "Capacity management předpovídá, kdy zdroje dosáhnou bezpečného limitu. Lifecycle management sleduje verze, kompatibilitu, konec podpory, bezpečnostní opravy a obnovu platformy. Oba procesy potřebují dlouhý výhled kvůli rozpočtu a lead time.", ["EOL produktu je projektové i provozní riziko.", "Kapacitní plán obsahuje scénáře růstu a rezervu.", "Technický dluh vzniká i odkládáním podporovaných upgrade cest."], "Pole má 25 % volné kapacity, ale při současném růstu a šestiměsíčním nákupu musí rozšíření začít nyní."],
+      ["6. SLA, metriky a reporting", "SLA musí přesně určit službu, měřicí období, zdroj dat, výjimky a cíle. Provozní report propojuje dostupnost, incidenty, změny, kapacitu, rizika, lifecycle a akční položky; seznam zelených grafů bez kontextu není řízení služby.", ["Metrika musí vést k rozhodnutí nebo kontrole cíle.", "Průměr může skrýt extrémní dopad konkrétního incidentu.", "Technické KPI a uživatelská zkušenost se mají číst společně."], "99,9 % dostupnosti může být splněno za měsíc, ale hodinový výpadek při účetní uzávěrce má vysoký obchodní dopad."],
+      ["7. Eskalace a práce se specialisty", "Kvalitní eskalace předává dopad, rozsah, časovou osu, symptomy, změny, důkazy, provedené kroky a konkrétní otázku. SDM nemá diktovat neověřenou příčinu; má zajistit správného vlastníka a rozhodnutí v potřebném čase.", ["Eskalace je nástroj řízení rizika, ne trest.", "Vendor case potřebuje technická data a support entitlement.", "Pravidelné stručné aktualizace budují důvěru více než spekulace."], "Místo „urgently fix storage“ pošli mapu postižených hostů, LUN, čas, latence, cesty, změny a support bundle."],
+      ["8. Vedení technického callu", "Call začíná cílem a potvrzením aktuálního stavu. Průběžně se oddělují fakta, hypotézy a rozhodnutí. Na konci se čtou vlastníci, termíny, závislosti, rizika a další checkpoint. Neznámý pojem se vysvětlí v kontextu a zapíše do knowledge base.", ["Agenda chrání čas specialistů.", "Rozhodovací log zabraňuje opakování stejné debaty.", "Dobré shrnutí je technicky přesné a zároveň srozumitelné zákazníkovi."], "Po incident callu existuje pět hypotéz, ale jen dvě mají důkaz. SDM zajistí testy, vlastníky a čas dalšího rozhodnutí."]
+    ]
+  }
+];
 
 const companies = [
   {
@@ -421,12 +550,14 @@ const state = {
   productFilter: "Vše",
   search: "",
   quiz: null,
+  courseQuiz: null,
   progress: JSON.parse(localStorage.getItem("infrabase-progress") || "{}"),
+  courseProgress: JSON.parse(localStorage.getItem("infrabase-course-progress") || "{}"),
   notes: JSON.parse(localStorage.getItem("infrabase-notes") || "{}")
 };
 
 const nav = [
-  ["PŘEHLED", null], ["dashboard", "⌂", "Můj přehled"], ["path", "↗", "Studijní cesta"],
+  ["PŘEHLED", null], ["dashboard", "⌂", "Můj přehled"], ["training", "▶", "Základní školení", trainingBlocks.length], ["path", "↗", "Studijní cesta"],
   ["ZNALOSTI", null], ["products", "▦", "Produkty", products.length], ["architecture", "◇", "Architektury", 5], ["glossary", "Aa", "Slovník", glossary.length], ["companies", "⌘", "Portfolio firem"],
   ["PROCVIČOVÁNÍ", null], ["quiz", "✓", "Test znalostí", quizQuestions.length], ["sources", "↗", "Zdroje"]
 ];
@@ -438,6 +569,7 @@ const termDialog = document.querySelector("#termDialog");
 
 function saveState() {
   localStorage.setItem("infrabase-progress", JSON.stringify(state.progress));
+  localStorage.setItem("infrabase-course-progress", JSON.stringify(state.courseProgress));
   localStorage.setItem("infrabase-notes", JSON.stringify(state.notes));
   updateProgressUI();
 }
@@ -569,6 +701,58 @@ function productDetail(id) {
   </aside></div>`;
 }
 
+function isTrainingUnlocked(index) {
+  if (index === 0) return true;
+  return Boolean(state.courseProgress[trainingBlocks[index - 1].id]?.passed);
+}
+
+function trainingOverview() {
+  const passed = trainingBlocks.filter(b => state.courseProgress[b.id]?.passed).length;
+  return `<div class="page-head"><div><p class="eyebrow">Řízený základní kurz</p><h1>Od úplných základů k technické debatě</h1><p class="lede">Studuj blok po bloku. Každý obsahuje rozsáhlý výklad, příklady a pojmy ve slovníku. Další blok se otevře po dosažení alespoň 80 % v závěrečném testu.</p></div><span class="status-pill">${passed}/${trainingBlocks.length} bloků dokončeno</span></div>
+  <section class="course-rule"><div><strong>1. Studuj</strong><span>Projdi všechny kapitoly a otevři neznámé pojmy ve slovníku.</span></div><div><strong>2. Vysvětli</strong><span>Zkus každou kapitolu převyprávět vlastními slovy.</span></div><div><strong>3. Otestuj se</strong><span>Test má 8 otázek a hranici úspěchu 80 %.</span></div><div><strong>4. Pokračuj</strong><span>Úspěšný výsledek automaticky odemkne další blok.</span></div></section>
+  <div class="course-map">${trainingBlocks.map((block,index)=>{const unlocked=isTrainingUnlocked(index);const result=state.courseProgress[block.id];return `<article class="course-card ${unlocked?"":"locked"}"><div class="course-order">${String(block.order).padStart(2,"0")}</div><div><div class="course-meta"><span>${block.duration}</span><span>${block.chapters.length} kapitol</span>${result?`<span>Nejlépe ${result.best}%</span>`:""}</div><h2>${block.title}</h2><p class="course-subtitle">${block.subtitle}</p><p>${block.objective}</p>${unlocked?`<button class="${result?.passed?"secondary-button":"primary-button"}" data-training="${block.id}">${result?.passed?"Zopakovat blok":"Otevřít školení"}</button>`:`<div class="lock-message">🔒 Nejdříve dokonči předchozí blok</div>`}</div></article>`}).join("")}</div>`;
+}
+
+function trainingBlockView(id) {
+  const index = trainingBlocks.findIndex(b=>b.id===id);
+  const block = trainingBlocks[index];
+  if (!block || !isTrainingUnlocked(index)) return trainingOverview();
+  const result = state.courseProgress[id];
+  return `<button class="action-link" data-route="training">← Zpět na přehled školení</button>
+  <header class="course-hero"><div><p class="eyebrow">Blok ${block.order} · ${block.duration}</p><h1>${block.title}</h1><p>${block.subtitle}</p></div><div class="course-goal"><span>Cíl bloku</span><p>${block.objective}</p></div></header>
+  <nav class="chapter-index" aria-label="Obsah bloku">${block.chapters.map((chapter,i)=>`<a href="#chapter-${block.id}-${i+1}"><span>${String(i+1).padStart(2,"0")}</span>${chapter[0].replace(/^\d+\.\s*/,"")}</a>`).join("")}</nav>
+  <div class="training-content">${block.chapters.map(([title,text,points,example],i)=>`<section class="lesson-chapter" id="chapter-${block.id}-${i+1}"><div class="chapter-no">${String(i+1).padStart(2,"0")}</div><div><p class="eyebrow">Kapitola ${i+1} z ${block.chapters.length}</p><h2>${title}</h2><p class="lesson-text">${text}</p><h3>Co si zapamatovat</h3><ul>${points.map(x=>`<li>${x}</li>`).join("")}</ul><div class="lesson-example"><span>PRAKTICKÝ PŘÍKLAD</span><p>${example}</p></div></div></section>`).join("")}</div>
+  <section class="course-test-cta"><div><p class="eyebrow">Závěrečné ověření</p><h2>Otestuj pochopení bloku</h2><p>Test obsahuje 8 otázek. K odemčení dalšího bloku potřebuješ alespoň 80 %, tedy minimálně 7 správných odpovědí.</p>${result?`<p><strong>Nejlepší výsledek: ${result.best} %</strong>${result.passed?" · Blok je splněný.":" · Zkus test znovu."}</p>`:""}</div><button class="primary-button" data-course-test="${id}">${result?"Opakovat test":"Spustit test"}</button></section>`;
+}
+
+function startCourseTest(id) {
+  const block = trainingBlocks.find(b=>b.id===id);
+  if (!block) return;
+  const questions = shuffle(quizQuestions.filter(q=>q.topic===block.topic));
+  state.courseQuiz = { blockId:id, questions, index:0, score:0, selected:null, answered:false };
+  routeTo(`training-test/${id}`);
+}
+
+function courseTestView(id) {
+  const qz = state.courseQuiz;
+  const block = trainingBlocks.find(b=>b.id===id);
+  if (!block || !qz || qz.blockId!==id) return trainingBlockView(id);
+  if (qz.index >= qz.questions.length) return courseTestResult(block);
+  const q = qz.questions[qz.index];
+  return `<div class="quiz-shell"><button class="action-link" data-training="${id}">← Zpět ke školení</button><div class="quiz-progress">${qz.questions.map((_,i)=>`<span class="${i<=qz.index?"active":""}"></span>`).join("")}</div><section class="quiz-card"><div class="quiz-meta"><span>${block.title}</span><span>Otázka ${qz.index+1} z ${qz.questions.length}</span></div><h2>${q.question}</h2><div class="answers">${q.answers.map((a,i)=>{let cls=qz.selected===i?"selected":"";if(qz.answered){if(i===q.correct)cls="correct";else if(i===qz.selected)cls="wrong";}return `<button class="answer ${cls}" data-course-answer="${i}" ${qz.answered?"disabled":""}><span class="answer-letter">${String.fromCharCode(65+i)}</span><span>${a}</span></button>`}).join("")}</div>${qz.answered?`<div class="explanation"><strong>${qz.selected===q.correct?"Správně.":"Správná odpověď je "+String.fromCharCode(65+q.correct)+"."}</strong> ${q.explanation}</div>`:""}<div class="quiz-actions">${qz.answered?`<button class="primary-button" id="nextCourseQuestion">${qz.index===qz.questions.length-1?"Vyhodnotit blok":"Další otázka"}</button>`:""}</div></section></div>`;
+}
+
+function courseTestResult(block) {
+  const qz = state.courseQuiz;
+  const pct = Math.round(qz.score/qz.questions.length*100);
+  const passed = pct >= 80;
+  const old = state.courseProgress[block.id] || {best:0,passed:false};
+  state.courseProgress[block.id] = {best:Math.max(old.best,pct),passed:old.passed||passed,completedAt:passed?new Date().toISOString():old.completedAt};
+  saveState();
+  const next = trainingBlocks[block.order];
+  return `<div class="quiz-shell"><section class="quiz-card course-result ${passed?"passed":"failed"}"><p class="eyebrow">Výsledek bloku ${block.order}</p><div class="result-score">${pct} %</div><h2>${passed?"Blok je splněný.":"Ještě jednou projdi slabá místa."}</h2><p class="lede">Správně ${qz.score} z ${qz.questions.length}. Hranice úspěchu je 80 %. ${passed&&next?`Odemkl se blok „${next.title}“.`:passed?"Dokončil jsi celé základní školení.":"Výklad i test můžeš opakovat bez omezení."}</p><div class="filter-row" style="margin-top:25px">${passed&&next?`<button class="primary-button" data-training="${next.id}">Pokračovat dalším blokem</button>`:`<button class="primary-button" data-training="${block.id}">${passed?"Zopakovat školení":"Vrátit se k výkladu"}</button>`}<button class="secondary-button" data-course-test="${block.id}">Opakovat test</button><button class="secondary-button" data-route="training">Přehled školení</button></div></section></div>`;
+}
+
 function pathView() {
   const levels = [
     { n:"00", title:"Úplný začátečník", time:"1–2 týdny", ids:[], goal:"Přestat se ztrácet v základních slovech a umět nakreslit jednoduché datacentrum.", learn:["Co je server, CPU, RAM, disk, síť, operační systém a aplikace","Rozdíl mezi hardwarem, softwarem, službou a daty","Co znamenají dostupnost, výkon, kapacita, latence, záloha a obnova","Jak se ptát, když pojmu nerozumíš, bez předstírání znalosti"], practice:["Nakresli cestu uživatele k aplikaci a jejím datům","Vysvětli laikovi, proč záloha není totéž co vysoká dostupnost","Vytvoř vlastní slovníček 30 pojmů a každý popiš jednou větou"], gate:"Bez nápovědy vysvětlíš server, síť, storage, VM, backup a incident a správně je propojíš."},
@@ -665,6 +849,9 @@ function render() {
   const [base, arg] = state.route.split("/");
   if (state.search) view.innerHTML = searchView(state.search);
   else if (base === "dashboard") view.innerHTML = dashboardView();
+  else if (base === "training-test" && arg) view.innerHTML = courseTestView(arg);
+  else if (base === "training" && arg) view.innerHTML = trainingBlockView(arg);
+  else if (base === "training") view.innerHTML = trainingOverview();
   else if (base === "products" && arg) view.innerHTML = productDetail(arg);
   else if (base === "products") view.innerHTML = productsView();
   else if (base === "architecture") view.innerHTML = architectureView();
@@ -692,6 +879,10 @@ function toast(message) {
 
 document.addEventListener("click", e => {
   const route = e.target.closest("[data-route]"); if (route) return routeTo(route.dataset.route);
+  const training = e.target.closest("[data-training]"); if (training) return routeTo(`training/${training.dataset.training}`);
+  const courseTest = e.target.closest("[data-course-test]"); if (courseTest) return startCourseTest(courseTest.dataset.courseTest);
+  const courseAnswer = e.target.closest("[data-course-answer]"); if (courseAnswer && state.courseQuiz && !state.courseQuiz.answered) { state.courseQuiz.selected=Number(courseAnswer.dataset.courseAnswer); state.courseQuiz.answered=true; if(state.courseQuiz.selected===state.courseQuiz.questions[state.courseQuiz.index].correct)state.courseQuiz.score++; return render(); }
+  if (e.target.closest("#nextCourseQuestion")) { state.courseQuiz.index++; state.courseQuiz.selected=null; state.courseQuiz.answered=false; return render(); }
   const product = e.target.closest("[data-product]"); if (product) { if (termDialog.open) termDialog.close(); return routeTo(`products/${product.dataset.product}`); }
   const term = e.target.closest("[data-term]"); if (term) return openTerm(term.dataset.term);
   const filter = e.target.closest("[data-filter]"); if (filter) { state.productFilter=filter.dataset.filter; return render(); }

@@ -13,7 +13,9 @@ Pokud macOS první spuštění zablokuje, použij na soubor pravé tlačítko �
 ## Co aplikace obsahuje
 
 - 17 produktových a průřezových modulů;
-- 109 vysvětlených pojmů;
+- více než 140 vysvětlených pojmů;
+- čtyřblokové základní školení s postupným odemykáním při výsledku alespoň 80 %;
+- 32 kurzových otázek navázaných na výklad a společnou testovací banku;
 - studijní cestu v šesti etapách;
 - krátký i úplný test znalostí;
 - osobní poznámky ke každému produktu;
