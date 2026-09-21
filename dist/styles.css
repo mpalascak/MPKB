@@ -390,6 +390,8 @@ body { background: radial-gradient(circle at 82% 0, rgba(8,127,197,.1), transpar
 .chapter-no { color: #b8deef; font-size: 2.5rem; font-weight: 900; letter-spacing: -.07em; }
 .lesson-chapter h2 { font-size: clamp(1.45rem,2.5vw,2rem); }
 .lesson-text { color: #4f6c7d; font-size: 1rem; line-height: 1.8; }
+.lesson-text p { max-width: 960px; margin: 0; }
+.lesson-text p + p { margin-top: 1.15em; }
 .lesson-chapter h3 { margin-top: 24px; color: #275b76; }
 .lesson-chapter ul { padding-left: 20px; color: var(--muted); line-height: 1.65; }
 .lesson-chapter li + li { margin-top: 6px; }
