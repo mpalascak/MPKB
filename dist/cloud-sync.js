@@ -44,6 +44,8 @@
       if(!confirm('Připojit výsledky a poznámky dříve uložené v tomto prohlížeči k právě přihlášenému účtu? Lepší výsledky se zachovají a rozdílné poznámky se spojí.'))return;
       try{
         const local={progress:JSON.parse(localStorage.getItem('infrabase-progress')||'{}'),courseProgress:JSON.parse(localStorage.getItem('infrabase-course-progress')||'{}'),productTrainingProgress:JSON.parse(localStorage.getItem('infrabase-product-training')||'{}'),notes:JSON.parse(localStorage.getItem('infrabase-notes')||'{}')};
+        const oldBest=Number(localStorage.getItem("infrabase-best")||0);
+        if(oldBest>0&&!local.courseProgress["general-quiz"])local.courseProgress["general-quiz"]={best:oldBest,passed:oldBest>=80};
         apply(merge(snapshot(),local));saveState();
       }catch{status('Import se nezdařil. Původní data zůstala zachovaná.');}
     }
