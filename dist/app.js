@@ -351,6 +351,48 @@ const glossary = [
   ["witness", "Witness", "Rozhodovací komponenta v některých distribuovaných topologiích; zpravidla není plnou další kopií všech dat."],
   ["workload-domain", "VCF Workload Domain", "Logický a lifecycle celek s vlastním vCenter a jedním nebo více clustery pro vybrané workloady."],
   ["wwpn", "WWPN", "World Wide Port Name: jednoznačný identifikátor Fibre Channel portu."],
+  ["access-port", "Access port", "Switch port přenášející provoz jedné přístupové VLAN bez VLAN tagu směrem ke koncovému zařízení."],
+  ["alert", "Alert", "Upozornění vytvořené při splnění definované podmínky. Alert signalizuje potřebu vyhodnocení, sám ale neurčuje příčinu ani obchodní dopad."],
+  ["bare-metal", "Bare metal", "Provoz operačního systému nebo aplikace přímo na fyzickém serveru bez virtualizačního hypervisoru mezi nimi."],
+  ["baseline", "Baseline", "Zdokumentovaný obraz normálního chování systému nebo služby, proti kterému lze porovnávat aktuální metriky a odchylky."],
+  ["bios", "BIOS / UEFI", "Firmware serveru inicializující hardware a poskytující základní nastavení platformy před spuštěním operačního systému nebo hypervisoru."],
+  ["cache", "Cache", "Rychlá dočasná vrstva uchovávající často používaná nebo čekající data, aby se omezil přístup k pomalejší vrstvě. Cache není automaticky trvalá kopie."],
+  ["cpu-core", "CPU jádro", "Samostatná výpočetní jednotka uvnitř procesoru schopná vykonávat instrukce. Počet jader není jediným ukazatelem aplikačního výkonu."],
+  ["data-path", "Datová cesta", "Úplný řetězec vrstev a komponent, kterými prochází požadavek od aplikace k datům a odpověď zpět."],
+  ["driver", "Driver / ovladač", "Software umožňující operačnímu systému nebo hypervisoru komunikovat s konkrétním hardwarovým zařízením."],
+  ["effective-capacity", "Effective kapacita", "Odhad množství logických dat, které lze uložit po započtení úspor, například komprese a deduplikace. Závisí na charakteru dat."],
+  ["ethernet-frame", "Ethernetový rámec", "Jednotka dat přenášená na ethernetové linkové vrstvě, obsahující mimo jiné zdrojovou a cílovou MAC adresu."],
+  ["event", "Event / událost", "Časově označený záznam změny stavu nebo významné činnosti systému. Událost nemusí znamenat poruchu."],
+  ["headroom", "Headroom", "Bezpečná rezerva prostředku nad běžnou spotřebou určená pro špičky, poruchy, údržbu a růst."],
+  ["initiator", "Storage initiator", "Klientská strana blokového storage spojení, typicky HBA port nebo iSCSI initiator hostu, která zahajuje komunikaci s targetem."],
+  ["jumbo-frames", "Jumbo frames", "Ethernetové rámce používající větší MTU než standardních 1500 bytů. Vyžadují konzistentní podporu po celé datové cestě."],
+  ["lead-time", "Lead time", "Celkový čas potřebný od zahájení požadavku po dostupný výsledek, například schválení, nákup, dodání, instalaci a změnu."],
+  ["log", "Log", "Časově označený textový nebo strukturovaný záznam činnosti, stavu či chyby systému používaný pro provoz, audit a diagnostiku."],
+  ["mac-address", "MAC adresa", "Identifikátor síťového rozhraní používaný ethernetovou linkovou vrstvou při komunikaci v lokální síti."],
+  ["metric", "Metrika", "Číselná hodnota sledovaná v čase, například využití CPU, počet IOPS, latence nebo volná kapacita."],
+  ["mtu", "MTU", "Maximum Transmission Unit: největší velikost paketu nebo payloadu přeneseného danou síťovou vrstvou bez potřeby fragmentace."],
+  ["nic-teaming", "NIC teaming / bonding", "Spojení více síťových adaptérů pro redundanci a podle návrhu také rozložení provozu."],
+  ["observability", "Observability / pozorovatelnost", "Schopnost odvozovat vnitřní stav systému z metrik, logů, událostí a trasování napříč jeho závislostmi."],
+  ["oversubscription", "Oversubscription", "Stav, kdy je konzumentům logicky přislíbeno více zdrojů, než je fyzicky okamžitě dostupné, na základě očekávání, že je nevyužijí současně."],
+  ["pdu", "PDU", "Power Distribution Unit: zařízení distribuující elektrické napájení v racku k jednotlivým IT komponentám."],
+  ["percentile", "Percentil", "Statistická hranice, pod kterou leží daný podíl měření. Například p95 latence je hodnota, kterou nepřekročí 95 % operací."],
+  ["queue", "Fronta / queue", "Místo, kde požadavky čekají na zpracování. Dlouhodobý růst fronty obvykle zvyšuje latenci a ukazuje na omezenou část cesty."],
+  ["rack", "Rack", "Standardizovaný rám v datacentru pro montáž serverů, storage a síťových zařízení, vybavený napájením a kabelovou organizací."],
+  ["rack-unit", "Rack unit / U", "Standardní jednotka výšky zařízení v racku; 1U odpovídá přibližně 44,45 mm."],
+  ["random-io", "Random I/O", "Vstupně-výstupní operace přistupující k nesousedícím místům dat. Často jsou náročnější na média a cache než sekvenční přístup."],
+  ["raw-capacity", "Raw kapacita", "Součet jmenovitých kapacit fyzických úložných médií před odečtením ochrany dat, systémové režie a rezerv."],
+  ["router", "Router", "Síťové zařízení nebo funkce směrující IP pakety mezi různými subnety podle směrovací tabulky."],
+  ["sequential-io", "Sekvenční I/O", "Čtení nebo zápis sousedících dat v pořadí, typický například pro velké soubory a některé backup workloady."],
+  ["site-readiness", "Site readiness", "Ověření připravenosti lokality před instalací: rack, napájení, chlazení, kabeláž, porty, adresace, přístupy a odpovědnosti."],
+  ["socket", "CPU socket", "Fyzická pozice procesoru na základní desce serveru. Jeden socket obsahuje procesor s více jádry."],
+  ["storage", "Storage", "Technologická vrstva pro dlouhodobé ukládání a zpřístupnění dat pomocí blokového, souborového nebo objektového modelu."],
+  ["support-matrix", "Support matrix", "Oficiální matice výrobcem podporovaných kombinací modelů, verzí firmwaru, driverů, operačních systémů, hypervisorů a dalších závislostí."],
+  ["switch", "Síťový switch", "Zařízení propojující síťové porty a přeposílající ethernetové rámce podle MAC adres; podle typu může poskytovat i další funkce."],
+  ["target", "Storage target", "Serverová strana blokového storage spojení poskytovaná portem nebo službou úložného systému initiatorům."],
+  ["trace", "Trace / trasování", "Záznam průchodu jednoho požadavku přes více komponent nebo služeb, používaný pro analýzu distribuovaných systémů."],
+  ["trunk-port", "Trunk port", "Switch port přenášející více VLAN, obvykle s označením rámců pomocí standardu 802.1Q."],
+  ["ups", "UPS", "Uninterruptible Power Supply: záložní napájecí systém, který krátkodobě udržuje provoz a překlene výpadek nebo přechod na generátor."],
+  ["usable-capacity", "Usable kapacita", "Kapacita dostupná po odečtení ochrany dat, systémové režie, formátování a povinných rezerv od raw kapacity."],
   ["application", "Aplikace", "Software, který poskytuje konkrétní funkci uživateli nebo jinému systému. Aplikace obvykle závisí na operačním systému, síti, datech a infrastruktuře."],
   ["availability", "Dostupnost", "Schopnost služby plnit požadovanou funkci v dohodnutém čase. Vyjadřuje se často procentem a musí mít přesně definovaný způsob měření."],
   ["bandwidth", "Bandwidth / šířka pásma", "Maximální teoretická nebo smluvená přenosová kapacita komunikační cesty. Sama o sobě neříká skutečnou rychlost aplikace."],
@@ -386,6 +428,32 @@ const glossary = [
   ["zero-trust", "Zero Trust", "Bezpečnostní princip průběžného ověřování, minimálních oprávnění a omezení implicitní důvěry."],
   ["zoning", "FC zoning", "Konfigurace FC fabric určující, které iniciátory a targety se mohou navzájem vidět."],
 ].map(([id, term, definition]) => ({ id, term, definition }));
+
+const glossaryCategories = {
+  "Datacentrum a fyzická infrastruktura": ["datacenter","rack","rack-unit","pdu","ups","site-readiness","failure-domain","hardware"],
+  "Compute a operační systémy": ["cpu","cpu-core","socket","numa","memory","server","bare-metal","bios","driver","firmware","operating-system","application","software","workload","cache","headroom"],
+  "Síť a konektivita": ["nic","nic-teaming","mac-address","ethernet-frame","switch","router","vlan","access-port","trunk-port","ip-address","subnet","gateway","mtu","jumbo-frames","dns","ntp","protocol","bandwidth","underlay","overlay","north-south","east-west"],
+  "Storage a SAN": ["storage","block-storage","file-storage","object-storage","san","fc","iscsi","sas","hba","wwpn","zoning","lun-masking","initiator","target","multipathing","lun","filesystem","raid","thin-provisioning","raw-capacity","usable-capacity","effective-capacity","oversubscription","random-io","sequential-io","data-path","queue","iops","throughput","latency","percentile"],
+  "Virtualizace a cloud": ["hypervisor","vm","vcpu","vcenter","vmotion","vsan","storage-policy","datastore","cluster","readynode","private-cloud","vcf","workload-domain","sddc-manager","orchestration"],
+  "Dostupnost a ochrana dat": ["availability","redundancy","spof","ha","rpo","rto","backup","restore","snapshot","replication","retention-lock","ransomware","air-gap","cyber-recovery"],
+  "Provoz a observability": ["service","sla","incident","problem-management","capacity","lead-time","support-matrix","metric","log","event","alert","trace","observability","baseline","qos"],
+  "Bezpečnost a identita": ["rbac","zero-trust","microsegmentation","identity","encryption","object-lock"]
+};
+
+for (const item of glossary) {
+  item.category = Object.entries(glossaryCategories).find(([,ids])=>ids.includes(item.id))?.[0] || "Enterprise infrastruktura";
+}
+
+const glossaryAliases = [
+  ["IT služba","service"],["služba","service"],["server","server"],["CPU","cpu"],["RAM","memory"],["storage","storage"],
+  ["firmware","firmware"],["driver","driver"],["ovladač","driver"],["support matrix","support-matrix"],["rack","rack"],["PDU","pdu"],["UPS","ups"],
+  ["socket","socket"],["jádro","cpu-core"],["cache","cache"],["bare metal","bare-metal"],["headroom","headroom"],["workload","workload"],
+  ["VLAN","vlan"],["subnet","subnet"],["gateway","gateway"],["DNS","dns"],["NTP","ntp"],["firewall","firewall"],["MTU","mtu"],["jumbo frames","jumbo-frames"],
+  ["SAN","san"],["LUN","lun"],["zoning","zoning"],["LUN masking","lun-masking"],["initiator","initiator"],["target","target"],["multipathing","multipathing"],
+  ["datová cesta","data-path"],["IOPS","iops"],["throughput","throughput"],["latence","latency"],["percentil","percentile"],["baseline","baseline"],
+  ["monitoring","monitoring"],["metrika","metric"],["log","log"],["alert","alert"],["observability","observability"],["failure domain","failure-domain"],
+  ["redundance","redundancy"],["SPOF","spof"],["snapshot","snapshot"],["backup","backup"],["RPO","rpo"],["RTO","rto"]
+].filter(([,id])=>glossary.some(item=>item.id===id));
 
 const quizQuestions = [
   ["PowerVault", "Co se při typickém scale-up rozšíření PowerVaultu mění jako první?", ["Počet VCF workload domains", "Fyzické disky nebo rozšiřující police", "Počet ESXi clusterů", "Počet NSX Edge uzlů"], 1, "PowerVault se typicky škáluje uvnitř existujícího pole přidáním podporovaných médií nebo polic."],
@@ -713,6 +781,20 @@ function trainingOverview() {
   <div class="course-map">${trainingBlocks.map((block,index)=>{const unlocked=isTrainingUnlocked(index);const result=state.courseProgress[block.id];return `<article class="course-card ${unlocked?"":"locked"}"><div class="course-order">${String(block.order).padStart(2,"0")}</div><div><div class="course-meta"><span>${block.duration}</span><span>${block.chapters.length} kapitol</span>${result?`<span>Nejlépe ${result.best}%</span>`:""}</div><h2>${block.title}</h2><p class="course-subtitle">${block.subtitle}</p><p>${block.objective}</p>${unlocked?`<button class="${result?.passed?"secondary-button":"primary-button"}" data-training="${block.id}">${result?.passed?"Zopakovat blok":"Otevřít školení"}</button>`:`<div class="lock-message">🔒 Nejdříve dokonči předchozí blok</div>`}</div></article>`}).join("")}</div>`;
 }
 
+function annotateTrainingText(text) {
+  const aliases = [...new Map(glossaryAliases.map(([label,id])=>[label.toLocaleLowerCase("cs"),[label,id]])).values()].sort((a,b)=>b[0].length-a[0].length);
+  const lookup = new Map(aliases.map(([label,id])=>[label.toLocaleLowerCase("cs"),id]));
+  const pattern = aliases.map(([label])=>label.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")).join("|");
+  if (!pattern) return text;
+  const regex = new RegExp(`(^|[^\\p{L}\\p{N}])(${pattern})(?=$|[^\\p{L}\\p{N}])`, "giu");
+  return text.replace(regex, (whole, prefix, match) => {
+    const id = lookup.get(match.toLocaleLowerCase("cs"));
+    const term = glossary.find(item=>item.id===id);
+    if (!term) return whole;
+    return `${prefix}<button class="glossary-token" data-term="${term.id}" data-definition="${escapeHtml(term.definition)}" aria-label="${escapeHtml(match)}: ${escapeHtml(term.definition)}">${match}</button>`;
+  });
+}
+
 function trainingBlockView(id) {
   const index = trainingBlocks.findIndex(b=>b.id===id);
   const block = trainingBlocks[index];
@@ -721,7 +803,7 @@ function trainingBlockView(id) {
   return `<button class="action-link" data-route="training">← Zpět na přehled školení</button>
   <header class="course-hero"><div><p class="eyebrow">Blok ${block.order} · ${block.duration}</p><h1>${block.title}</h1><p>${block.subtitle}</p></div><div class="course-goal"><span>Cíl bloku</span><p>${block.objective}</p></div></header>
   <nav class="chapter-index" aria-label="Obsah bloku">${block.chapters.map((chapter,i)=>`<a href="#chapter-${block.id}-${i+1}"><span>${String(i+1).padStart(2,"0")}</span>${chapter[0].replace(/^\d+\.\s*/,"")}</a>`).join("")}</nav>
-  <div class="training-content">${block.chapters.map(([title,text,points,example],i)=>`<section class="lesson-chapter" id="chapter-${block.id}-${i+1}"><div class="chapter-no">${String(i+1).padStart(2,"0")}</div><div><p class="eyebrow">Kapitola ${i+1} z ${block.chapters.length}</p><h2>${title}</h2><div class="lesson-text">${text.split("||").map(paragraph=>`<p>${paragraph}</p>`).join("")}</div><h3>Co si zapamatovat</h3><ul>${points.map(x=>`<li>${x}</li>`).join("")}</ul><div class="lesson-example"><span>PRAKTICKÝ PŘÍKLAD</span><p>${example}</p></div></div></section>`).join("")}</div>
+  <div class="training-content">${block.chapters.map(([title,text,points,example],i)=>`<section class="lesson-chapter" id="chapter-${block.id}-${i+1}"><div class="chapter-no">${String(i+1).padStart(2,"0")}</div><div><p class="eyebrow">Kapitola ${i+1} z ${block.chapters.length}</p><h2>${title}</h2><div class="lesson-text">${text.split("||").map(paragraph=>`<p>${annotateTrainingText(paragraph)}</p>`).join("")}</div><h3>Co si zapamatovat</h3><ul>${points.map(x=>`<li>${annotateTrainingText(x)}</li>`).join("")}</ul><div class="lesson-example"><span>PRAKTICKÝ PŘÍKLAD</span><p>${annotateTrainingText(example)}</p></div></div></section>`).join("")}</div>
   <section class="course-test-cta"><div><p class="eyebrow">Závěrečné ověření</p><h2>Otestuj pochopení bloku</h2><p>Test obsahuje 8 otázek. K odemčení dalšího bloku potřebuješ alespoň 80 %, tedy minimálně 7 správných odpovědí.</p>${result?`<p><strong>Nejlepší výsledek: ${result.best} %</strong>${result.passed?" · Blok je splněný.":" · Zkus test znovu."}</p>`:""}</div><button class="primary-button" data-course-test="${id}">${result?"Opakovat test":"Spustit test"}</button></section>`;
 }
 
@@ -770,12 +852,19 @@ function pathView() {
   <section class="article-section practice-bridge"><p class="eyebrow">Most do skutečné praxe</p><h2>Jak získat zkušenost dříve, než dostaneš plnou odpovědnost</h2><div class="bridge-grid"><div><b>1. Poslech</b><p>Na callu sleduj jeden konkrétní tok: incident, change nebo kapacitu. Nesnaž se zachytit všechno.</p></div><div><b>2. Rekonstrukce</b><p>Po callu nakresli, co se dělo, a odděl fakta od domněnek. Nech specialistu opravit chyby.</p></div><div><b>3. Simulace</b><p>Před změnou si nanečisto projdi plán, rollback, validační kroky, komunikaci a eskalaci.</p></div><div><b>4. Částečné vedení</b><p>Převezmi agendu, rekapitulaci, rizika a další kroky. Technické rozhodnutí ponech vlastníkovi.</p></div><div><b>5. Samostatné vedení</b><p>Veď rutinní service review a bezpečné změny. Specialistu zapojuj podle předem domluvených hranic.</p></div><div><b>6. Zpětná vazba</b><p>Po každé důležité situaci udělej krátké PIR: co jsem přehlédl, na co jsem se měl zeptat a co příště změním.</p></div></div></section>`;
 }
 
+function trainingUsesForTerm(id) {
+  const item = glossary.find(g=>g.id===id);
+  if (!item) return [];
+  const labels = [item.term, ...glossaryAliases.filter(([,aliasId])=>aliasId===id).map(([label])=>label)].map(x=>x.toLocaleLowerCase("cs"));
+  return trainingBlocks.filter(block => block.chapters.some(chapter => labels.some(label => String(chapter).toLocaleLowerCase("cs").includes(label))));
+}
+
 function glossaryView(filter = state.search) {
   const q = filter.toLowerCase().trim();
-  const items = glossary.filter(g => !q || `${g.term} ${g.definition}`.toLowerCase().includes(q)).sort((a,b)=>a.term.localeCompare(b.term,"cs"));
+  const items = glossary.filter(g => !q || `${g.term} ${g.definition} ${g.category}`.toLowerCase().includes(q)).sort((a,b)=>a.term.localeCompare(b.term,"cs"));
   const letters = [...new Set(glossary.map(g => g.term[0].toUpperCase()))].sort((a,b)=>a.localeCompare(b,"cs"));
   return `<div class="page-head"><div><p class="eyebrow">Terminologie</p><h1>Slovník pojmů</h1><p class="lede">Definice jsou psané pro praktickou orientaci. U konkrétní implementace vždy rozhoduje verze produktu a podporovaná architektura.</p></div><span class="status-pill">${items.length} pojmů</span></div>
-  <div class="glossary-layout"><aside class="alpha-index">${letters.map(l=>`<button data-letter="${l}">${l}</button>`).join("")}</aside><div class="term-list">${items.length ? items.map(g=>`<article class="term-card" id="term-${g.id}" data-term="${g.id}"><h3>${g.term}</h3><p>${g.definition}</p></article>`).join("") : `<div class="empty-state"><h2>Nic jsem nenašel</h2><p>Zkus kratší výraz nebo jiný název produktu.</p></div>`}</div></div>`;
+  <div class="glossary-layout"><aside class="alpha-index">${letters.map(l=>`<button data-letter="${l}">${l}</button>`).join("")}</aside><div class="term-list">${items.length ? items.map(g=>`<article class="term-card" id="term-${g.id}" data-term="${g.id}"><div class="term-meta"><span>${g.category}</span>${trainingUsesForTerm(g.id).length?`<span>${trainingUsesForTerm(g.id).length}× ve školení</span>`:""}</div><h3>${g.term}</h3><p>${g.definition}</p></article>`).join("") : `<div class="empty-state"><h2>Nic jsem nenašel</h2><p>Zkus kratší výraz nebo jiný název produktu.</p></div>`}</div></div>`;
 }
 
 function companiesView() {
@@ -834,7 +923,7 @@ function sourcesView() {
 function searchView(query) {
   const q = query.toLowerCase().trim();
   const pResults = products.filter(p => `${p.name} ${p.vendor} ${p.category} ${p.oneLiner} ${p.sections.flat().join(" ")}`.toLowerCase().includes(q));
-  const gResults = glossary.filter(g => `${g.term} ${g.definition}`.toLowerCase().includes(q));
+  const gResults = glossary.filter(g => `${g.term} ${g.definition} ${g.category}`.toLowerCase().includes(q));
   return `<div class="page-head"><div><p class="eyebrow">Vyhledávání</p><h1>Výsledky pro „${escapeHtml(query)}“</h1><p class="lede">${pResults.length} produktových modulů a ${gResults.length} pojmů.</p></div></div>
     ${pResults.length?`<h2>Produkty</h2><div class="product-grid" style="margin-bottom:30px">${pResults.map(productCard).join("")}</div>`:""}
     ${gResults.length?`<h2>Pojmy</h2><div class="term-list">${gResults.slice(0,20).map(g=>`<article class="term-card" data-term="${g.id}"><h3>${g.term}</h3><p>${g.definition}</p></article>`).join("")}</div>`:""}
@@ -868,7 +957,8 @@ function openTerm(id) {
   const t = glossary.find(g => g.id === id);
   if (!t) return;
   const related = products.filter(p => p.terms.includes(id));
-  document.querySelector("#termDialogContent").innerHTML = `<p class="eyebrow">Pojem</p><h2>${t.term}</h2><p>${t.definition}</p>${related.length?`<h3>Související moduly</h3><div class="term-links">${related.map(p=>`<button class="term-link" data-product="${p.id}">${p.name}</button>`).join("")}</div>`:""}`;
+  const trainingUses = trainingUsesForTerm(id);
+  document.querySelector("#termDialogContent").innerHTML = `<p class="eyebrow">${t.category}</p><h2>${t.term}</h2><p>${t.definition}</p>${trainingUses.length?`<h3>Použito ve školení</h3><div class="term-links">${trainingUses.map(block=>`<button class="term-link" data-training="${block.id}">Blok ${block.order}: ${block.title}</button>`).join("")}</div>`:""}${related.length?`<h3>Související produktové moduly</h3><div class="term-links">${related.map(p=>`<button class="term-link" data-product="${p.id}">${p.name}</button>`).join("")}</div>`:""}`;
   termDialog.showModal();
 }
 
@@ -879,7 +969,7 @@ function toast(message) {
 
 document.addEventListener("click", e => {
   const route = e.target.closest("[data-route]"); if (route) return routeTo(route.dataset.route);
-  const training = e.target.closest("[data-training]"); if (training) return routeTo(`training/${training.dataset.training}`);
+  const training = e.target.closest("[data-training]"); if (training) { if (termDialog.open) termDialog.close(); return routeTo(`training/${training.dataset.training}`); }
   const courseTest = e.target.closest("[data-course-test]"); if (courseTest) return startCourseTest(courseTest.dataset.courseTest);
   const courseAnswer = e.target.closest("[data-course-answer]"); if (courseAnswer && state.courseQuiz && !state.courseQuiz.answered) { state.courseQuiz.selected=Number(courseAnswer.dataset.courseAnswer); state.courseQuiz.answered=true; if(state.courseQuiz.selected===state.courseQuiz.questions[state.courseQuiz.index].correct)state.courseQuiz.score++; return render(); }
   if (e.target.closest("#nextCourseQuestion")) { state.courseQuiz.index++; state.courseQuiz.selected=null; state.courseQuiz.answered=false; return render(); }
