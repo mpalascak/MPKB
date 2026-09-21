@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="cs">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Osobní studijní databáze enterprise infrastruktury pro roli SDM a PM." />
+    <meta name="theme-color" content="#087fc5" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <link rel="manifest" href="./manifest.webmanifest" />
+    <title>InfraBase — SDM Knowledge Base</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23071426'/%3E%3Cpath d='M16 18h32v9H16zm0 14h32v9H16zm0 14h20v5H16z' fill='%2347b6ff'/%3E%3Ccircle cx='43' cy='48.5' r='5.5' fill='%23f5b942'/%3E%3C/svg%3E" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Přeskočit na obsah</a>
+    <div class="app-shell">
+      <aside class="sidebar" aria-label="Hlavní navigace">
+        <div class="brand">
+          <div class="brand-mark" aria-hidden="true"><span></span><span></span><span></span></div>
+          <div><strong>InfraBase</strong><small>SDM Knowledge Base</small></div>
+        </div>
+        <nav id="mainNav" class="main-nav"></nav>
+        <div class="sidebar-footer">
+          <div class="level-label"><span>Studijní úroveň</span><strong id="levelName">Start</strong></div>
+          <div class="progress-track" aria-label="Celkový postup"><span id="sidebarProgress"></span></div>
+          <small id="sidebarProgressText">0 % zvládnuto</small>
+        </div>
+      </aside>
+
+      <div class="workspace">
+        <header class="topbar">
+          <button class="menu-button" id="menuButton" aria-label="Otevřít navigaci" aria-expanded="false">☰</button>
+          <label class="search-box">
+            <span aria-hidden="true">⌕</span>
+            <input id="globalSearch" type="search" placeholder="Hledat produkt, pojem nebo otázku…" autocomplete="off" />
+            <kbd>/</kbd>
+          </label>
+          <button class="icon-button" id="randomTermButton" title="Náhodný pojem" aria-label="Otevřít náhodný pojem">?</button>
+        </header>
+
+        <main id="main" tabindex="-1">
+          <div id="view" aria-live="polite"></div>
+        </main>
+      </div>
+    </div>
+
+    <dialog id="termDialog" class="term-dialog">
+      <form method="dialog"><button class="dialog-close" aria-label="Zavřít">×</button></form>
+      <div id="termDialogContent"></div>
+    </dialog>
+
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+    <script src="./app.js"></script>
+    <script>
+      if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
+        window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js"));
+      }
+    </script>
+  </body>
+</html>

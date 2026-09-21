@@ -1,0 +1,23 @@
+# dependencies
+node_modules/
+
+# Next.js build output
+.next/
+out/
+
+# local hosting metadata
+.openai/
+
+# local environment and secrets
+.env
+.env.*
+!.env.example
+
+# logs and editor files
+*.log
+.DS_Store
+.idea/
+.vscode/
+
+# TypeScript cache
+*.tsbuildinfo
