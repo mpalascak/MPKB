@@ -870,6 +870,8 @@ const state = {
   notes: JSON.parse(localStorage.getItem("infrabase-notes") || "{}")
 };
 
+if (!state.courseProgress["general-quiz"] && localStorage.getItem("infrabase-best")) state.courseProgress["general-quiz"] = {best:Number(localStorage.getItem("infrabase-best")),passed:false};
+
 const nav = [
   ["PŘEHLED", null], ["dashboard", "⌂", "Můj přehled"], ["training", "▶", "Školení", trainingBlocks.length + products.length], ["path", "↗", "Studijní cesta"],
   ["ZNALOSTI", null], ["products", "▦", "Produkty", products.length], ["architecture", "◇", "Architektury", 5], ["glossary", "Aa", "Slovník", glossary.length], ["companies", "⌘", "Portfolio firem"],
@@ -937,7 +939,7 @@ function dashboardView() {
     <div class="metric"><span>Produktové moduly</span><strong>${products.length}</strong><small>Dell, VMware a průřezová témata</small></div>
     <div class="metric"><span>Pojmy ve slovníku</span><strong>${glossary.length}</strong><small>Srozumitelná vysvětlení</small></div>
     <div class="metric"><span>Zvládnuté moduly</span><strong>${getMasteredCount()} / ${products.length}</strong><small>${levelName(percent)}</small></div>
-    <div class="metric"><span>Nejlepší test</span><strong>${localStorage.getItem("infrabase-best") || "—"}${localStorage.getItem("infrabase-best") ? " %" : ""}</strong><small>${quizQuestions.length} otázek v databázi</small></div>
+    <div class="metric"><span>Nejlepší test</span><strong>${state.courseProgress["general-quiz"]?.best ?? "—"}${state.courseProgress["general-quiz"] ? " %" : ""}</strong><small>${quizQuestions.length} otázek v databázi</small></div>
   </section>
   <div class="dashboard-grid"><div class="stack">
     <section class="panel"><div class="panel-head"><div><p class="eyebrow">Doporučené pořadí</p><h2>Od infrastruktury ke službě</h2></div><button class="action-link" data-route="path">Celá cesta →</button></div>
@@ -1198,7 +1200,7 @@ function companiesView() {
 }
 
 function quizIntro() {
-  const best = localStorage.getItem("infrabase-best");
+  const best = state.courseProgress["general-quiz"]?.best;
   return `<div class="page-head"><div><p class="eyebrow">Aktivní opakování</p><h1>Test znalostí</h1><p class="lede">Otázky ověřují vztahy a praktické rozhodování, nejen názvy. Po každé odpovědi dostaneš vysvětlení.</p></div>${best ? `<span class="status-pill">Nejlepší výsledek ${best} %</span>` : ""}</div>
   <div class="quiz-shell"><section class="quiz-card"><h2>Vyber délku testu</h2><p class="lede">Krátký test je vhodný pro denní opakování. Plný test projde všechny oblasti.</p><div class="filter-row" style="margin-top:24px"><button class="primary-button" data-start-quiz="8">8 náhodných otázek</button><button class="secondary-button" data-start-quiz="${quizQuestions.length}">Plný test (${quizQuestions.length})</button></div></section></div>`;
 }
@@ -1227,8 +1229,9 @@ function quizRunView() {
 function quizResult() {
   const qz = state.quiz;
   const pct = Math.round((qz.score/qz.questions.length)*100);
-  const best = Math.max(Number(localStorage.getItem("infrabase-best")||0),pct);
-  localStorage.setItem("infrabase-best", best);
+  const best = Math.max(Number(state.courseProgress["general-quiz"]?.best||0),pct);
+  state.courseProgress["general-quiz"] = {best,passed:best>=80};
+  saveState();
   const message = pct >= 85 ? "Výborně — souvislosti už držíš pohromadě." : pct >= 65 ? "Dobrý základ. Vrať se k chybným oblastem." : "Začni prioritními moduly a test zopakuj po kratších blocích.";
   return `<div class="quiz-shell"><section class="quiz-card"><p class="eyebrow">Výsledek testu</p><div class="result-score">${pct} %</div><h2>${message}</h2><p class="lede">Správně ${qz.score} z ${qz.questions.length}. Nejlepší uložený výsledek: ${best} %.</p><div class="filter-row" style="margin-top:25px"><button class="primary-button" data-start-quiz="8">Nový krátký test</button><button class="secondary-button" data-route="products">Studovat produkty</button></div></section></div>`;
 }

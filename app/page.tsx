@@ -28,6 +28,6 @@ export default function HomePage() {
     <dialog id="termDialog" className="term-dialog"><form method="dialog"><button className="dialog-close" aria-label="Zavřít">×</button></form><div id="termDialogContent" /></dialog>
     <div id="toast" className="toast" role="status" aria-live="polite" />
     <Script src="/legacy-app" strategy="afterInteractive" />
-    <Script id="register-infrabase-sw" strategy="afterInteractive">{`if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('/sw'));`}</Script>
+    <Script id="register-infrabase-sw" strategy="afterInteractive">{`if ('serviceWorker' in navigator) navigator.serviceWorker.register('/sw').then(r => r.update()).catch(() => {});`}</Script>
   </>;
 }
