@@ -4,7 +4,7 @@ Aplikace používá Neon PostgreSQL a Neon Auth (Google). Připojení samotné d
 
 ## Nastavení v Neonu a Vercelu
 
-1. V projektu a správné databázové větvi aktivovat Neon Auth, poskytovatele Google a povolit stabilní doménu aplikace v Trusted domains. Pro lokální vývoj přidat odpovídající localhost origin. Používat stále stejnou produkční URL.
+1. V projektu a správné databázové větvi aktivovat Neon Auth, poskytovatele Google, Email OTP a odesílání e-mailů. Povolit stabilní doménu aplikace v Trusted domains. Pro lokální vývoj přidat odpovídající localhost origin. Používat stále stejnou produkční URL.
 2. Ve Vercelu pro produkci nastavit `DATABASE_URL` z integrace, `NEON_AUTH_BASE_URL` z Neon Auth a `NEON_AUTH_COOKIE_SECRET` (náhodný tajný řetězec alespoň 32 znaků). Secret generovat bezpečně, neposílat v chatu a neukládat do repozitáře. Po změně proměnných znovu nasadit aplikaci.
 3. Preview prostředí musí mít vlastní odpovídající větev a konfiguraci Auth. Nespojovat testovací identity s produkční databází.
 4. První přihlášené načtení vytvoří výhradně novou tabulku `mpkb_study_progress`. Databázová role musí mít oprávnění CREATE TABLE; existující tabulky se nemění. Pro striktnější provoz lze tabulku předem vytvořit migrací a následně odstranit runtime CREATE.
@@ -24,3 +24,5 @@ Původní anonymní data zůstávají dostupná pro import. Nejde o certifikačn
 - Po aktivaci infrastruktury: přihlášení, import z PC, načtení na telefonu, změna na telefonu, návrat do PC, souběžný zápis a sloučení, odhlášení a jiný účet, přerušení a obnova spojení.
 
 Dokumentace: https://github.com/neondatabase/neon-js/blob/main/packages/auth/NEXT-JS.md
+
+Známé omezení: Managed Neon Auth může na veřejném Google callbacku přechodně vrátit `STATE_INTEGRITY_CHECK_FAILED`; požadavek se v takovém případě k aplikaci vůbec nevrátí. Sledováno upstreamem v https://github.com/neondatabase/neon-js/issues/194. MPKB proto nabízí přihlášení jednorázovým e-mailovým kódem, které Google OAuth callback nepoužívá.
