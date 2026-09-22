@@ -14,7 +14,7 @@ export default async function HomePage() {
       <aside className="sidebar" aria-label="Hlavní navigace">
         <div className="brand">
           <div className="brand-mark" aria-hidden="true"><span /><span /><span /></div>
-          <div><strong>InfraBase</strong><small>SDM Knowledge Base</small></div>
+          <div><strong>MP Knowledge Base</strong><small>SDM</small></div>
         </div>
         <nav id="mainNav" className="main-nav" />
         <div className="sidebar-footer">

@@ -2,8 +2,8 @@ import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "InfraBase — SDM Knowledge Base",
-    short_name: "InfraBase",
+    name: "MP Knowledge Base",
+    short_name: "MP KB",
     description: "Osobní studijní databáze enterprise infrastruktury pro SDM a PM.",
     lang: "cs",
     start_url: "/#dashboard",

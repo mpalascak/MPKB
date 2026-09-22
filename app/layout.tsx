@@ -3,10 +3,10 @@ import type { ReactNode } from "react";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "InfraBase — SDM Knowledge Base",
+  title: "MP Knowledge Base",
   description: "Osobní studijní databáze enterprise infrastruktury pro roli SDM a PM.",
-  applicationName: "InfraBase",
-  appleWebApp: { capable: true, title: "InfraBase", statusBarStyle: "default" },
+  applicationName: "MP Knowledge Base",
+  appleWebApp: { capable: true, title: "MP KB", statusBarStyle: "default" },
 };
 
 export const viewport: Viewport = {

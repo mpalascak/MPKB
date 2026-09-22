@@ -1,9 +1,16 @@
 'use client';
 
 import {createAuthClient} from '@neondatabase/auth/next';
-import {FormEvent, useState} from 'react';
+import {FormEvent, useEffect, useState} from 'react';
 
 const auth = createAuthClient();
+
+function describeError(error:unknown):string {
+  if(!error) return '';
+  const e=error as {code?:string;message?:string;statusText?:string;status?:number};
+  const parts=[e.code,e.message||e.statusText].filter(Boolean);
+  return parts.length?parts.join(': '):'neznámá chyba';
+}
 
 export default function Login({signedIn}:{signedIn:boolean}) {
   const [message,setMessage]=useState('');
@@ -12,19 +19,37 @@ export default function Login({signedIn}:{signedIn:boolean}) {
   const [otp,setOtp]=useState('');
   const [otpSent,setOtpSent]=useState(false);
 
+  // Chyba z Google OAuth callbacku se vrací až po redirectu z Googlu jako parametr v URL.
+  useEffect(()=>{
+    const params=new URLSearchParams(window.location.search);
+    const err=params.get('error')||params.get('error_description')||params.get('error_code');
+    if(err){
+      setMessage('Google se vrátil s chybou: '+err+'. Pokud jde o kontrolu state (STATE_INTEGRITY_CHECK_FAILED), použij níže přihlášení jednorázovým kódem.');
+      const url=new URL(window.location.href);
+      ['error','error_description','error_code'].forEach(k=>url.searchParams.delete(k));
+      window.history.replaceState({},'',url.toString());
+    }
+  },[]);
+
   async function googleOrSignOut() {
     setBusy(true);setMessage('');
     try {
       if(signedIn) {
         const result=await auth.signOut();
-        if(result.error)throw new Error();
+        if(result.error){setMessage('Odhlášení se nepodařilo: '+describeError(result.error));setBusy(false);return;}
         window.location.assign('/');
       } else {
-        const result=await auth.signIn.social({provider:'google',callbackURL:window.location.origin+'/'});
-        if(result.error)throw new Error();
+        const origin=window.location.origin;
+        const result=await auth.signIn.social({provider:'google',callbackURL:origin+'/',errorCallbackURL:origin+'/account'});
+        if(result.error){setMessage('Přihlášení přes Google se nepodařilo: '+describeError(result.error)+'. Na mobilu použij jednorázový kód na e-mail.');setBusy(false);return;}
+        // Někteří klienti přesměrují sami, jiní jen vrátí URL — přesměrujeme explicitně.
+        const url=(result as {data?:{url?:string}}).data?.url;
+        if(url){window.location.assign(url);return;}
+        setMessage('Google nevrátil adresu k přesměrování — v Neon Auth zřejmě není zapnutý poskytovatel Google. Zatím použij jednorázový kód na e-mail.');
+        setBusy(false)
       }
-    } catch {
-      setMessage('Přihlášení přes Google se nepodařilo. Na mobilu použij jednorázový kód na e-mail.');
+    } catch(e) {
+      setMessage('Přihlášení přes Google se nepodařilo: '+describeError(e)+'. Na mobilu použij jednorázový kód na e-mail.');
       setBusy(false);
     }
   }
@@ -33,11 +58,11 @@ export default function Login({signedIn}:{signedIn:boolean}) {
     event.preventDefault();setBusy(true);setMessage('');
     try {
       const result=await auth.emailOtp.sendVerificationOtp({email,type:'sign-in'});
-      if(result.error)throw new Error();
+      if(result.error)throw new Error(describeError(result.error));
       setOtpSent(true);
       setMessage('Jednorázový kód jsme poslali na e-mail.');
-    } catch {
-      setMessage('Kód se nepodařilo odeslat. V Neon Auth musí být zapnuté Email OTP a odesílání e-mailů.');
+    } catch(e) {
+      setMessage('Kód se nepodařilo odeslat ('+describeError(e)+'). V Neon Auth musí být zapnuté Email OTP a odesílání e-mailů.');
     } finally { setBusy(false); }
   }
 
@@ -45,7 +70,7 @@ export default function Login({signedIn}:{signedIn:boolean}) {
     event.preventDefault();setBusy(true);setMessage('');
     try {
       const result=await auth.signIn.emailOtp({email,otp});
-      if(result.error)throw new Error();
+      if(result.error)throw new Error(describeError(result.error));
       window.location.assign('/');
     } catch {
       setMessage('Kód není platný nebo už vypršel. Vyžádej si nový kód.');

@@ -1,6 +1,6 @@
-# InfraBase — osobní SDM knowledge base
+# MP Knowledge Base — osobní SDM knowledge base
 
-InfraBase je webová studijní aplikace v Next.js pro enterprise infrastrukturu, Dell Technologies a VMware/Broadcom. Neodesílá poznámky ani studijní postup na server; zatím je ukládá do úložiště konkrétního prohlížeče.
+MP Knowledge Base je webová studijní aplikace v Next.js pro enterprise infrastrukturu, Dell Technologies a VMware/Broadcom. Neodesílá poznámky ani studijní postup na server; zatím je ukládá do úložiště konkrétního prohlížeče.
 
 ## Spuštění na macOS
 
