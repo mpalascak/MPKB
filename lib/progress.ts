@@ -1,5 +1,5 @@
-export type StudyData = {progress: Record<string,boolean>; courseProgress: Record<string,{best:number;passed:boolean;completedAt?:string}>; productTrainingProgress: Record<string,{best:number;passed:boolean;completedAt?:string}>; notes: Record<string,string>};
-export const emptyProgress: StudyData = {progress:{},courseProgress:{},productTrainingProgress:{},notes:{}};
+export type StudyData = {progress: Record<string,boolean>; courseProgress: Record<string,{best:number;passed:boolean;completedAt?:string}>; productTrainingProgress: Record<string,{best:number;passed:boolean;completedAt?:string}>; chapterProgress: Record<string,{best:number;passed:boolean;completedAt?:string}>; notes: Record<string,string>};
+export const emptyProgress: StudyData = {progress:{},courseProgress:{},productTrainingProgress:{},chapterProgress:{},notes:{}};
 export function validProgress(value: unknown): value is StudyData {
   if (!value || typeof value !== 'object' || Array.isArray(value)) return false;
   const data=value as Record<string,unknown>;

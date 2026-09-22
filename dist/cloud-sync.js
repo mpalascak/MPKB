@@ -1,6 +1,6 @@
 // Appended after app.js: shares its state, rendering and persistence functions.
 (() => {
-  const keys=['progress','courseProgress','productTrainingProgress','notes'];
+  const keys=['progress','courseProgress','productTrainingProgress','chapterProgress','notes'];
   const originalSave=saveState;
   const bar=document.createElement('section');bar.className='cloud-status';bar.setAttribute('aria-live','polite');
   document.querySelector('.workspace').prepend(bar);
@@ -13,8 +13,9 @@
   const status=message=>{bar.innerHTML=`<span>${escapeHtml(message)}</span> <a href="/account">${user?'Účet':'Přihlášení'}</a>${user?' <button type="button" data-import-local>Importovat staré výsledky</button>':''}${conflict?' <button type="button" data-resolve-cloud>Sloučit změny z druhého zařízení</button>':''}`;};
   function merge(remote,local){
     const result=structuredClone(remote);
+    keys.forEach(k=>result[k]||={});
     for(const [id,yes]of Object.entries(local.progress||{}))result.progress[id]=Boolean(result.progress[id]||yes);
-    for(const kind of ['courseProgress','productTrainingProgress'])for(const [id,score]of Object.entries(local[kind]||{})){
+    for(const kind of ['courseProgress','productTrainingProgress','chapterProgress'])for(const [id,score]of Object.entries(local[kind]||{})){
       const old=result[kind][id]||{best:0,passed:false};result[kind][id]={...old,...score,best:Math.max(old.best,score.best),passed:old.passed||score.passed};
     }
     for(const [id,note]of Object.entries(local.notes||{})){
@@ -43,7 +44,7 @@
     if(e.target.closest('[data-import-local]')){
       if(!confirm('Připojit výsledky a poznámky dříve uložené v tomto prohlížeči k právě přihlášenému účtu? Lepší výsledky se zachovají a rozdílné poznámky se spojí.'))return;
       try{
-        const local={progress:JSON.parse(localStorage.getItem('infrabase-progress')||'{}'),courseProgress:JSON.parse(localStorage.getItem('infrabase-course-progress')||'{}'),productTrainingProgress:JSON.parse(localStorage.getItem('infrabase-product-training')||'{}'),notes:JSON.parse(localStorage.getItem('infrabase-notes')||'{}')};
+        const local={progress:JSON.parse(localStorage.getItem('infrabase-progress')||'{}'),courseProgress:JSON.parse(localStorage.getItem('infrabase-course-progress')||'{}'),productTrainingProgress:JSON.parse(localStorage.getItem('infrabase-product-training')||'{}'),chapterProgress:JSON.parse(localStorage.getItem('infrabase-chapter-progress')||'{}'),notes:JSON.parse(localStorage.getItem('infrabase-notes')||'{}')};
         const oldBest=Number(localStorage.getItem("infrabase-best")||0);
         if(oldBest>0&&!local.courseProgress["general-quiz"])local.courseProgress["general-quiz"]={best:oldBest,passed:oldBest>=80};
         apply(merge(snapshot(),local));saveState();

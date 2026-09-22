@@ -899,9 +899,11 @@ const state = {
   quiz: null,
   courseQuiz: null,
   productQuiz: null,
+  chapterQuiz: null,
   progress: JSON.parse(localStorage.getItem("infrabase-progress") || "{}"),
   courseProgress: JSON.parse(localStorage.getItem("infrabase-course-progress") || "{}"),
   productTrainingProgress: JSON.parse(localStorage.getItem("infrabase-product-training") || "{}"),
+  chapterProgress: JSON.parse(localStorage.getItem("infrabase-chapter-progress") || "{}"),
   notes: JSON.parse(localStorage.getItem("infrabase-notes") || "{}")
 };
 
@@ -922,6 +924,7 @@ function saveState() {
   localStorage.setItem("infrabase-progress", JSON.stringify(state.progress));
   localStorage.setItem("infrabase-course-progress", JSON.stringify(state.courseProgress));
   localStorage.setItem("infrabase-product-training", JSON.stringify(state.productTrainingProgress));
+  localStorage.setItem("infrabase-chapter-progress", JSON.stringify(state.chapterProgress));
   localStorage.setItem("infrabase-notes", JSON.stringify(state.notes));
   updateProgressUI();
 }
@@ -1065,9 +1068,9 @@ function trainingOverview() {
   const passed = trainingBlocks.filter(b => state.courseProgress[b.id]?.passed).length;
   return `<div class="page-head"><div><p class="eyebrow">Řízený základní kurz</p><h1>Od úplných základů k technické debatě</h1><p class="lede">Studuj blok po bloku. Každý obsahuje rozsáhlý výklad, příklady a pojmy ve slovníku. Další blok se otevře po dosažení alespoň 80 % v závěrečném testu.</p></div><span class="status-pill">${passed}/${trainingBlocks.length} bloků dokončeno</span></div>
   <section class="course-rule"><div><strong>1. Studuj</strong><span>Projdi všechny kapitoly a otevři neznámé pojmy ve slovníku.</span></div><div><strong>2. Vysvětli</strong><span>Zkus každou kapitolu převyprávět vlastními slovy.</span></div><div><strong>3. Otestuj se</strong><span>Test má 8 otázek a hranici úspěchu 80 %.</span></div><div><strong>4. Pokračuj</strong><span>Úspěšný výsledek automaticky odemkne další blok.</span></div></section>
-  <div class="course-map">${trainingBlocks.map((block,index)=>{const unlocked=isTrainingUnlocked(index);const result=state.courseProgress[block.id];return `<article class="course-card ${unlocked?"":"locked"}"><div class="course-order">${String(block.order).padStart(2,"0")}</div><div><div class="course-meta"><span>${block.duration}</span><span>${block.chapters.length} kapitol</span>${result?`<span>Nejlépe ${result.best}%</span>`:""}</div><h2>${block.title}</h2><p class="course-subtitle">${block.subtitle}</p><p>${block.objective}</p>${unlocked?`<button class="${result?.passed?"secondary-button":"primary-button"}" data-training="${block.id}">${result?.passed?"Zopakovat blok":"Otevřít školení"}</button>`:`<div class="lock-message">🔒 Nejdříve dokonči předchozí blok</div>`}</div></article>`}).join("")}</div>
+  <div class="course-map">${trainingBlocks.map((block,index)=>{const unlocked=isTrainingUnlocked(index),done=completedChapterCount("course",block.id,block.chapters.length),pct=chapterPercent("course",block.id,block.chapters.length);return `<article class="course-card ${unlocked?"":"locked"}"><div class="course-order">${String(block.order).padStart(2,"0")}</div><div><div class="course-meta"><span>${block.duration}</span><span>${done}/${block.chapters.length} kapitol</span><span>${pct}%</span></div><h2>${block.title}</h2><p class="course-subtitle">${block.subtitle}</p><p>${block.objective}</p><div class="card-progress"><i style="width:${pct}%"></i></div>${unlocked?`<button class="${pct===100?"secondary-button":"primary-button"}" data-training="${block.id}">${pct===100?"Zopakovat blok":done?"Pokračovat ve školení":"Otevřít školení"}</button>`:`<div class="lock-message">🔒 Nejdříve dokonči předchozí blok</div>`}</div></article>`}).join("")}</div>
   <section class="product-training-head"><div><p class="eyebrow">Produktová akademie</p><h2>Školení ke každému produktu</h2><p>Produkty zůstávají v KB jako rychlá reference. Zde mají samostatnou výukovou cestu s architekturou, provozem, scénářem, oficiální dokumentací a testem.</p></div><span>${Object.values(state.productTrainingProgress).filter(x=>x.passed).length}/${products.length} dokončeno</span></section>
-  <div class="product-training-grid">${products.map(p=>{const extra=productTrainingExtras[p.id];const progress=state.productTrainingProgress[p.id];const prereq=trainingBlocks.find(b=>b.id===productTrainingPrerequisites[p.id]);return `<article class="product-training-card ${extra?"deep":""}"><div class="course-meta"><span>${p.category}</span><span>${extra?"Rozšířený kurz":"Základní kurz"}</span></div><h3>${p.name}</h3><p>${p.oneLiner}</p><small>Doporučený základ: ${prereq?.title||"Jak funguje IT služba"}</small>${progress?`<div class="training-score">Nejlépe ${progress.best}% ${progress.passed?"· splněno":""}</div>`:""}<button class="${progress?.passed?"secondary-button":"primary-button"} wide" data-product-training="${p.id}">${progress?.passed?"Zopakovat kurz":"Otevřít kurz"}</button></article>`}).join("")}</div>`;
+  <div class="product-training-grid">${products.map(p=>{const extra=productTrainingExtras[p.id],chapters=productTrainingChapters(p),done=completedChapterCount("product",p.id,chapters.length),pct=chapterPercent("product",p.id,chapters.length);const prereq=trainingBlocks.find(b=>b.id===productTrainingPrerequisites[p.id]);return `<article class="product-training-card ${extra?"deep":""}"><div class="course-meta"><span>${p.category}</span><span>${done}/${chapters.length} kapitol</span></div><h3>${p.name}</h3><p>${p.oneLiner}</p><small>Doporučený základ: ${prereq?.title||"Jak funguje IT služba"}</small><div class="training-score">${pct}% školení dokončeno</div><div class="card-progress"><i style="width:${pct}%"></i></div><button class="${pct===100?"secondary-button":"primary-button"} wide" data-product-training="${p.id}">${pct===100?"Zopakovat kurz":done?"Pokračovat v kurzu":"Otevřít kurz"}</button></article>`}).join("")}</div>`;
 }
 
 function annotateTrainingText(text) {
@@ -1084,16 +1087,57 @@ function annotateTrainingText(text) {
   });
 }
 
-function trainingBlockView(id) {
+function chapterProgressKey(kind,id,index) { return `${kind}-${id}-${index+1}`; }
+function chapterResult(kind,id,index) { return state.chapterProgress[chapterProgressKey(kind,id,index)]; }
+function chapterUnlocked(kind,id,index) { return index===0 || Boolean(chapterResult(kind,id,index-1)?.passed); }
+function completedChapterCount(kind,id,total) { return Array.from({length:total},(_,i)=>chapterResult(kind,id,i)?.passed).filter(Boolean).length; }
+function chapterPercent(kind,id,total) { return Math.round(completedChapterCount(kind,id,total)/total*100); }
+
+function uniqueQuestionAnswers(correct,candidates) {
+  const fallback=["Přeskočit ověření závislostí","Rozhodnout pouze podle názvu produktu","Považovat zelenou konzoli za důkaz celé služby","Ignorovat vlastníky a provozní kontext"];
+  const wrong=[...new Set([...candidates,...fallback].filter(x=>x&&x!==correct))].slice(0,3);
+  return shuffle([correct,...wrong]);
+}
+
+function chapterQuestions(title,text,points,example,allChapters,topic) {
+  points=points||[];
+  example=example||"Použij princip kapitoly v modelové zákaznické situaci a vysvětli své rozhodnutí.";
+  const otherTitles=allChapters.map(c=>c[0]).filter(x=>x!==title);
+  const otherPoints=allChapters.flatMap(c=>c[2]||[]).filter(x=>!points.includes(x));
+  const otherExamples=allChapters.map(c=>c[3]).filter(x=>x&&x!==example);
+  const lead=text.split("||")[0];
+  const specs=[
+    [`Které téma právě studovaná kapitola vysvětluje?`,title,otherTitles,`Kapitola je zaměřena na „${title}“.`],
+    [`Které tvrzení patří mezi hlavní závěry této kapitoly?`,points[0]||lead,otherPoints,points[0]||lead],
+    [`Co dalšího si máš z kapitoly zapamatovat?`,points[1]||points[0]||lead,otherPoints,points[1]||points[0]||lead],
+    [`Který praktický scénář nejlépe odpovídá této kapitole?`,example,otherExamples,`Modelový scénář kapitoly: ${example}`],
+    [`Která věta nejlépe vystihuje očekávaný výsledek studia této kapitoly?`,points.at(-1)||lead,otherPoints,points.at(-1)||lead]
+  ];
+  return specs.map(([question,correct,candidates,explanation],i)=>{const answers=uniqueQuestionAnswers(correct,candidates);return {id:`${topic}-${i+1}`,topic,question,answers,correct:answers.indexOf(correct),explanation};});
+}
+
+function trainingProgressPanel(kind,id,chapters,activeIndex) {
+  const done=completedChapterCount(kind,id,chapters.length), percent=chapterPercent(kind,id,chapters.length);
+  return `<section class="chapter-progress-card"><div class="chapter-progress-head"><div><p class="eyebrow">Průběh školení</p><strong>${done} z ${chapters.length} kapitol dokončeno</strong></div><span>${percent} %</span></div><div class="chapter-progress-track" aria-label="Dokončeno ${percent} procent"><i style="width:${percent}%"></i></div><nav class="chapter-stepper" aria-label="Kapitoly školení">${chapters.map((chapter,i)=>{const result=chapterResult(kind,id,i),unlocked=chapterUnlocked(kind,id,i),active=i===activeIndex;return `<button class="${result?.passed?"done":""} ${active?"active":""} ${unlocked?"":"locked"}" ${unlocked?(kind==="course"?`data-course-chapter="${id}"`:`data-product-chapter="${id}"`):"disabled"} data-chapter="${i}" title="${escapeHtml(chapter[0])}"><span>${result?.passed?"✓":unlocked?String(i+1):"🔒"}</span><small>${chapter[0].replace(/^\d+\.\s*/,"")}</small></button>`}).join("")}</nav></section>`;
+}
+
+function trainingBlockView(id, requestedChapter=null) {
   const index = trainingBlocks.findIndex(b=>b.id===id);
   const block = trainingBlocks[index];
   if (!block || !isTrainingUnlocked(index)) return trainingOverview();
-  const result = state.courseProgress[id];
+  const total=block.chapters.length;
+  const resume=Math.min(completedChapterCount("course",id,total),total-1);
+  const wanted=requestedChapter===null||requestedChapter===undefined?resume:Math.max(0,Math.min(Number(requestedChapter)||0,total-1));
+  const chapterIndex=chapterUnlocked("course",id,wanted)?wanted:Math.max(0,completedChapterCount("course",id,total));
+  const [title,text,points=[],example=""] = block.chapters[chapterIndex];
+  const result=chapterResult("course",id,chapterIndex);
+  const done=completedChapterCount("course",id,total);
   return `<button class="action-link" data-route="training">← Zpět na přehled školení</button>
   <header class="course-hero"><div><p class="eyebrow">Blok ${block.order} · ${block.duration}</p><h1>${block.title}</h1><p>${block.subtitle}</p></div><div class="course-goal"><span>Cíl bloku</span><p>${block.objective}</p></div></header>
-  <nav class="chapter-index" aria-label="Obsah bloku">${block.chapters.map((chapter,i)=>`<a href="#chapter-${block.id}-${i+1}"><span>${String(i+1).padStart(2,"0")}</span>${chapter[0].replace(/^\d+\.\s*/,"")}</a>`).join("")}</nav>
-  <div class="training-content">${block.chapters.map(([title,text,points,example],i)=>`<section class="lesson-chapter" id="chapter-${block.id}-${i+1}"><div class="chapter-no">${String(i+1).padStart(2,"0")}</div><div><p class="eyebrow">Kapitola ${i+1} z ${block.chapters.length}</p><h2>${title}</h2><div class="lesson-text">${text.split("||").map(paragraph=>`<p>${annotateTrainingText(paragraph)}</p>`).join("")}</div><h3>Co si zapamatovat</h3><ul>${points.map(x=>`<li>${annotateTrainingText(x)}</li>`).join("")}</ul><div class="lesson-example"><span>PRAKTICKÝ PŘÍKLAD</span><p>${annotateTrainingText(example)}</p></div></div></section>`).join("")}</div>
-  <section class="course-test-cta"><div><p class="eyebrow">Závěrečné ověření</p><h2>Otestuj pochopení bloku</h2><p>Test obsahuje 8 otázek. K odemčení dalšího bloku potřebuješ alespoň 80 %, tedy minimálně 7 správných odpovědí.</p>${result?`<p><strong>Nejlepší výsledek: ${result.best} %</strong>${result.passed?" · Blok je splněný.":" · Zkus test znovu."}</p>`:""}</div><button class="primary-button" data-course-test="${id}">${result?"Opakovat test":"Spustit test"}</button></section>`;
+  ${trainingProgressPanel("course",id,block.chapters,chapterIndex)}
+  <section class="lesson-chapter single-chapter"><div class="chapter-no">${String(chapterIndex+1).padStart(2,"0")}</div><div><p class="eyebrow">Kapitola ${chapterIndex+1} z ${total}</p><h2>${title}</h2><div class="lesson-text">${text.split("||").map(paragraph=>`<p>${annotateTrainingText(paragraph)}</p>`).join("")}</div><h3>Co si zapamatovat</h3><ul>${points.map(x=>`<li>${annotateTrainingText(x)}</li>`).join("")}</ul><div class="lesson-example"><span>PRAKTICKÝ PŘÍKLAD</span><p>${annotateTrainingText(example)}</p></div></div></section>
+  <section class="course-test-cta"><div><p class="eyebrow">Ověření kapitoly ${chapterIndex+1}</p><h2>${result?.passed?"Kapitola je dokončená":"Odemkni další kapitolu"}</h2><p>Krátký test má 5 otázek. Pro pokračování potřebuješ alespoň 4 správné odpovědi.</p>${result?`<p><strong>Nejlepší výsledek: ${result.best} %</strong></p>`:""}</div><div class="chapter-actions">${chapterIndex>0?`<button class="secondary-button" data-course-chapter="${id}" data-chapter="${chapterIndex-1}">Předchozí kapitola</button>`:""}<button class="primary-button" data-chapter-test="course" data-training-id="${id}" data-chapter="${chapterIndex}">${result?"Opakovat test":"Spustit test kapitoly"}</button>${result?.passed&&chapterIndex<total-1?`<button class="primary-button" data-course-chapter="${id}" data-chapter="${chapterIndex+1}">Další kapitola</button>`:""}</div></section>
+  <p class="course-completion-note">Dokončeno ${done} z ${total} kapitol · ${chapterPercent("course",id,total)} % školení.</p>`;
 }
 
 function startCourseTest(id) {
@@ -1170,19 +1214,62 @@ function powerVaultDiagram(chapter) {
   return result;
 }
 
-function productTrainingView(id) {
+function productTrainingView(id, requestedChapter=null) {
   const product = products.find(p=>p.id===id);
   if (!product) return notFound();
   const extra = productTrainingExtras[id];
   const chapters = productTrainingChapters(product);
-  const result = state.productTrainingProgress[id];
+  const total=chapters.length;
+  const resume=Math.min(completedChapterCount("product",id,total),total-1);
+  const wanted=requestedChapter===null||requestedChapter===undefined?resume:Math.max(0,Math.min(Number(requestedChapter)||0,total-1));
+  const chapterIndex=chapterUnlocked("product",id,wanted)?wanted:Math.max(0,completedChapterCount("product",id,total));
+  const [title,text,points=[],example=product.scenario]=chapters[chapterIndex];
+  const result=chapterResult("product",id,chapterIndex);
+  const done=completedChapterCount("product",id,total);
   const prereq = trainingBlocks.find(b=>b.id===productTrainingPrerequisites[id]);
   const sources = extra?.sources || [[`Oficiální zdroj: ${product.name}`,product.source]];
   return `<button class="action-link" data-route="training">← Zpět na všechna školení</button><header class="course-hero product-course-hero"><div><p class="eyebrow">Produktové školení · ${extra?.estimated||"Úvodní produktový blok"}</p><h1>${product.name}</h1><p>${product.oneLiner}</p></div><div class="course-goal"><span>Doporučený základ</span><p>${prereq?.title||"Jak funguje IT služba"}</p><button class="secondary-button" data-training="${prereq?.id||"foundations"}">Otevřít základní blok</button></div></header>
-  <nav class="chapter-index">${chapters.map((chapter,i)=>`<a href="#product-chapter-${id}-${i+1}"><span>${String(i+1).padStart(2,"0")}</span>${chapter[0].replace(/^\d+\.\s*/,"")}</a>`).join("")}</nav>
-  <div class="training-content">${chapters.map(([title,text,points=[],example=product.scenario],i)=>`<section class="lesson-chapter" id="product-chapter-${id}-${i+1}"><div class="chapter-no">${String(i+1).padStart(2,"0")}</div><div><p class="eyebrow">${product.name} · kapitola ${i+1}</p><h2>${title}</h2><div class="lesson-text">${text.split("||").map(paragraph=>`<p>${annotateTrainingText(paragraph)}</p>`).join("")}</div>${id==="powervault"?powerVaultDiagram(i):""}${points.length?`<h3>Co si zapamatovat</h3><ul>${points.map(x=>`<li>${annotateTrainingText(x)}</li>`).join("")}</ul>`:""}<div class="lesson-example"><span>MODELOVÉ CVIČENÍ · VLASTNÍ SCÉNÁŘ</span><p>${annotateTrainingText(example)}</p></div></div></section>`).join("")}</div>
+  ${trainingProgressPanel("product",id,chapters,chapterIndex)}
+  <section class="lesson-chapter single-chapter" id="product-chapter-${id}-${chapterIndex+1}"><div class="chapter-no">${String(chapterIndex+1).padStart(2,"0")}</div><div><p class="eyebrow">${product.name} · kapitola ${chapterIndex+1} z ${total}</p><h2>${title}</h2><div class="lesson-text">${text.split("||").map(paragraph=>`<p>${annotateTrainingText(paragraph)}</p>`).join("")}</div>${id==="powervault"?powerVaultDiagram(chapterIndex):""}${points.length?`<h3>Co si zapamatovat</h3><ul>${points.map(x=>`<li>${annotateTrainingText(x)}</li>`).join("")}</ul>`:""}<div class="lesson-example"><span>MODELOVÉ CVIČENÍ · VLASTNÍ SCÉNÁŘ</span><p>${annotateTrainingText(example)}</p></div></div></section>
   <section class="official-study"><div><p class="eyebrow">Primární studijní zdroje</p><h2>Pokračuj v oficiální dokumentaci</h2><p>Pro implementaci vždy ověř přesný model, firmware/software release, build a datum dokumentu.</p></div><div>${sources.map(([name,url])=>`<a href="${url}" target="_blank" rel="noreferrer">${name}<span>↗</span></a>`).join("")}</div></section>
-  <section class="course-test-cta"><div><p class="eyebrow">Produktový test</p><h2>Ověř si ${product.name}</h2><p>Pro splnění produktu potřebuješ alespoň 80 %. Výsledek se promítne do Studijní cesty.</p>${result?`<p><strong>Nejlepší výsledek: ${result.best}%</strong></p>`:""}</div><button class="primary-button" data-product-test="${id}">${result?"Opakovat test":"Spustit test"}</button></section>`;
+  <section class="course-test-cta"><div><p class="eyebrow">Ověření kapitoly ${chapterIndex+1}</p><h2>${result?.passed?"Kapitola je dokončená":`Odemkni další část školení ${product.name}`}</h2><p>Test má 5 otázek. Pro pokračování potřebuješ alespoň 4 správné odpovědi.</p>${result?`<p><strong>Nejlepší výsledek: ${result.best}%</strong></p>`:""}</div><div class="chapter-actions">${chapterIndex>0?`<button class="secondary-button" data-product-chapter="${id}" data-chapter="${chapterIndex-1}">Předchozí kapitola</button>`:""}<button class="primary-button" data-chapter-test="product" data-training-id="${id}" data-chapter="${chapterIndex}">${result?"Opakovat test":"Spustit test kapitoly"}</button>${result?.passed&&chapterIndex<total-1?`<button class="primary-button" data-product-chapter="${id}" data-chapter="${chapterIndex+1}">Další kapitola</button>`:""}</div></section>
+  <p class="course-completion-note">Dokončeno ${done} z ${total} kapitol · ${chapterPercent("product",id,total)} % školení.</p>`;
+}
+
+function startChapterTest(kind,id,index) {
+  const product=kind==="product"?products.find(p=>p.id===id):null;
+  const block=kind==="course"?trainingBlocks.find(b=>b.id===id):null;
+  const chapters=product?productTrainingChapters(product):block?.chapters;
+  const chapter=chapters?.[index];
+  if(!chapter || !chapterUnlocked(kind,id,index)) return;
+  const [title,text,points=[],example=""] = chapter;
+  state.chapterQuiz={kind,id,chapterIndex:index,questions:chapterQuestions(title,text,points,example,chapters,`${kind}-${id}-${index+1}`),index:0,score:0,selected:null,answered:false};
+  routeTo(`chapter-test/${kind}/${id}/${index}`);
+}
+
+function chapterTestView(kind,id,index) {
+  const qz=state.chapterQuiz;
+  const product=kind==="product"?products.find(p=>p.id===id):null;
+  const block=kind==="course"?trainingBlocks.find(b=>b.id===id):null;
+  const chapters=product?productTrainingChapters(product):block?.chapters;
+  const chapterIndex=Number(index);
+  if(!qz||!chapters||qz.kind!==kind||qz.id!==id||qz.chapterIndex!==chapterIndex)return kind==="product"?productTrainingView(id,chapterIndex):trainingBlockView(id,chapterIndex);
+  const title=chapters[chapterIndex][0], courseTitle=product?.name||block.title;
+  if(qz.index>=qz.questions.length){
+    const pct=Math.round(qz.score/qz.questions.length*100),passed=pct>=80,key=chapterProgressKey(kind,id,chapterIndex),old=state.chapterProgress[key]||{best:0,passed:false};
+    state.chapterProgress[key]={best:Math.max(old.best,pct),passed:old.passed||passed,completedAt:passed?new Date().toISOString():old.completedAt};
+    const allPassed=chapters.every((_,i)=>i===chapterIndex?(old.passed||passed):chapterResult(kind,id,i)?.passed);
+    if(allPassed){
+      const target=kind==="product"?state.productTrainingProgress:state.courseProgress;
+      const previous=target[id]||{best:0,passed:false};
+      target[id]={best:Math.max(previous.best,100),passed:true,completedAt:previous.completedAt||new Date().toISOString()};
+    }
+    saveState();
+    const hasNext=chapterIndex<chapters.length-1;
+    return `<div class="quiz-shell"><section class="quiz-card course-result ${passed?"passed":"failed"}"><p class="eyebrow">${courseTitle} · kapitola ${chapterIndex+1}</p><div class="result-score">${pct}%</div><h2>${passed?(hasNext?"Další kapitola je odemčená.":"Školení je dokončené."):"Kapitola zatím zůstává otevřená."}</h2><p class="lede">Správně ${qz.score} z 5. Pro postup potřebuješ 4 správné odpovědi.</p><div class="filter-row" style="margin-top:25px">${passed&&hasNext?`<button class="primary-button" ${kind==="product"?`data-product-chapter="${id}"`:`data-course-chapter="${id}"`} data-chapter="${chapterIndex+1}">Pokračovat další kapitolou</button>`:`<button class="primary-button" ${kind==="product"?`data-product-chapter="${id}"`:`data-course-chapter="${id}"`} data-chapter="${chapterIndex}">Vrátit se ke kapitole</button>`}<button class="secondary-button" data-chapter-test="${kind}" data-training-id="${id}" data-chapter="${chapterIndex}">Opakovat test</button><button class="secondary-button" data-route="training">Přehled školení</button></div></section></div>`;
+  }
+  const q=qz.questions[qz.index];
+  return `<div class="quiz-shell"><button class="action-link" ${kind==="product"?`data-product-chapter="${id}"`:`data-course-chapter="${id}"`} data-chapter="${chapterIndex}">← Zpět ke kapitole</button><div class="quiz-progress">${qz.questions.map((_,i)=>`<span class="${i<=qz.index?"active":""}"></span>`).join("")}</div><section class="quiz-card"><div class="quiz-meta"><span>${courseTitle} · ${title}</span><span>Otázka ${qz.index+1} z 5</span></div><h2>${q.question}</h2><div class="answers">${q.answers.map((a,i)=>{let cls=qz.selected===i?"selected":"";if(qz.answered){if(i===q.correct)cls="correct";else if(i===qz.selected)cls="wrong";}return `<button class="answer ${cls}" data-chapter-answer="${i}" ${qz.answered?"disabled":""}><span class="answer-letter">${String.fromCharCode(65+i)}</span><span>${a}</span></button>`}).join("")}</div>${qz.answered?`<div class="explanation"><strong>${qz.selected===q.correct?"Správně.":"Správná odpověď je "+String.fromCharCode(65+q.correct)+"."}</strong> ${q.explanation}</div>`:""}<div class="quiz-actions">${qz.answered?`<button class="primary-button" id="nextChapterQuestion">${qz.index===4?"Vyhodnotit kapitolu":"Další otázka"}</button>`:""}</div></section></div>`;
 }
 
 function startProductTest(id) {
@@ -1308,13 +1395,14 @@ function escapeHtml(value) { return String(value).replace(/[&<>'"]/g, c => ({"&"
 
 function render() {
   renderNav(); updateProgressUI();
-  const [base, arg] = state.route.split("/");
+  const [base, arg, arg2, arg3] = state.route.split("/");
   if (state.search) view.innerHTML = searchView(state.search);
+  else if (base === "chapter-test" && arg && arg2) view.innerHTML = chapterTestView(arg,arg2,arg3);
   else if (base === "dashboard") view.innerHTML = dashboardView();
   else if (base === "product-test" && arg) view.innerHTML = productTestView(arg);
-  else if (base === "product-training" && arg) view.innerHTML = productTrainingView(arg);
+  else if (base === "product-training" && arg) view.innerHTML = productTrainingView(arg,arg2);
   else if (base === "training-test" && arg) view.innerHTML = courseTestView(arg);
-  else if (base === "training" && arg) view.innerHTML = trainingBlockView(arg);
+  else if (base === "training" && arg) view.innerHTML = trainingBlockView(arg,arg2);
   else if (base === "training") view.innerHTML = trainingOverview();
   else if (base === "products" && arg) view.innerHTML = productDetail(arg);
   else if (base === "products") view.innerHTML = productsView();
@@ -1349,6 +1437,11 @@ document.addEventListener("click", e => {
   const route = e.target.closest("[data-route]"); if (route) return routeTo(route.dataset.route);
   const training = e.target.closest("[data-training]"); if (training) { if (termDialog.open) termDialog.close(); return routeTo(`training/${training.dataset.training}`); }
   const productTraining = e.target.closest("[data-product-training]"); if (productTraining) { if (termDialog.open) termDialog.close(); return routeTo(`product-training/${productTraining.dataset.productTraining}`); }
+  const courseChapter=e.target.closest("[data-course-chapter]"); if(courseChapter)return routeTo(`training/${courseChapter.dataset.courseChapter}/${courseChapter.dataset.chapter}`);
+  const productChapter=e.target.closest("[data-product-chapter]"); if(productChapter)return routeTo(`product-training/${productChapter.dataset.productChapter}/${productChapter.dataset.chapter}`);
+  const chapterTest=e.target.closest("[data-chapter-test]"); if(chapterTest)return startChapterTest(chapterTest.dataset.chapterTest,chapterTest.dataset.trainingId,Number(chapterTest.dataset.chapter));
+  const chapterAnswer=e.target.closest("[data-chapter-answer]"); if(chapterAnswer&&state.chapterQuiz&&!state.chapterQuiz.answered){state.chapterQuiz.selected=Number(chapterAnswer.dataset.chapterAnswer);state.chapterQuiz.answered=true;if(state.chapterQuiz.selected===state.chapterQuiz.questions[state.chapterQuiz.index].correct)state.chapterQuiz.score++;return render();}
+  if(e.target.closest("#nextChapterQuestion")){state.chapterQuiz.index++;state.chapterQuiz.selected=null;state.chapterQuiz.answered=false;return render();}
   const productTest = e.target.closest("[data-product-test]"); if (productTest) return startProductTest(productTest.dataset.productTest);
   const productAnswer = e.target.closest("[data-product-answer]"); if (productAnswer && state.productQuiz && !state.productQuiz.answered) { state.productQuiz.selected=Number(productAnswer.dataset.productAnswer); state.productQuiz.answered=true; if(state.productQuiz.selected===state.productQuiz.questions[state.productQuiz.index].correct)state.productQuiz.score++; return render(); }
   if (e.target.closest("#nextProductQuestion")) { state.productQuiz.index++; state.productQuiz.selected=null; state.productQuiz.answered=false; return render(); }

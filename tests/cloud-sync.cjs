@@ -1,6 +1,6 @@
 const vm=require('node:vm'),fs=require('node:fs'),assert=require('node:assert/strict');
 const source=fs.readFileSync('dist/cloud-sync.js','utf8');
-const empty=()=>({progress:{},courseProgress:{},productTrainingProgress:{},notes:{}});
+const empty=()=>({progress:{},courseProgress:{},productTrainingProgress:{},chapterProgress:{},notes:{}});
 const tick=()=>new Promise(resolve=>setImmediate(resolve));
 (async()=>{
  const store=new Map([['infrabase-notes','{"powervault":"old anonymous note"}']]),timers=[];let writes=[],events={},remote={configured:true,user:{id:'alice',email:'alice@example.com'},revision:2,data:empty()};
