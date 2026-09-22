@@ -644,8 +644,14 @@ const companies = [
 // Interní kompetenční profil. Jde o doslovně významově zachované sebehodnocení,
 // nikoli o produktovou specifikaci, personální závazek nebo potvrzení platnosti certifikace.
 const lukasExpertise = {
+  id: "lukas-travnicek",
   name: "Lukáš Trávníček",
+  role: "Enterprise infrastructure specialist",
   recordedAt: "22. 9. 2026",
+  certifications: [
+    { vendor:"Dell Technologies", name:"Produktové certifikace uvedené u jednotlivých kompetencí", status:"Konkrétní názvy a platnost k ověření" },
+    { vendor:"VMware by Broadcom", name:"VxRail / VMware certifikace", status:"Konkrétní názvy a platnost k ověření" }
+  ],
   dell: [
     { productId: "powervault", area: "Entry SAN", experience: "Malá praktická zkušenost", certification: "Neuvedena", engagement: "Orientace a práce podle dokumentace", level: "limited" },
     { productId: "powerstore", area: "Univerzální storage", experience: "Praktická zkušenost", certification: "Uvedena", engagement: "Aktivní kompetence", level: "experienced" },
@@ -670,6 +676,74 @@ const lukasExpertise = {
     { area: "Automation", depth: "Nejmenší znalost", context: "Pre-sales orientace, bez hands-on zkušenosti." },
     { area: "vDefend, data services a cyber recovery", depth: "Bez reálné zkušenosti", context: "Přehled add-onů bez praktické realizace." }
   ]
+};
+
+// Nové členy týmu přidáváme jako další záznamy se stejnou strukturou.
+const teamMembers = [lukasExpertise];
+
+const productCommercialDetails = {
+  powervault: {
+    verified:"22. 9. 2026", scope:"PowerVault ME5",
+    configurations:[
+      "ME5012: 2U se 12 pozicemi pro 3,5″ LFF disky.",
+      "ME5024: 2U se 24 pozicemi pro 2,5″ SFF disky.",
+      "ME5084: 5U s 84 pozicemi; podporuje LFF a SFF média v odpovídajících nosičích.",
+      "Hostitelské varianty zahrnují 32/16Gb FC, 25/10Gb iSCSI, 10/1GBase-T iSCSI nebo 12Gb SAS. Protokol konkrétního systému nelze později prostě převést na jiný.",
+      "ME5012/ME5024 podporují až devět ME412/ME424 nebo tři ME484; ME5084 až tři ME484. Kombinace 2U a 5U expanzí u ME5012/ME5024 podporována není."
+    ],
+    licensing:[
+      "PowerVault je pořizován jako konkrétní hardwarová konfigurace s PowerVault Managerem; přesný entitlement je nutné ověřit v nabídce a přímo na poli.",
+      "Rozhraní systému eviduje základní a licencovaný limit snapshotů, stav virtualizace a případnou expiraci oprávnění pro vzdálenou snapshotovou replikaci.",
+      "Z toho nelze odvodit univerzální tvrzení, že všechny datové služby jsou vždy zahrnuty. Rozhoduje model, release, license record a obchodní konfigurace."
+    ],
+    decisions:["Form factor a typ médií","FC vs. iSCSI vs. SAS","Single vs. dual controller","Typ a počet expanzních polic","Snapshoty, replikace a požadovaná podpora"],
+    sources:[
+      ["Dell ME5 Owner’s Manual — modely a porty","https://www.dell.com/support/manuals/en-us/powervault-me5084/me5_series_om/customer-replaceable-units-crus"],
+      ["Dell ME5 Support Matrix — protokoly a expanze","https://www.dell.com/support/manuals/en-us/powervault-me5024/me5_series_sm/supported-data-protocols"],
+      ["Dell ME5 CLI Reference — licence","https://www.dell.com/support/manuals/en-us/powervault-me5084/me5_series_cli/license"]
+    ]
+  },
+  powerstore: {
+    verified:"22. 9. 2026", scope:"PowerStore T/Q, PowerStoreOS 4.3+ pro popis Dynamic Licensing",
+    configurations:[
+      "PowerStore podporuje block, file a vVol workloady přímo na appliance.",
+      "Dell dokumentace rozlišuje Gen 1 (1000–9000), Gen 2 (500, 1200, 3200, 5200, 9200) a Gen 3 (1500, 5500, 9500). Přesný prodejní status modelu se ověřuje při návrhu.",
+      "T modely pokrývají sjednocené block/file/vVol použití; u vybraných řad dokumentace uvádí také Q varianty. Konkrétní workload a funkce se ověřují proti planning guide daného modelu.",
+      "Růst může probíhat přidáním médií uvnitř appliance a u podporované architektury také přidáním appliance do clusteru."
+    ],
+    licensing:[
+      "Licence PowerStore podle Dell Planning Guide zahrnuje přístup ke všem funkcím PowerStore.",
+      "PowerStoreOS 4.3+ používá Dynamic Licensing. Připojené systémy mohou licenci získat automaticky přes Dell connectivity; pro izolovaná prostředí existuje offline postup.",
+      "Při problému se získáním licence může systém pracovat ve 30denním trial režimu. Upgrade operačního prostředí nebo firmware nevyžaduje samostatnou PowerStore licenci.",
+      "Licenci platformy je stále nutné odlišit od support kontraktu, služeb implementace a licencí navazujících produktů."
+    ],
+    decisions:["Generace a výkonový model","T/Q varianta a požadované workloady","Block, file a vVol služby","Scale-up vs. cluster","Connected vs. offline licencování","Support a implementační služby"],
+    sources:[
+      ["Dell PowerStore Planning Guide — licensing","https://www.dell.com/support/manuals/en-us/powerstore-5000/pwrstr-plang/powerstore-licensing"],
+      ["Dell PowerStore Networking Guide — generace a modely","https://www.dell.com/support/manuals/en-us/powerstore-1200t/pwrstr-ntwkg-init-deploy/powerstore"]
+    ]
+  },
+  powermax: {
+    verified:"22. 9. 2026", scope:"PowerMaxOS 10, zejména PowerMax 2500/8500",
+    configurations:[
+      "PowerMax 2500 podporuje jeden až dva node pairs; PowerMax 8500 jeden až osm node pairs.",
+      "Základními stavebními bloky jsou node pair a Dynamic Media Enclosure (DME). U 8500 lze compute a média rozšiřovat v podporovaných poměrech až na osm node pairs a osm DME.",
+      "Aktuální platformy 2500/8500 jsou all-NVMe a podporují open systems, mainframe nebo smíšené prostředí podle modelu a konfigurace.",
+      "PowerMax File je samostatná konfigurační oblast s vlastními file nody a kapacitními požadavky."
+    ],
+    licensing:[
+      "Array-based licence obsahuje hodnotu licencované kapacity. U PowerMaxOS 10 Dell uvádí Inclusive Software a SRDF s kapacitním typem usable; některé ekosystémové produkty, například PowerPath, mohou být pořizovány samostatně.",
+      "Systémy vytvořené na PowerMaxOS 10 Q1 2026 nebo novějším mohou používat Dynamic Licensing nebo legacy eLicensing. Starší či pouze upgradované systémy pokračují s eLicensing.",
+      "eLicense definuje entitlement konkrétního pole včetně typu a licencované kapacity. Přidání funkce nebo navýšení licencované kapacity vyžaduje aktualizované oprávnění.",
+      "Obchodní návrh musí rozlišit usable kapacitu, fyzickou kapacitu, efektivní kapacitu a samostatně licencované hostitelské či ekosystémové komponenty."
+    ],
+    decisions:["2500 vs. 8500","Počet node pairs a DME","Open systems vs. mainframe","Block vs. PowerMax File","SRDF/Metro a DR topologie","Licencovaná usable kapacita","PowerPath a další samostatné komponenty"],
+    sources:[
+      ["Dell PowerMax Product Guide — modely a škálování","https://www.dell.com/support/manuals/en-us/powermax-os-10/esd_p_product_guide_pmax_10_2_magnolia/powermax-arrays"],
+      ["Dell PowerMax Product Guide — capacity licensing","https://www.dell.com/support/manuals/en-us/powermax-os-10/esd_p_product_guide_pmax_10_2_magnolia/capacity-measurements"],
+      ["Dell PowerMax Product Guide — Dynamic Licensing","https://www.dell.com/support/manuals/en-us/powermax-os-5978/esd_p_pmax_product_guide_redwood/dynamic-licensing"]
+    ]
+  }
 };
 
 function expertiseForProduct(productId) {
@@ -1041,6 +1115,7 @@ function productDetail(id) {
   localStorage.setItem("infrabase-last", p.id);
   const note = state.notes[p.id] || "";
   const expert = expertiseForProduct(p.id);
+  const commercial = productCommercialDetails[p.id];
   return `<button class="action-link" data-route="products">← Zpět na produkty</button>
   <div class="detail-layout"><article class="detail-main">
     <header class="detail-hero"><span class="tag">${p.category}</span><h1>${p.name}</h1><p class="one-liner">${p.oneLiner}</p>
@@ -1048,6 +1123,7 @@ function productDetail(id) {
     </header>
     ${p.sections.map(([title, text]) => `<section class="article-section"><h2>${title}</h2><p>${text}</p></section>`).join("")}
     <section class="article-section"><h2>Modelová situace</h2><div class="callout">${p.scenario}</div></section>
+    ${commercial?`<section class="product-commercial"><div class="commercial-head"><div><p class="eyebrow">Konfigurace a licencování</p><h2>Jak se ${p.name} technicky a obchodně skládá</h2></div><span>Ověřeno ${commercial.verified}</span></div><p class="scope-note"><strong>Rozsah:</strong> ${commercial.scope}. Údaje jsou studijní orientace; závazná je konkrétní nabídka, objednávka, entitlement a dokumentace přesného release.</p><div class="commercial-grid"><article><h3>Možnosti konfigurace</h3><ul>${commercial.configurations.map(x=>`<li>${x}</li>`).join("")}</ul></article><article><h3>Licenční a obchodní model</h3><ul>${commercial.licensing.map(x=>`<li>${x}</li>`).join("")}</ul></article></div><h3>Rozhodnutí, která musí projekt potvrdit</h3><div class="decision-tags">${commercial.decisions.map(x=>`<span>${x}</span>`).join("")}</div><div class="commercial-sources"><strong>Oficiální zdroje Dell</strong>${commercial.sources.map(([name,url])=>`<a href="${url}" target="_blank" rel="noreferrer">${name} ↗</a>`).join("")}</div></section>`:""}
   </article>
   <aside class="detail-aside">
     <div class="side-card"><h3>Produktové školení</h3><p>Projdi výklad, praktický scénář a závěrečný test.</p><button class="primary-button wide" data-product-training="${p.id}">Otevřít školení</button></div>
@@ -1324,8 +1400,9 @@ function companiesView() {
 }
 
 function expertiseView() {
-  return `<div class="page-head"><div><p class="eyebrow">Interní kompetenční mapa</p><h1>Expertní pokrytí — Lukáš Trávníček</h1><p class="lede">Pracovní pomůcka pro sestavení projektového týmu a přípravu eskalace. Zachycuje Lukášovo vlastní hodnocení k ${lukasExpertise.recordedAt}; není to produktová specifikace ani příslib kapacity konkrétního člověka.</p></div><span class="status-pill">Interní zdroj</span></div>
-  <section class="expertise-guide"><h2>Jak profil číst</h2><div class="expertise-axis"><div><strong>Praktická zkušenost</strong><p>Ukazuje kontakt s návrhem, implementací nebo provozem. Historická zkušenost vyžaduje ověření proti aktuální verzi.</p></div><div><strong>Certifikace</strong><p>Je vedena jen tak, jak ji Lukáš uvedl. Konkrétní název, úroveň, datum a platnost zde nejsou potvrzeny.</p></div><div><strong>Aktuální zaměření</strong><p>Říká, zda se oblasti věnuje nyní. Certifikace bez hands-on zkušenosti z člověka automaticky nedělá realizačního vlastníka.</p></div></div></section>
+  return `<div class="page-head"><div><p class="eyebrow">Interní kompetenční mapa týmu</p><h1>Expertní pokrytí produktů</h1><p class="lede">Databáze propojuje produkty, praktické dovednosti a certifikace jednotlivých členů týmu. Slouží pro sestavení projektu, plán rozvoje a přípravu eskalace; sama neurčuje dostupnost člověka ani smluvní odpovědnost.</p></div><span class="status-pill">${teamMembers.length} člen týmu</span></div>
+  <section class="team-roster"><div class="section-heading"><div><p class="eyebrow">Lidé a certifikace</p><h2>Týmový katalog</h2></div><p>Další profily lze přidávat bez změny produktové struktury.</p></div>${teamMembers.map(member=>`<article class="team-member-card"><div><span class="avatar-placeholder">${member.name.split(" ").map(x=>x[0]).join("")}</span><div><h3>${member.name}</h3><p>${member.role} · profil aktualizován ${member.recordedAt}</p></div></div><div class="certification-list">${member.certifications.map(cert=>`<div><strong>${cert.vendor}</strong><span>${cert.name}</span><small>${cert.status}</small></div>`).join("")}</div></article>`).join("")}</section>
+  <section class="expertise-guide"><h2>Jak profil číst</h2><div class="expertise-axis"><div><strong>Praktická zkušenost</strong><p>Ukazuje kontakt s návrhem, implementací nebo provozem. Historická zkušenost vyžaduje ověření proti aktuální verzi.</p></div><div><strong>Certifikace</strong><p>U každého člověka budeme evidovat přesný název, výrobce, identifikátor, datum získání a platnost. Neúplné údaje zůstávají označené jako nepotvrzené.</p></div><div><strong>Aktuální zaměření</strong><p>Říká, zda se člověk oblasti věnuje nyní. Certifikace bez hands-on zkušenosti z něj automaticky nedělá realizačního vlastníka.</p></div></div></section>
   <section class="expertise-section"><div class="section-heading"><div><p class="eyebrow">Dell Technologies</p><h2>Produkty, zkušenost a certifikace</h2></div><p>Kliknutím na produkt otevřeš jeho studijní detail.</p></div><div class="expertise-table-wrap"><table class="expertise-table"><thead><tr><th>Oblast a produkt</th><th>Praktická zkušenost</th><th>Certifikace</th><th>Aktuální kontext</th></tr></thead><tbody>${lukasExpertise.dell.map(item=>{const product=products.find(p=>p.id===item.productId);return `<tr data-product="${item.productId}" tabindex="0"><td><span>${item.area}</span><strong>${product?.name||item.productId}</strong></td><td><span class="expertise-level ${item.level}">${item.experience}</span></td><td>${item.certification}</td><td>${item.engagement}</td></tr>`}).join("")}</tbody></table></div></section>
   <section class="expertise-section"><div class="section-heading"><div><p class="eyebrow">VMware by Broadcom</p><h2>Technologická hloubka</h2></div><p>VCF je zastřešující platforma; hloubka se liší podle jednotlivých komponent.</p></div><div class="vmware-depth-grid">${lukasExpertise.vmware.map(item=>`<article><span>${item.depth}</span><h3>${item.area}</h3><p>${item.context}</p></article>`).join("")}</div></section>
   <section class="expertise-section delivery-use"><p class="eyebrow">Použití pro SDM / PM</p><h2>Jak podle profilu sestavit spolupráci</h2><div class="delivery-grid"><article><h3>Silný praktický sparring</h3><p>VxRail, VCF on VxRail a ObjectScale jsou podle profilu nejsilnější oblasti. I zde se před projektem potvrzuje konkrétní role, dostupnost a zkušenost s nasazovanou verzí.</p></article><article><h3>Zapojení s ověřením rozsahu</h3><p>PowerStore, PowerMax a PowerScale mají praktický základ, jehož aktuálnost a hloubku je vhodné ověřit proti požadovanému scénáři.</p></article><article><h3>Nutný další realizační specialista</h3><p>PowerFlex, Dell Private Cloud, PPDM, Cyber Recovery, Automation a další oblasti bez hands-on zkušenosti nelze personálně pokrýt pouze uvedenou certifikací nebo schopností dohledat dokumentaci.</p></article></div><div class="callout"><strong>Praktická interpretační zásada:</strong> schopnost rychle dohledat a pochopit dokumentaci je cenná pro přípravu debaty, triage a koordinaci. Nenahrazuje oprávnění k zásahu, zkušenost s produkční implementací ani formálně přiřazenou odpovědnost.</div></section>
@@ -1373,6 +1450,7 @@ function sourcesView() {
   const sources = [
     ["KSPCS", "https://kspcs.cz/"], ["DC-tec Partners", "https://www.dctec.cz/"],
     ...products.map(p=>[p.name,p.source]),
+    ...Object.values(productCommercialDetails).flatMap(detail=>detail.sources),
     ["Podrobný lokální referenční dokument", "./reference.md"]
   ];
   return `<div class="page-head"><div><p class="eyebrow">Evidence</p><h1>Zdroje a přesnost</h1><p class="lede">Produktové informace se mění. Pro implementaci vždy ověř přesný model, verzi, support matrix, licenční entitlement a datum dokumentace.</p></div></div>

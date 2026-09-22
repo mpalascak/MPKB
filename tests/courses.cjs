@@ -5,7 +5,7 @@ const listeners = {};
 const element = {innerHTML:'',textContent:'',value:'',style:{},dataset:{},classList:{add(){},remove(){},toggle(){},contains(){return false;}},addEventListener(){},setAttribute(){},focus(){},scrollIntoView(){},showModal(){},close(){}};
 const context = {console,location:{hash:''},localStorage:{getItem(){return null},setItem(){}},document:{querySelector(){return {...element}},querySelectorAll(){return []},getElementById(){return element},addEventListener(type,handler){listeners[type]=handler},activeElement:{tagName:'BODY'}},window:{addEventListener(){},scrollTo(){}},setTimeout,clearTimeout};
 vm.createContext(context);
-vm.runInContext(fs.readFileSync('dist/app.js','utf8')+'\n globalThis.api={products,glossary,trainingBlocks,powerVaultQuestions,productTrainingView,productTrainingQuestions,productTrainingChapters,annotateTrainingText,state,lukasExpertise,expertiseView,productDetail,chapterQuestions,chapterUnlocked,completedChapterCount,chapterProgressKey,trainingBlockView};',context);
+vm.runInContext(fs.readFileSync('dist/app.js','utf8')+'\n globalThis.api={products,glossary,trainingBlocks,powerVaultQuestions,productTrainingView,productTrainingQuestions,productTrainingChapters,annotateTrainingText,state,lukasExpertise,teamMembers,productCommercialDetails,expertiseView,productDetail,chapterQuestions,chapterUnlocked,completedChapterCount,chapterProgressKey,trainingBlockView};',context);
 const a=context.api;
 for(const p of a.products){
  const html=a.productTrainingView(p.id);
@@ -48,6 +48,11 @@ for(const item of a.lukasExpertise.dell) assert.ok(a.products.some(p=>p.id===ite
 assert.equal(a.lukasExpertise.vmware.length,8);
 assert.ok(a.expertiseView().includes('Interní kompetenční mapa'));
 assert.ok(a.productDetail('powervault').includes('Malá praktická zkušenost'));
+assert.equal(a.teamMembers.length,1);
+assert.equal(Object.keys(a.productCommercialDetails).join(','),'powervault,powerstore,powermax');
+for(const id of Object.keys(a.productCommercialDetails)){
+ const html=a.productDetail(id);assert.ok(html.includes('Možnosti konfigurace'),id);assert.ok(html.includes('Licenční a obchodní model'),id);assert.ok(a.productCommercialDetails[id].sources.every(([,url])=>url.startsWith('https://www.dell.com/')),id);
+}
 let prevented=false,scrolled=false;
 element.scrollIntoView=()=>scrolled=true;
 listeners.click({preventDefault(){prevented=true},target:{closest(selector){return selector==='.chapter-index a'?{getAttribute(){return '#product-chapter-powervault-2'}}:null}}});
