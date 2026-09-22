@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "test": "node tests/access.cjs && node tests/security-gate.cjs && node tests/progress-api.cjs && node tests/cloud-sync.cjs && node tests/courses.cjs"
   },
   "dependencies": {
     "@neondatabase/auth": "^0.5.0-beta",

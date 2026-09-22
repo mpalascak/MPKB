@@ -5,13 +5,19 @@ assert.ok(model.validProgress(model.emptyProgress));
 assert.ok(!model.validProgress({...model.emptyProgress,notes:{a:34}}));
 assert.ok(!model.validProgress({...model.emptyProgress,courseProgress:{a:{best:101,passed:true}}}));
 assert.ok(!model.validProgress({...model.emptyProgress,progress:{constructor:true,'__proto__':true}}));
-let signedIn=false,configured=true,queries=[],rows=[];
-const api=load('app/api/progress/route.ts',{'@neondatabase/serverless':{neon:()=>async(strings,...values)=>{queries.push({text:strings.join('?'),values});return strings[0].startsWith('CREATE')?[]:rows;}},'../../../lib/auth':{authConfigured:()=>configured,getAuth:()=>({getSession:async()=>({data:signedIn?{user:{id:'verified-user',email:'user@example.com'}}:null})})},'../../../lib/progress':model});
+let approved=false,configured=true,queries=[],rows=[];
+const sql=async(strings,...values)=>{queries.push({text:strings.join('?'),values});return rows;};
+const api=load('app/api/progress/route.ts',{
+ '../../../lib/auth':{authConfigured:()=>configured},
+ '../../../lib/access':{requireApproved:async()=>approved?{status:'approved',user:{id:'verified-user',email:'user@example.com'}}:null},
+ '../../../lib/db':{ensureProgressSchema:async()=>sql},
+ '../../../lib/progress':model
+});
 const request=(data,origin='https://kb.test')=>new Request('https://kb.test/api/progress',{method:'PUT',headers:{origin},body:JSON.stringify(data)});
 (async()=>{
- assert.equal((await api.PUT(request({data:model.emptyProgress,revision:0}))).status,401);
+ assert.equal((await api.PUT(request({data:model.emptyProgress,revision:0}))).status,403);
  assert.equal(queries.length,0);
- signedIn=true;
+ approved=true;
  assert.equal((await api.PUT(request({data:model.emptyProgress,revision:0},'https://evil.test'))).status,403);
  assert.equal((await api.PUT(request({data:{},revision:0}))).status,400);
  rows=[{revision:1}];assert.equal((await api.PUT(request({data:model.emptyProgress,revision:0,userId:'other-user'}))).status,200);

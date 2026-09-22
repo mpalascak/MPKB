@@ -1,6 +1,13 @@
 import Script from "next/script";
+import Link from "next/link";
+import {getAccessState} from "../lib/access";
+import {AccessShell} from "./_components/access-shell";
 
-export default function HomePage() {
+export const dynamic="force-dynamic";
+
+export default async function HomePage() {
+  const access=await getAccessState();
+  if(access.status!=="approved")return <AccessShell access={access}/>;
   return <>
     <a className="skip-link" href="#main">Přeskočit na obsah</a>
     <div className="app-shell">
@@ -20,6 +27,8 @@ export default function HomePage() {
         <header className="topbar">
           <button className="menu-button" id="menuButton" aria-label="Otevřít navigaci" aria-expanded="false">☰</button>
           <label className="search-box"><span aria-hidden="true">⌕</span><input id="globalSearch" type="search" placeholder="Hledat produkt, pojem nebo otázku…" autoComplete="off" /><kbd>/</kbd></label>
+          {access.isAdmin&&<Link className="topbar-link" href="/admin/users">Schvalování</Link>}
+          <Link className="topbar-link" href="/account">{access.user?.email}</Link>
           <button className="icon-button" id="randomTermButton" title="Náhodný pojem" aria-label="Otevřít náhodný pojem">?</button>
         </header>
         <main id="main" tabIndex={-1}><div id="view" aria-live="polite" /></main>
