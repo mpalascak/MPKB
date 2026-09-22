@@ -641,6 +641,41 @@ const companies = [
   }
 ];
 
+// Interní kompetenční profil. Jde o doslovně významově zachované sebehodnocení,
+// nikoli o produktovou specifikaci, personální závazek nebo potvrzení platnosti certifikace.
+const lukasExpertise = {
+  name: "Lukáš Trávníček",
+  recordedAt: "22. 9. 2026",
+  dell: [
+    { productId: "powervault", area: "Entry SAN", experience: "Malá praktická zkušenost", certification: "Neuvedena", engagement: "Orientace a práce podle dokumentace", level: "limited" },
+    { productId: "powerstore", area: "Univerzální storage", experience: "Praktická zkušenost", certification: "Uvedena", engagement: "Aktivní kompetence", level: "experienced" },
+    { productId: "powermax", area: "Tier-0 storage", experience: "Historická praktická zkušenost", certification: "Uvedena", engagement: "Zkušenost je potřeba zasadit do aktuální verze a projektu", level: "historical" },
+    { productId: "powerscale", area: "NAS", experience: "Menší praktická zkušenost", certification: "Uvedena", engagement: "Dílčí kompetence", level: "partial" },
+    { productId: "objectscale", area: "Object Storage / S3", experience: "Velká praktická zkušenost", certification: "Uvedena", engagement: "Silná produktová kompetence", level: "strong" },
+    { productId: "powerflex", area: "Software Defined Storage", experience: "Bez praktické zkušenosti", certification: "Uvedena", engagement: "Pro projekt ověřit dostupnost zkušeného realizačního specialisty", level: "cert-only" },
+    { productId: "datadomain", area: "Backup Storage", experience: "Zkušenost z období EMC i Dell", certification: "Neuvedena", engagement: "Aktuálně se této oblasti nevěnuje", level: "historical" },
+    { productId: "ppdm", area: "Backup Software", experience: "Bez praktické zkušenosti", certification: "Neuvedena", engagement: "Aktuálně se této oblasti nevěnuje", level: "out-of-scope" },
+    { productId: "cyber-recovery", area: "Cyber Vault", experience: "Bez praktické zkušenosti", certification: "Neuvedena", engagement: "Aktuálně se této oblasti nevěnuje", level: "out-of-scope" },
+    { productId: "vxrail", area: "HCI", experience: "Největší praktická zkušenost", certification: "Uvedena", engagement: "Jedna z nejsilnějších kompetencí", level: "strong" },
+    { productId: "vcf", area: "Private Cloud — VCF on VxRail", experience: "Největší praktická zkušenost", certification: "VxRail / VMware uvedena", engagement: "Jedna z nejsilnějších kompetencí", level: "strong" },
+    { productId: "dell-private-cloud", area: "Cloud Platform — Dell Private Cloud (DAP)", experience: "Bez praktické zkušenosti", certification: "Uvedena", engagement: "Očekávaná budoucí oblast rozvoje", level: "cert-only" }
+  ],
+  vmware: [
+    { area: "VCF stack a add-ony", depth: "Obecná znalost", context: "Orientace v celém stacku a jeho doplňcích." },
+    { area: "vSphere a vSAN", depth: "Hlubší znalost", context: "Core produkty a hlavní technická kompetence." },
+    { area: "NSX", depth: "Základní znalost", context: "Pro hlubší návrh a realizaci je vhodné zapojit síťového specialistu." },
+    { area: "HCX", depth: "Základní znalost", context: "Zaměření na migrační scénáře." },
+    { area: "VMware Operations", depth: "Základní znalost", context: "Chybí větší hands-on zkušenost." },
+    { area: "VKS — VMware Kubernetes Service", depth: "Právě studuje", context: "Rozvíjená kompetence; stav se může rychle měnit." },
+    { area: "Automation", depth: "Nejmenší znalost", context: "Pre-sales orientace, bez hands-on zkušenosti." },
+    { area: "vDefend, data services a cyber recovery", depth: "Bez reálné zkušenosti", context: "Přehled add-onů bez praktické realizace." }
+  ]
+};
+
+function expertiseForProduct(productId) {
+  return lukasExpertise.dell.find(item => item.productId === productId);
+}
+
 
 // PowerVault course expansion: educational explanations and original exercises.
 const powerVaultExpansion = {
@@ -874,7 +909,7 @@ if (!state.courseProgress["general-quiz"] && localStorage.getItem("infrabase-bes
 
 const nav = [
   ["PŘEHLED", null], ["dashboard", "⌂", "Můj přehled"], ["training", "▶", "Školení", trainingBlocks.length + products.length], ["path", "↗", "Studijní cesta"],
-  ["ZNALOSTI", null], ["products", "▦", "Produkty", products.length], ["architecture", "◇", "Architektury", 5], ["glossary", "Aa", "Slovník", glossary.length], ["companies", "⌘", "Portfolio firem"],
+  ["ZNALOSTI", null], ["products", "▦", "Produkty", products.length], ["architecture", "◇", "Architektury", 5], ["glossary", "Aa", "Slovník", glossary.length], ["companies", "⌘", "Portfolio firem"], ["expertise", "◎", "Expertní pokrytí"],
   ["PROCVIČOVÁNÍ", null], ["quiz", "✓", "Test znalostí", quizQuestions.length], ["sources", "↗", "Zdroje"]
 ];
 
@@ -1002,6 +1037,7 @@ function productDetail(id) {
   if (!p) return notFound();
   localStorage.setItem("infrabase-last", p.id);
   const note = state.notes[p.id] || "";
+  const expert = expertiseForProduct(p.id);
   return `<button class="action-link" data-route="products">← Zpět na produkty</button>
   <div class="detail-layout"><article class="detail-main">
     <header class="detail-hero"><span class="tag">${p.category}</span><h1>${p.name}</h1><p class="one-liner">${p.oneLiner}</p>
@@ -1012,6 +1048,7 @@ function productDetail(id) {
   </article>
   <aside class="detail-aside">
     <div class="side-card"><h3>Produktové školení</h3><p>Projdi výklad, praktický scénář a závěrečný test.</p><button class="primary-button wide" data-product-training="${p.id}">Otevřít školení</button></div>
+    ${expert ? `<div class="side-card expertise-mini"><div class="source-kicker">Interní profil · ${lukasExpertise.recordedAt}</div><h3>${lukasExpertise.name}</h3><span class="expertise-level ${expert.level}">${expert.experience}</span><dl><div><dt>Oblast</dt><dd>${expert.area}</dd></div><div><dt>Certifikace</dt><dd>${expert.certification}</dd></div><div><dt>Aktuální kontext</dt><dd>${expert.engagement}</dd></div></dl><p class="source-note">Profil neurčuje support ownership, projektovou roli ani SLA.</p><button class="secondary-button wide" data-route="expertise">Celý kompetenční profil</button></div>` : ""}
     <div class="side-card"><h3>Související pojmy</h3><div class="term-links">${p.terms.map(id => { const t=glossary.find(g=>g.id===id); return t ? `<button class="term-link" data-term="${id}">${t.term}</button>` : ""; }).join("")}</div></div>
     <div class="side-card"><h3>Moje poznámky</h3><textarea class="note-area" id="productNote" data-note="${p.id}" placeholder="Co si potřebuji zapamatovat?">${escapeHtml(note)}</textarea><button class="secondary-button wide" id="saveNote">Uložit poznámku</button></div>
     <div class="side-card"><h3>Stav modulu</h3><button class="${state.progress[p.id] ? "secondary-button" : "primary-button"} wide" data-mastery="${p.id}">${state.progress[p.id] ? "Označit jako nerozpracované" : "Označit jako zvládnuté"}</button></div>
@@ -1199,6 +1236,15 @@ function companiesView() {
     <section class="article-section" style="margin-top:18px"><h2>Jak portfolio číst pro delivery</h2><p>Široké portfolio integrátora znamená, že projekt může překročit hranice jednoho výrobku. PowerVault může být napojen na servery, SAN, VMware a backup od různých výrobců. Před zahájením proto vytvoř mapu odpovědností: kdo navrhuje, kdo implementuje, kdo poskytuje support, kdo vlastní změnu a kdo potvrzuje obchodní funkčnost.</p></section>`;
 }
 
+function expertiseView() {
+  return `<div class="page-head"><div><p class="eyebrow">Interní kompetenční mapa</p><h1>Expertní pokrytí — Lukáš Trávníček</h1><p class="lede">Pracovní pomůcka pro sestavení projektového týmu a přípravu eskalace. Zachycuje Lukášovo vlastní hodnocení k ${lukasExpertise.recordedAt}; není to produktová specifikace ani příslib kapacity konkrétního člověka.</p></div><span class="status-pill">Interní zdroj</span></div>
+  <section class="expertise-guide"><h2>Jak profil číst</h2><div class="expertise-axis"><div><strong>Praktická zkušenost</strong><p>Ukazuje kontakt s návrhem, implementací nebo provozem. Historická zkušenost vyžaduje ověření proti aktuální verzi.</p></div><div><strong>Certifikace</strong><p>Je vedena jen tak, jak ji Lukáš uvedl. Konkrétní název, úroveň, datum a platnost zde nejsou potvrzeny.</p></div><div><strong>Aktuální zaměření</strong><p>Říká, zda se oblasti věnuje nyní. Certifikace bez hands-on zkušenosti z člověka automaticky nedělá realizačního vlastníka.</p></div></div></section>
+  <section class="expertise-section"><div class="section-heading"><div><p class="eyebrow">Dell Technologies</p><h2>Produkty, zkušenost a certifikace</h2></div><p>Kliknutím na produkt otevřeš jeho studijní detail.</p></div><div class="expertise-table-wrap"><table class="expertise-table"><thead><tr><th>Oblast a produkt</th><th>Praktická zkušenost</th><th>Certifikace</th><th>Aktuální kontext</th></tr></thead><tbody>${lukasExpertise.dell.map(item=>{const product=products.find(p=>p.id===item.productId);return `<tr data-product="${item.productId}" tabindex="0"><td><span>${item.area}</span><strong>${product?.name||item.productId}</strong></td><td><span class="expertise-level ${item.level}">${item.experience}</span></td><td>${item.certification}</td><td>${item.engagement}</td></tr>`}).join("")}</tbody></table></div></section>
+  <section class="expertise-section"><div class="section-heading"><div><p class="eyebrow">VMware by Broadcom</p><h2>Technologická hloubka</h2></div><p>VCF je zastřešující platforma; hloubka se liší podle jednotlivých komponent.</p></div><div class="vmware-depth-grid">${lukasExpertise.vmware.map(item=>`<article><span>${item.depth}</span><h3>${item.area}</h3><p>${item.context}</p></article>`).join("")}</div></section>
+  <section class="expertise-section delivery-use"><p class="eyebrow">Použití pro SDM / PM</p><h2>Jak podle profilu sestavit spolupráci</h2><div class="delivery-grid"><article><h3>Silný praktický sparring</h3><p>VxRail, VCF on VxRail a ObjectScale jsou podle profilu nejsilnější oblasti. I zde se před projektem potvrzuje konkrétní role, dostupnost a zkušenost s nasazovanou verzí.</p></article><article><h3>Zapojení s ověřením rozsahu</h3><p>PowerStore, PowerMax a PowerScale mají praktický základ, jehož aktuálnost a hloubku je vhodné ověřit proti požadovanému scénáři.</p></article><article><h3>Nutný další realizační specialista</h3><p>PowerFlex, Dell Private Cloud, PPDM, Cyber Recovery, Automation a další oblasti bez hands-on zkušenosti nelze personálně pokrýt pouze uvedenou certifikací nebo schopností dohledat dokumentaci.</p></article></div><div class="callout"><strong>Praktická interpretační zásada:</strong> schopnost rychle dohledat a pochopit dokumentaci je cenná pro přípravu debaty, triage a koordinaci. Nenahrazuje oprávnění k zásahu, zkušenost s produkční implementací ani formálně přiřazenou odpovědnost.</div></section>
+  <section class="source-panel"><h2>Původ a hranice informací</h2><p><strong>[INTERNÍ PROFIL]</strong> Poznámky zaslal Lukáš Trávníček a uživatel je vložil do KB dne ${lukasExpertise.recordedAt}. Formulace byly zpřesněny pouze pro čitelnost; význam zkušenosti a aktuálního zaměření zůstává zachovaný.</p><p><strong>[PREZENTACE]</strong> Soubor <em>Dell_Enterprise-portfolio.pptx</em> potvrzuje členění portfolia na Primary Storage, UDS, SDS/HCI, Data Protection a Cloud Platform. Prezentace je interní orientační podklad, nikoli náhrada aktuální dokumentace výrobce.</p></section>`;
+}
+
 function quizIntro() {
   const best = state.courseProgress["general-quiz"]?.best;
   return `<div class="page-head"><div><p class="eyebrow">Aktivní opakování</p><h1>Test znalostí</h1><p class="lede">Otázky ověřují vztahy a praktické rozhodování, nejen názvy. Po každé odpovědi dostaneš vysvětlení.</p></div>${best ? `<span class="status-pill">Nejlepší výsledek ${best} %</span>` : ""}</div>
@@ -1276,6 +1322,7 @@ function render() {
   else if (base === "path") view.innerHTML = pathView();
   else if (base === "glossary") view.innerHTML = glossaryView();
   else if (base === "companies") view.innerHTML = companiesView();
+  else if (base === "expertise") view.innerHTML = expertiseView();
   else if (base === "quiz" && arg === "run") view.innerHTML = quizRunView();
   else if (base === "quiz") view.innerHTML = quizIntro();
   else if (base === "sources") view.innerHTML = sourcesView();

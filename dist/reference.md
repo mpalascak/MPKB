@@ -655,6 +655,48 @@ Martinovo zapojení konkretizovat přes požadovaný výstup: například revize
 | S-04 | Rozšifrovat NGUP | Rozsah, závislosti, milníky | K doplnění |
 | S-05 | Upřesnit zapojení Martina | Role, výstup, kapacitní rezervace | K doplnění |
 
+<a id="kompetencni-profil-lukas-travnicek"></a>
+
+## 12A. Interní kompetenční profil — Lukáš Trávníček
+
+> **[INTERNÍ PROFIL, zaznamenáno 22. 9. 2026]** Tato kapitola zachycuje sebehodnocení specialisty, které uživatel dodal do KB. Není to produktová specifikace, personální závazek, potvrzení dostupnosti ani popis smluvní odpovědnosti. Uvedení certifikace neobsahuje její přesný název, úroveň, datum ani platnost; tyto údaje je před použitím v nabídce nebo projektu nutné ověřit.
+
+### Dell Technologies: zkušenost, certifikace a aktuální zaměření
+
+| Oblast | Produkt | Praktická zkušenost | Certifikace podle profilu | Aktuální kontext |
+|---|---|---|---|---|
+| Entry SAN | PowerVault | Malá; orientace podle dokumentace | Neuvedena | Vhodný pro konzultaci a dohledání podkladů, ne automaticky jako jediný realizační vlastník |
+| Univerzální storage | PowerStore | Praktická zkušenost | Uvedena | Aktivní kompetence |
+| Tier-0 storage | PowerMax | Historická zkušenost | Uvedena | Je nutné ověřit aktuálnost vůči verzi a projektovému scénáři |
+| NAS | PowerScale | Menší zkušenost | Uvedena | Dílčí praktická kompetence |
+| Object Storage / S3 | ObjectScale | Velká zkušenost | Uvedena | Silná produktová kompetence |
+| Software Defined Storage | PowerFlex | Bez praktické zkušenosti | Uvedena | Pro realizaci doplnit zkušeného specialistu |
+| Backup Storage | PowerProtect Data Domain | Zkušenost z období EMC i Dell | Neuvedena | Lukáš se oblasti aktuálně nevěnuje |
+| Backup Software | PowerProtect Data Manager | Bez praktické zkušenosti | Neuvedena | Lukáš se oblasti aktuálně nevěnuje |
+| Cyber Vault | PowerProtect Cyber Recovery | Bez praktické zkušenosti | Neuvedena | Lukáš se oblasti aktuálně nevěnuje |
+| HCI | VxRail | Největší zkušenost | Uvedena | Jedna z nejsilnějších praktických kompetencí |
+| Private Cloud | VCF on VxRail | Největší zkušenost | VxRail / VMware uvedena | Jedna z nejsilnějších praktických kompetencí |
+| Cloud Platform | Dell Private Cloud (DAP) | Bez praktické zkušenosti | Uvedena | Očekávaná budoucí oblast rozvoje |
+
+### VMware / Broadcom: hloubka podle komponent
+
+- **Celý VCF stack a add-ony:** obecná znalost a schopnost zasadit komponenty do celku.
+- **vSphere a vSAN:** hlubší znalost core produktů.
+- **NSX:** základní znalost; hlubší návrh a realizace vyžadují odpovídající síťovou expertizu.
+- **HCX:** základní znalost se zaměřením na migrace.
+- **VMware Operations:** základní znalost, zatím s menší hands-on zkušeností.
+- **VKS (VMware Kubernetes Service):** právě studovaná a rozvíjená oblast.
+- **Automation:** nejslabší oblast; pre-sales orientace bez hands-on zkušenosti.
+- **vDefend, data services a cyber recovery add-ony:** bez reálné praktické zkušenosti.
+
+Lukáš současně uvedl, že si dokáže potřebné informace dohledat v dokumentaci a pochopit jejich princip. Pro SDM je tato schopnost cenná při přípravě workshopu, triage a koordinaci specialistů. Nesmí se ale zaměnit s oprávněním provést změnu, s produkční zkušeností ani s formálně přiřazenou odpovědností.
+
+### Jak profil používat při sestavení týmu [SDM]
+
+Profil pracuje se třemi nezávislými osami: **praktická zkušenost**, **certifikace** a **aktuální zaměření**. Certifikovaný člověk může mít malou praktickou zkušenost; zkušený člověk se dané oblasti nemusí aktuálně věnovat. Před zahájením projektu proto SDM nebo PM potvrzuje konkrétní roli, časovou dostupnost, zkušenost s požadovanou verzí, hranici odpovědnosti a jméno dalšího specialisty pro nepokryté části.
+
+Pro VxRail, VCF on VxRail a ObjectScale lze podle profilu očekávat nejsilnější praktický sparring. PowerStore, historická zkušenost s PowerMax a menší zkušenost s PowerScale vyžadují ověření proti konkrétnímu rozsahu. U PowerFlex, Dell Private Cloud, PPDM, Cyber Recovery a VMware Automation musí projekt počítat s dalším hands-on specialistou. U Data Domain existuje historická zkušenost, ale oblast není součástí Lukášova aktuálního zaměření.
+
 <a id="kapitola-13"></a>
 
 ## 13. Mapa Dell portfolia
