@@ -594,7 +594,7 @@ const productTrainingExtras = {
       ["7. Management, monitoring a support", "PowerVault Manager slouží k prvotní konfiguraci, provisioningu, monitoringu a administraci. Guided setup podle Dell dokumentace zahrnuje management síť, DNS, NTP, uživatele, notifikace, SupportAssist, storage konfiguraci, hosty a volumes. Tyto kroky jsou také základem provozního předání.||Provoz musí mít bezpečné účty a role, aktuální kontakty, notifikace přes e-mail/SNMP/syslog, přístup k logům, evidenci sériových čísel a platný support entitlement. SupportAssist nebo související observability služba pomáhá s telemetrií a podporou, ale nenahrazuje lokální monitoring, proces incidentu ani odpovědnost za reakci na alarm."],
       ["8. Lifecycle, změny a role SDM", "Firmware změna začíná ověřením release notes, Support Matrix, známých problémů a podporované upgrade cesty. Plán zahrnuje pre-check, zálohu konfigurace, potvrzení zdraví pole a všech cest, komunikační okno, implementaci, monitoring, funkční validaci a rollback nebo eskalační postup. Bez aktuálního support bundle a kontaktu na podporu roste riziko prodlouženého incidentu.||SDM vede service map, přehled kapacity, incidentů, změn, firmware, supportu a rizik. U degradované komponenty rozlišuje dostupnost služby od ztráty redundance. Při capacity review sleduje trend, bezpečný práh a lead time. Při incidentu koordinuje host, SAN/IP, storage a aplikační tým a vyžaduje společnou časovou osu. Technické rozhodnutí ponechává specialistovi, ale hlídá důkaz, vlastníka a termín." ]
     ]
-  }
+  },
 };
 
 const productTrainingPrerequisites = {
@@ -742,6 +742,70 @@ const productCommercialDetails = {
       ["Dell PowerMax Product Guide — modely a škálování","https://www.dell.com/support/manuals/en-us/powermax-os-10/esd_p_product_guide_pmax_10_2_magnolia/powermax-arrays"],
       ["Dell PowerMax Product Guide — capacity licensing","https://www.dell.com/support/manuals/en-us/powermax-os-10/esd_p_product_guide_pmax_10_2_magnolia/capacity-measurements"],
       ["Dell PowerMax Product Guide — Dynamic Licensing","https://www.dell.com/support/manuals/en-us/powermax-os-5978/esd_p_pmax_product_guide_redwood/dynamic-licensing"]
+    ]
+  },
+  powerscale: {
+    verified:"22. 9. 2026", scope:"PowerScale OneFS; licenční mechanismus OneFS 9.13+ a modul SmartPools",
+    configurations:[
+      "PowerScale tvoří scale-out cluster s jedním distribuovaným filesystemem a namespace. Přidání uzlu přidává kapacitu, CPU, paměť, cache a síťové prostředky.",
+      "Aktuální rodiny zahrnují all-flash uzly pro výkon, hybridní H-Series a kapacitně orientované A-Series. Konkrétní podporované kombinace závisí na OneFS release a generaci hardwaru.",
+      "F200/F600/F900 používají minimálně tři uzly; některé starší Gen 6 platformy používají čtyřuzlové šasi. Dell dokumentace pro současné single-node platformy uvádí rozšíření po jednom uzlu až na 252 uzlů.",
+      "Různé typy uzlů mohou tvořit node pools a tiers. Návrh musí sladit výkon, kapacitu, ochranu dat, backend síť a očekávaný počet i velikost souborů."
+    ],
+    licensing:[
+      "Hardware i software PowerScale se licencují prostřednictvím Dell Software Licensing Central. OneFS 9.13+ používá Dynamic Licensing s automatickou nebo manuální aktivací.",
+      "Základní OneFS funkce a volitelné softwarové moduly je nutné rozlišit. Například SmartPools licence odemyká vlastní file-pool policies a spillover management; bez ní OneFS stále automaticky spravuje node pools jako jeden storage pool.",
+      "Další moduly, například replikace, cloud tiering nebo rozšířené datové služby, se ověřují podle konkrétní objednávky, verze a entitlementu.",
+      "Rozšíření clusteru může znamenat nejen nákup uzlů, ale také navýšení hardwarového a softwarového oprávnění a kontrolu support kontraktu."
+    ],
+    decisions:["All-flash, hybrid nebo archive","Minimální cluster a modely uzlů","Node pools a tiers","NFS, SMB a případně S3 přístup","SmartPools a další OneFS moduly","Backend síť a failure domains","Kapacita, počet souborů a metadata"],
+    sources:[
+      ["Dell OneFS 9.13 Administration Guide — licensing","https://www.dell.com/support/manuals/en-us/isilon-onefs/ifs-pub-91300-administration-guide-gui/licensing"],
+      ["Dell OneFS Administration Guide — node models a cluster","https://www.dell.com/support/manuals/en-us/isilon-onefs/ifs_pub_administration_guide_cli/node-components"],
+      ["Dell OneFS Administration Guide — SmartPools licensing","https://www.dell.com/support/manuals/en-us/isilon-onefs/ifs-pub-91000-administration-guide-cli/storage-pools-overview"]
+    ]
+  },
+  objectscale: {
+    verified:"22. 9. 2026", scope:"ObjectScale software/appliance; licenční typy ověřené v Dell ObjectScale Administration Guide",
+    configurations:[
+      "ObjectScale poskytuje distribuovanou S3 object storage. Aplikace přistupují k bucketům a objektům přes API; platforma není automatickou náhradou block storage nebo SMB share.",
+      "Dell nabízí softwarovou variantu a appliance. Aktuální hardware dokumentace uvádí ObjectScale X560 a all-flash XF960; konkrétní sizing a minimální počet nodů se ověřují v instalačním a planning guide daného release.",
+      "Základní logické objekty zahrnují instance, object stores, storage pools, tenants/namespaces, buckets, uživatele, klíče a politiky. Jejich hranice ovlivňují kapacitu, bezpečnost i provozní odpovědnost.",
+      "Návrh se neprovádí pouze podle TB. Rozhodují počet objektů, jejich velikost, request rate, S3 kompatibilita klienta, ochranné schéma, geografické rozložení a požadavky na Object Lock."
+    ],
+    licensing:[
+      "Dell dokumentuje Community Edition, Subscription a Permanent licenci. Subscription a Permanent dovolují vytvářet object stores nad 30 TiB v mezích licencované kapacity.",
+      "Community Edition je omezena na celkovou kapacitu nejvýše 30 TiB a má omezené funkce SupportAssist; je určena pro community-supported použití, ne jako automatický ekvivalent produkční podpory.",
+      "Licence se aplikuje na ObjectScale instanci a zobrazuje povolené funkce a kapacity. Komerční návrh musí oddělit licenci, appliance hardware, support, implementaci a případné navazující služby.",
+      "Starší licenční dokumentace nemusí popisovat všechny vlastnosti aktuálního release; před objednávkou se vždy potvrzuje aktuální ObjectScale Licensing Guide nebo nabídka Dellu."
+    ],
+    decisions:["Software vs. X560/XF960 appliance","Subscription vs. permanent licence","Licencovaná kapacita","Počet a velikost objektů","Tenant a namespace model","Object Lock a retence","Replikace a geografické umístění","S3 API kompatibilita aplikace"],
+    sources:[
+      ["Dell ObjectScale Hardware Documentation Info Hub","https://www.dell.com/support/kbdoc/en-us/000311136/dell-objectscale-hardware-documentation-infohub"],
+      ["Dell ObjectScale Administration Guide — licence","https://www.dell.com/support/manuals/en-us/objectscale/objectscale_p_adminguide_1_0_0/apply-the-objectscale-license"],
+      ["Dell ObjectScale 4.0 InfoHub","https://www.dell.com/support/kbdoc/en-us/000293768/dell-objectscale-4-0-x-infohub"]
+    ]
+  },
+  powerflex: {
+    verified:"22. 9. 2026", scope:"PowerFlex 5.x / PowerFlex Manager 5.1+; historická kapacitní metrika je označena zvlášť",
+    configurations:[
+      "Consumption modely zahrnují PowerFlex software na zákaznickém hardwaru, PowerFlex rack, PowerFlex appliance, PowerFlex custom node a PowerFlex pro AWS nebo Azure.",
+      "Architektura může být hyperconverged, two-layer s odděleným compute a storage, storage-only nebo hybridní. Oddělení SDC a storage komponent umožňuje škálovat compute a storage samostatně.",
+      "PowerFlex rack je integrovaný rack-scale systém; appliance má menší počáteční rozsah a flexibilní síť; custom node ponechává více návrhu a lifecycle odpovědnosti zákazníkovi či integrátorovi.",
+      "PowerFlex 5.x pracuje s protection domains, device groups, storage pools a volumes. Síť backendu, ochranné schéma a počet nodů jsou součástí sizingu, nikoli dodatečný detail."
+    ],
+    licensing:[
+      "Produkční PowerFlex vyžaduje platnou licenci. PowerFlex Manager poskytuje 90denní evaluation období; po jeho skončení zůstávají data zachována, ale konfigurační změny jsou blokovány do aplikace platné licence.",
+      "PowerFlex Manager 5.1+ podporuje Dynamic Licensing v connected i offline režimu. Podporována je také key-based licence; při překročení licencované kapacity je nutné oprávnění navýšit.",
+      "Aktuální dokumentace uvádí licenci založenou na kapacitě systému. Starší PowerFlex dokumentace ji výslovně popisuje jako celkovou fyzickou kapacitu zařízení v TB; přesnou metriku pro nový obchod je nutné potvrdit v aktuálním Licensing Guide a quote.",
+      "Do nákladů patří zvolený consumption model, PowerEdge hardware a síť, licence PowerFlex, případný CloudLink/šifrování, support a lifecycle odpovědnost za okolní stack."
+    ],
+    decisions:["Software, rack, appliance, custom node nebo public cloud","HCI, two-layer, storage-only nebo hybrid","Počet nodů a protection domains","Síťová topologie a propustnost","Ochranné schéma storage poolu","Dynamic vs. key-based licensing","Kapacitní entitlement","CloudLink a šifrování","Rozdělení lifecycle odpovědnosti"],
+    sources:[
+      ["Dell PowerFlex 5.x Technical Overview — consumption models","https://www.dell.com/support/manuals/en-us/scaleio/flex-software-to-5x/powerflex-consumption-models"],
+      ["Dell PowerFlex Manager 5.1 — license management","https://www.dell.com/support/manuals/en-ph/powerflex-appliance-int-ca-sw/powerflex_manager_user_guide_51x/license-management"],
+      ["Dell PowerFlex Product Documentation","https://www.dell.com/support/kbdoc/en-us/000308007/powerflex-family-product-documentation"],
+      ["Dell PowerFlex 5.x Rack deployment options","https://www.dell.com/support/manuals/en-us/powerflex-rack-hw/flex-rack-admin-guide-5x/powerflex-rack-deployment-options"]
     ]
   }
 };

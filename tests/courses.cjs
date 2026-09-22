@@ -49,7 +49,7 @@ assert.equal(a.lukasExpertise.vmware.length,8);
 assert.ok(a.expertiseView().includes('Interní kompetenční mapa'));
 assert.ok(a.productDetail('powervault').includes('Malá praktická zkušenost'));
 assert.equal(a.teamMembers.length,1);
-assert.equal(Object.keys(a.productCommercialDetails).join(','),'powervault,powerstore,powermax');
+assert.equal(Object.keys(a.productCommercialDetails).join(','),'powervault,powerstore,powermax,powerscale,objectscale,powerflex');
 for(const id of Object.keys(a.productCommercialDetails)){
  const html=a.productDetail(id);assert.ok(html.includes('Možnosti konfigurace'),id);assert.ok(html.includes('Licenční a obchodní model'),id);assert.ok(a.productCommercialDetails[id].sources.every(([,url])=>url.startsWith('https://www.dell.com/')),id);
 }
