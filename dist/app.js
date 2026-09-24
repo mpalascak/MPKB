@@ -228,6 +228,76 @@ const products = [
     source: "https://www.dell.com/en-ca/lp/dt/private-cloud"
   },
   {
+    id: "foreman", name: "Foreman", vendor: "The Foreman Project", category: "Infrastructure automation", level: "Středně pokročilé",
+    oneLiner: "Open-source platforma pro provisioning, inventář a lifecycle fyzických, virtuálních a cloudových hostů.",
+    role: "Host lifecycle management", scaling: "Centrální server a distribuované Smart Proxies", protocols: "HTTPS API, PXE/UEFI HTTP, DHCP, DNS, TFTP, SSH a pluginové integrace",
+    terms: ["provisioning","host-group","smart-proxy","pxe","uefi-http","dhcp","tftp","kickstart","katello","hammer-cli"],
+    sections: [
+      ["Co Foreman řeší", "Foreman udržuje model hostů a automatizuje cestu od prázdného serveru k připravenému operačnímu systému. Spojuje parametry hostu, síť, operační systém, instalační šablony, compute resource a následné konfigurační kroky. Není pouze inventářem a sám o sobě není konfiguračním enginem typu Ansible."],
+      ["Provisioning a host groups", "Host group funguje jako dědičná šablona společných parametrů pro skupinu hostů. Síťový provisioning může využít PXE nebo UEFI HTTP, DHCP, DNS a TFTP či HTTP instalační zdroje. Výsledek závisí na správném propojení těchto služeb a na podporované instalační šabloně."],
+      ["Smart Proxy a pluginy", "Smart Proxy zpřístupňuje Foremanu služby v konkrétní lokalitě nebo síťové zóně. Může zprostředkovat DHCP, DNS, TFTP, templates, remote execution a další pluginové funkce. Katello rozšiřuje Foreman zejména o správu softwarového obsahu a lifecycle prostředí; není synonymem pro samotný Foreman."],
+      ["SDM/PM pohled", "Mapuj odpovědnosti za Foreman server, databázi, proxy, DNS/DHCP, image a repozitáře, BMC, identitu a síť. Změna šablony může ovlivnit mnoho nových hostů, proto vyžaduje verzování, testovací skupinu, schválení a evidenci výsledků."],
+    ],
+    scenario: "Nový server se objeví v inventáři, ale nenabootuje instalátor. SDM rozdělí diagnostiku na BMC a boot order, DHCP nabídku, PXE/UEFI cestu, dosažitelnost Smart Proxy, šablonu a instalační repozitář.",
+    source: "https://docs.theforeman.org/"
+  },
+  {
+    id: "landscape", name: "Canonical Landscape", vendor: "Canonical", category: "Linux management", level: "Středně pokročilé",
+    oneLiner: "Centrální správa, monitoring, patchování a compliance Ubuntu systémů prostřednictvím klient-server architektury.",
+    role: "Ubuntu fleet management", scaling: "SaaS nebo self-hosted server s klienty na spravovaných systémech", protocols: "Landscape Client, HTTPS, web portal a API",
+    terms: ["ubuntu-pro","landscape-client","patch-management","repository-profile","upgrade-profile","access-group","usn","compliance"],
+    sections: [
+      ["Co Landscape řeší", "Landscape eviduje Ubuntu servery, desktopy, cloudové instance a další podporované systémy, sleduje jejich stav a centrálně řídí balíčky, bezpečnostní aktualizace, skripty a vybrané compliance úlohy. Doplňuje správu operačního systému; nenahrazuje aplikační deployment ani obecný orchestrátor infrastruktury."],
+      ["Client-server model", "Landscape Client běží na každém spravovaném systému a komunikuje s Landscape Serverem. Server může být poskytovaný jako SaaS nebo provozovaný zákazníkem. Self-hosted varianta přidává odpovědnost za databázi, messaging, storage, vysokou dostupnost, upgrade a zálohu samotné management platformy."],
+      ["Profily a patchování", "Tags a access groups určují rozsah správy a oprávnění. Package, repository, upgrade, reboot, script a USG profily definují požadovaný stav nebo plán činností. Aktualizace musí zohlednit aplikační clustery, maintenance okna, rebooty, závislosti a rollback či recovery postup."],
+      ["SDM/PM pohled", "Sleduj počet a stáří nezařazených klientů, security notices, neúspěšné aktivity, compliance, reboot pending, pokrytí supportem a aktuálnost samotného Landscape. Report patch compliance musí pracovat s odsouhlaseným inventářem a výjimkami, ne jen s úspěšnými joby."],
+    ],
+    scenario: "Dashboard hlásí 98 % patch compliance, ale část kritických serverů se měsíc nepřipojila. SDM ověří jmenovatel metriky, vlastníky offline systémů a skutečné pokrytí produkčních služeb.",
+    source: "https://documentation.ubuntu.com/landscape/"
+  },
+  {
+    id: "gitlab", name: "GitLab", vendor: "GitLab", category: "DevSecOps platform", level: "Středně pokročilé",
+    oneLiner: "Platforma pro Git repozitáře, code review, CI/CD, balíčky, registry, plánování práce a bezpečnostní workflow.",
+    role: "Software delivery platform", scaling: "GitLab.com, Dedicated nebo Self-Managed s oddělenými runners", protocols: "Git over SSH/HTTPS, REST/GraphQL API, OCI registry a webhooks",
+    terms: ["git","repository","merge-request","pipeline","gitlab-runner","executor","artifact","container-registry","devsecops","cicd"],
+    sections: [
+      ["Co GitLab řeší", "GitLab spojuje správu zdrojového kódu s merge requests, issue workflow, CI/CD pipelines, registry a podle edice také pokročilými bezpečnostními a governance funkcemi. Repozitář je autoritativní zdroj změn; pipeline převádí deklarovaný kód na opakovatelné kontroly, buildy a deploymenty."],
+      ["GitLab a runners", "GitLab instance plánuje joby, ukládá metadata a zobrazuje výsledky. GitLab Runner job převezme a spustí pomocí konkrétního executoru, například shellu, Dockeru nebo Kubernetes. Runner umístěný v privátní síti je významná bezpečnostní hranice a jeho oprávnění se mají omezit."],
+      ["Self-Managed architektura", "Malá instalace může používat kompaktní deployment, zatímco větší prostředí odděluje web/API, background jobs, Git repository storage, PostgreSQL, Redis, object storage, registry a observability. Reference architecture se volí podle uživatelů a workloadu, zejména velikosti repozitářů a souběhu CI jobů."],
+      ["SDM/PM pohled", "Hlídej dostupnost služby, zálohu i obnovu repozitářů a databáze, kapacitu artifacts a registry, stav runners, integrace identity, upgrade cestu, licence a expiraci tokenů či certifikátů. Úspěšný GitLab backup musí být doplněn pravidelným restore testem."],
+    ],
+    scenario: "GitLab web funguje, ale pipelines čekají ve frontě. SDM oddělí stav aplikace od runner kapacity, ověří tagy jobů, dostupnost executoru, síť, registry a nedávné změny pipeline.",
+    source: "https://docs.gitlab.com/"
+  },
+  {
+    id: "ansible", name: "Ansible", vendor: "Red Hat / Ansible Community", category: "Infrastructure automation", level: "Základ",
+    oneLiner: "Agentless automatizační engine pro konfiguraci systémů, deployment aplikací a opakovatelné provozní úlohy.",
+    role: "Configuration and task automation", scaling: "Control node, inventories a paralelní běhy proti managed nodes", protocols: "SSH, WinRM, HTTP API a síťové transporty dle kolekcí",
+    terms: ["ansible-core","control-node","managed-node","inventory","playbook","play","task","module","role","collection","idempotence","ansible-vault"],
+    sections: [
+      ["Základní model", "Ansible běží z control node a většinou nevyžaduje vlastní dlouhodobě běžící agent na spravovaném Linux hostu. Inventory popisuje cíle a skupiny, playbook požadované kroky a moduly provádějí konkrétní operace. Připojovací účty a privilege escalation zůstávají bezpečnostní závislostí."],
+      ["Playbooks, roles a collections", "Playbook obsahuje plays a tasks. Role strukturuje opakovatelný obsah a collection distribuuje moduly, pluginy, role a případně playbooky v namespace. Použití plně kvalifikovaných názvů pomáhá určit přesný původ modulu a omezit nejasnosti mezi kolekcemi."],
+      ["Idempotence a proměnné", "Idempotentní úloha při opakování zachová správný cílový stav a neprovádí zbytečnou změnu. Ne každý command či shell krok je idempotentní automaticky. Variables, templates, handlers, conditions a tags zvyšují flexibilitu, ale také počet cest, které je nutné testovat."],
+      ["SDM/PM pohled", "Požaduj verzování v Gitu, code review, testovací prostředí, omezení cílové skupiny, bezpečnou správu secrets, čitelný log a rollback nebo recovery postup. Automatizace zrychluje správný i chybný zásah; blast radius je součást řízení změny."],
+    ],
+    scenario: "Playbook určený pro deset testovacích serverů dostane inventory skupinu obsahující produkci. Před spuštěním musí proces kombinovat review, limit/check mode, správné oprávnění a potvrzení cílového seznamu.",
+    source: "https://docs.ansible.com/ansible/latest/"
+  },
+  {
+    id: "semaphore-ui", name: "Semaphore UI", vendor: "Semaphore UI", category: "Automation orchestration", level: "Středně pokročilé",
+    oneLiner: "Self-hosted webové rozhraní a API pro spouštění Ansible, Terraform/OpenTofu a skriptové automatizace.",
+    role: "Automation execution portal", scaling: "Centrální server, databáze a volitelné vzdálené runners", protocols: "Web UI, REST API, Git, SSH a nástrojové runtime",
+    terms: ["semaphore-project","task-template","task-run","key-store","variable-group","workflow","schedule","runner","ansible"],
+    sections: [
+      ["Co Semaphore UI řeší", "Semaphore UI zpřístupňuje automatizaci přes projekty, task templates, API, schedule a auditovatelnou historii běhů. Podporuje Ansible a také Terraform/OpenTofu, shell, PowerShell a Python. Není alternativní implementací Ansible modulů; pro Ansible template spouští ansible-playbook na serveru nebo runneru."],
+      ["Datový model", "Project odděluje členy a zdroje. Repository obsahuje automatizační kód, Inventory cíle, Key Store přístupy, Variable Groups opakovaná data a Task Template je spojí do definice běhu. Spuštění template vytvoří samostatný task run s logem a výsledkem."],
+      ["Nasazení a bezpečnost", "Semaphore lze nasadit jako binární soubor, container nebo v Kubernetes a používá SQLite, MySQL či PostgreSQL podle zvoleného provozního modelu. Produkce potřebuje TLS, identity provider, RBAC, zálohu databáze, ochranu secrets a oddělené runners pro citlivé sítě."],
+      ["SDM/PM pohled", "Definuj, kdo smí template upravit a kdo ji spustit, jak se schvaluje produkční běh, odkud se načítá Git revision a jak se rotují credentials. Úspěšný task dokládá pouze návratový stav automatizace; funkci obchodní služby musí potvrdit následná validace."],
+    ],
+    scenario: "Operátor spustí správnou template, ale z jiné Git větve. SDM vyžádá commit SHA, inventory, vstupní proměnné, identitu spouštějícího uživatele a log výsledné validace.",
+    source: "https://semaphoreui.com/docs/"
+  },
+  {
     id: "san", name: "SAN a Fibre Channel", vendor: "Průřezové téma", category: "Networking", level: "Středně pokročilé",
     oneLiner: "Specializovaná infrastruktura pro blokový přístup mezi hosty a storage poli.",
     role: "Storage connectivity", scaling: "Porty, switche, fabrics a cesty", protocols: "FC, případně IP storage v širším kontextu",
@@ -427,6 +497,54 @@ const glossary = [
   ["workload", "Workload", "Konkrétní aplikační nebo výpočetní zátěž se svými požadavky na CPU, paměť, síť, storage, dostupnost a ochranu dat."],
   ["zero-trust", "Zero Trust", "Bezpečnostní princip průběžného ověřování, minimálních oprávnění a omezení implicitní důvěry."],
   ["zoning", "FC zoning", "Konfigurace FC fabric určující, které iniciátory a targety se mohou navzájem vidět."],
+  ["provisioning", "Provisioning", "Řízené vytvoření a počáteční příprava systému, například přiřazení infrastruktury, instalace operačního systému a základní konfigurace."],
+  ["host-group", "Host group", "Ve Foremanu dědičná šablona společných parametrů hostů, například operačního systému, partitioning nebo provisioning vlastností."],
+  ["smart-proxy", "Foreman Smart Proxy", "Distribuovaná Foreman komponenta poskytující zabezpečené API k lokálním službám, například DHCP, DNS, TFTP, templates nebo remote execution."],
+  ["pxe", "PXE", "Preboot Execution Environment: mechanismus, kterým stroj získá informace pro síťový boot a načte instalační prostředí."],
+  ["uefi-http", "UEFI HTTP Boot", "Síťový boot mechanismus UEFI, který načítá bootovací prostředky přes HTTP nebo HTTPS."],
+  ["dhcp", "DHCP", "Protokol přidělující zařízení IP konfiguraci a případně informace potřebné pro síťový boot."],
+  ["tftp", "TFTP", "Jednoduchý přenosový protokol často používaný pro některé soubory tradičního PXE bootu; poskytuje jen omezené bezpečnostní funkce."],
+  ["kickstart", "Kickstart", "Deklarativní instalační konfigurace používaná pro automatizovanou instalaci systémů z rodiny Red Hat Enterprise Linux."],
+  ["katello", "Katello", "Sada Foreman pluginů rozšiřující platformu o správu softwarového obsahu, repozitářů, lifecycle environments a souvisejících hostitelských operací."],
+  ["hammer-cli", "Hammer CLI", "Příkazové rozhraní pro Foreman a jeho pluginy, použitelné pro administraci a skriptovou automatizaci."],
+  ["ubuntu-pro", "Ubuntu Pro", "Komerční předplatné Canonicalu poskytující rozšířenou bezpečnostní údržbu a služby; Landscape je s ním licenčně provázán podle zvoleného modelu."],
+  ["landscape-client", "Landscape Client", "Agent na spravovaném systému, který komunikuje s Landscape Serverem a přenáší inventář, stav a výsledky požadovaných aktivit."],
+  ["patch-management", "Patch management", "Proces identifikace, testování, schvalování, instalace a ověřování oprav s ohledem na riziko, dostupnost a závislosti služby."],
+  ["repository-profile", "Repository profile", "Landscape profil určující APT zdroje a pockets, které se mají aplikovat na vybrané spravované instance."],
+  ["upgrade-profile", "Upgrade profile", "Landscape profil určující plán automatické instalace vybraných aktualizací na přiřazených systémech."],
+  ["access-group", "Access group", "Landscape hranice, která seskupuje spravované instance a omezuje, kteří uživatelé nebo profily s nimi mohou pracovat."],
+  ["usn", "USN", "Ubuntu Security Notice: oznámení Canonicalu popisující bezpečnostní problém a opravené balíčky pro podporované Ubuntu releasy."],
+  ["compliance", "Compliance", "Míra shody skutečného systému s požadovaným pravidlem, profilem, standardem nebo regulatorním požadavkem."],
+  ["git", "Git", "Distribuovaný systém verzování, který eviduje historii změn a umožňuje práci s větvemi, commity a slučováním."],
+  ["repository", "Repository", "Verzované úložiště zdrojového kódu, konfigurace a historie změn; v automatizaci má být jednoznačně určena použitá větev, tag nebo commit."],
+  ["merge-request", "Merge request", "GitLab workflow pro návrh, kontrolu, automatické testy a schválení změny před jejím sloučením do cílové větve."],
+  ["pipeline", "Pipeline", "Automatizovaný sled stages a jobs, který ověřuje, sestavuje, publikuje nebo nasazuje změnu."],
+  ["gitlab-runner", "GitLab Runner", "Agent, který přebírá GitLab CI/CD joby a spouští je ve zvoleném execution prostředí."],
+  ["executor", "Executor", "Způsob, kterým runner izoluje a spouští job, například shell, Docker nebo Kubernetes."],
+  ["artifact", "Artifact", "Výstup jobu uchovaný pro další stage nebo stažení, například binární balík, report testů či sestavená dokumentace."],
+  ["container-registry", "Container registry", "Služba pro ukládání a distribuci verzovaných OCI container images a souvisejících metadat."],
+  ["devsecops", "DevSecOps", "Přístup začleňující bezpečnostní kontroly a odpovědnosti do celého procesu vývoje a provozu software."],
+  ["cicd", "CI/CD", "Continuous Integration a Continuous Delivery/Deployment: automatické ověřování změn a řízené doručování software."],
+  ["ansible-core", "ansible-core", "Základní Ansible runtime obsahující příkazové nástroje, execution engine a builtin pluginy."],
+  ["control-node", "Control node", "Systém, ze kterého Ansible načítá automatizační obsah a řídí běhy proti spravovaným cílům."],
+  ["managed-node", "Managed node", "Cílový systém spravovaný Ansiblem prostřednictvím podporovaného připojení nebo API."],
+  ["inventory", "Inventory", "Seznam a členění spravovaných cílů, jejich skupin a souvisejících proměnných pro automatizaci."],
+  ["playbook", "Playbook", "YAML definice jednoho či více plays, která popisuje cíle a požadované automatizační kroky."],
+  ["play", "Play", "Část playbooku spojující vybranou skupinu hostů s úlohami, proměnnými a dalšími pravidly běhu."],
+  ["task", "Task", "Jedna pojmenovaná automatizační operace volající modul nebo jinou akci."],
+  ["module", "Ansible module", "Jednotka automatizační funkce, například správa balíku, souboru, služby nebo cloudového objektu."],
+  ["role", "Ansible role", "Standardizovaná struktura pro opakovatelné tasks, handlers, templates, files, defaults a proměnné."],
+  ["collection", "Ansible collection", "Distribuční balík pro moduly, pluginy, role a další Ansible obsah v jednoznačném namespace."],
+  ["idempotence", "Idempotence", "Vlastnost operace, jejíž opakované provedení po dosažení cílového stavu nevytváří další nežádoucí změny."],
+  ["ansible-vault", "Ansible Vault", "Funkce pro šifrování citlivých proměnných nebo souborů; bezpečnost stále závisí na správě hesla či vault identity."],
+  ["semaphore-project", "Semaphore project", "Izolovaný workspace obsahující členy, repository, inventories, keys, variables, templates a historii běhů."],
+  ["task-template", "Task template", "Uložená definice toho, co a nad jakými cíli Semaphore spustí, včetně repository, entry pointu, inventory, variables a credentials."],
+  ["task-run", "Task run", "Jedno konkrétní spuštění template s vlastními vstupy, stavem, časem, logem a výsledkem."],
+  ["key-store", "Key Store", "Úložiště Semaphore pro SSH klíče, hesla, tokeny, Vault credentials a napojení externích secret stores."],
+  ["variable-group", "Variable Group", "Znovupoužitelná skupina proměnných a případně secrets předávaná automatizačním běhům."],
+  ["workflow", "Workflow", "Řetězec automatizačních templates s návaznostmi, podmínkami nebo schvalovacími kroky."],
+  ["schedule", "Schedule", "Pravidlo pro jednorázové nebo opakované automatické spuštění template či workflow."],
+  ["runner", "Automation runner", "Execution host, který přebírá a provádí automatizační úlohy, často v oddělené síťové nebo bezpečnostní zóně."],
 ].map(([id, term, definition]) => ({ id, term, definition }));
 
 const glossaryCategories = {
@@ -438,6 +556,7 @@ const glossaryCategories = {
   "Dostupnost a ochrana dat": ["availability","redundancy","spof","ha","rpo","rto","backup","restore","snapshot","replication","retention-lock","ransomware","air-gap","cyber-recovery"],
   "Provoz a observability": ["service","sla","incident","problem-management","capacity","lead-time","support-matrix","metric","log","event","alert","trace","observability","baseline","qos"],
   "Bezpečnost a identita": ["rbac","zero-trust","microsegmentation","identity","encryption","object-lock"]
+  ,"Automatizace a lifecycle": ["provisioning","host-group","smart-proxy","pxe","uefi-http","dhcp","tftp","kickstart","katello","hammer-cli","ubuntu-pro","landscape-client","patch-management","repository-profile","upgrade-profile","access-group","usn","compliance","git","repository","merge-request","pipeline","gitlab-runner","executor","artifact","container-registry","devsecops","cicd","ansible-core","control-node","managed-node","inventory","playbook","play","task","module","role","collection","idempotence","ansible-vault","semaphore-project","task-template","task-run","key-store","variable-group","workflow","schedule","runner"]
 };
 
 for (const item of glossary) {
@@ -452,7 +571,11 @@ const glossaryAliases = [
   ["SAN","san"],["LUN","lun"],["zoning","zoning"],["LUN masking","lun-masking"],["initiator","initiator"],["target","target"],["multipathing","multipathing"],
   ["datová cesta","data-path"],["IOPS","iops"],["throughput","throughput"],["latence","latency"],["percentil","percentile"],["baseline","baseline"],
   ["monitoring","monitoring"],["metrika","metric"],["log","log"],["alert","alert"],["observability","observability"],["failure domain","failure-domain"],
-  ["redundance","redundancy"],["SPOF","spof"],["snapshot","snapshot"],["backup","backup"],["RPO","rpo"],["RTO","rto"]
+  ["redundance","redundancy"],["SPOF","spof"],["snapshot","snapshot"],["backup","backup"],["RPO","rpo"],["RTO","rto"],
+  ["provisioning","provisioning"],["Smart Proxy","smart-proxy"],["PXE","pxe"],["Katello","katello"],["Ubuntu Pro","ubuntu-pro"],["Landscape Client","landscape-client"],
+  ["Git","git"],["repository","repository"],["merge request","merge-request"],["pipeline","pipeline"],["GitLab Runner","gitlab-runner"],["CI/CD","cicd"],
+  ["control node","control-node"],["managed node","managed-node"],["inventory","inventory"],["playbook","playbook"],["Ansible role","role"],["collection","collection"],["idempotence","idempotence"],["Ansible Vault","ansible-vault"],
+  ["task template","task-template"],["task run","task-run"],["Key Store","key-store"],["Variable Group","variable-group"],["workflow","workflow"],["schedule","schedule"],["runner","runner"]
 ].filter(([,id])=>glossary.some(item=>item.id===id));
 
 const quizQuestions = [
@@ -576,6 +699,49 @@ const trainingBlocks = [
 ];
 
 const productTrainingExtras = {
+  datadomain: {
+    estimated:"8–12 hodin",
+    sources:[
+      ["Dell Data Domain — portfolio a modelové kapacity","https://www.dell.com/en-us/shop/powerprotect-data-domain/sf/powerprotect-data-domain"],
+      ["Dell DD9410/DD9910 — konfigurace a HA","https://www.dell.com/support/manuals/en-us/dd9910-appliance/dd_p_dd9410_dd9910_install_guide/dd9410-and-dd9910-system-features"],
+      ["Dell DD — elektronické licence","https://www.dell.com/support/manuals/en-us/dd9910-appliance/dd_p_dd9410_dd9910_install_guide/license-the-new-storage-with-electronic-licensing"]
+    ],
+    chapters:[
+      ["1. Data Domain v end-to-end ochraně dat","Data Domain je specializované protection storage. Backup software rozhoduje, co se chrání, kdy kopie vznikne a jak se obnoví; Data Domain poskytuje optimalizovaný cíl, deduplikaci, retenci a replikaci. Stav appliance proto neodpovídá na otázku, zda jsou všechny služby chráněné.||Pro SDM je základní mapou řetězec workload → protection policy → data mover → Data Domain MTree/storage unit → replika nebo vault → recovery workflow. Každý článek má jiného vlastníka a vlastní failure modes. Úspěšný zápis na target neprokazuje konzistenci aplikace ani dosažitelnost požadovaného RTO.",["Data Domain je backup target, nikoli úplná backup služba.","Coverage a obnovitelnost se měří nad inventářem služeb.","RPO a RTO se ověřují recovery testem."],"Zákazník ukáže 99,9 % úspěšných jobů. Vyžádej seznam kritických služeb, poslední použitelný recovery point a výsledek posledního restore testu."],
+      ["2. Deduplikace, komprese a kapacita","DD OS rozděluje příchozí data na segmenty a opakující se obsah neukládá znovu. DD Boost může přesunout část identifikace segmentů ke zdroji a snížit objem přenášených dat. Výsledek závisí na změnovosti, typu workloadu, šifrování a formátu záloh.||Logical capacity popisuje objem dat před redukcí, physical nebo usable capacity skutečně dostupný prostor a reduction ratio jejich vztah v určeném měřicím bodě. Kapacitní forecast musí zahrnout retenci, denní změnu, nové workloady, replikaci, cleaning a rezervu; marketingové maximum redukce není sizingový závazek.",["Redukční poměr je výsledek workloadu, ne pevná vlastnost.","Retence a změnovost určují růst kapacity.","Kapacitní nouze může zablokovat ochranu i obnovu."],"Při poklesu redukce po zapnutí aplikačního šifrování přepočítej forecast a eskaluj datum rozšíření dříve, než target dosáhne provozního limitu."],
+      ["3. Appliance, DDVE, Active Tier a Cloud Tier","Fyzická appliance spojuje řadič, cache, síťová rozhraní a podporované diskové police. DDVE poskytuje DD OS jako virtuální appliance a spoléhá na podkladový compute, storage a cloudové služby. Tato závislost mění failure domains i odpovědnost za výkon.||Active Tier drží aktivní záložní data. Cloud Tier je řízené rozšíření pro vhodná dlouhodobější data; vyžaduje licenci, metadata kapacitu a podporovaný object target. Active-passive HA u podporovaných modelů chrání dostupnost zařízení, ale nevytváří historickou či geograficky izolovanou kopii.",["DDVE dědí část rizik podkladové platformy.","Cloud Tier je navržená vrstva, ne libovolný bucket.","HA, replika a cyber vault řeší jiné poruchy."],"Nakresli fyzickou appliance v HA, druhou lokalitu a cloudovou vrstvu. Ke každé poruše přiřaď, která kopie zůstane dostupná."],
+      ["4. Retention Lock, replikace a bezpečnost","Retence říká, jak dlouho má kopie existovat. Retention Lock omezuje její změnu či smazání během chráněného období. Správná governance musí řešit oprávnění, čas, režim, výjimky a důsledky chybně dlouhé retence. Neměnnost posiluje odolnost, současně omezuje možnost rychle uvolnit kapacitu.||Replikace vytváří další kopii, ale bez historie a izolace může přenést také logické poškození. Bezpečný návrh kombinuje více verzí, omezená oprávnění, oddělené identity, monitoring změn a pravidelné obnovy. Management síť a replikační linka mají být zakresleny odděleně.",["Replikace není automaticky air gap.","Neměnnost potřebuje správu času, rolí a kapacity.","Bezpečnost kopie se ověřuje spolu s recovery postupem."],"Administrátor požaduje smazání uzamčených dat kvůli nedostatku místa. SDM zastaví improvizaci, ověří politiku a svolá vlastníky kapacity, compliance a ochrany dat."],
+      ["5. Provoz, licencování a service review","Provoz sleduje ingest a restore výkon, streamy, kapacitu, cleaning, replikační lag, stav filesystému, hardware, alerty, support a verzi DD OS. Service review má spojit technické trendy s coverage a výsledky obnovy.||Active Tier, Cloud Tier a DDVE mají vlastní kapacitní oprávnění. Data Domain licence automaticky nezahrnuje PPDM, Cyber Recovery ani CyberSense. Rozšíření je hotové až po instalaci, licenci, konfiguraci, monitoringu, dokumentaci a ověření backup i restore cesty.",["Licence, support a fyzická kapacita jsou různé položky.","Změna DD OS vyžaduje kontrolu celého ekosystému.","Service review končí rozhodnutím a vlastníkem."],"Připrav měsíční report s datem do kapacitního limitu, replikačním lagem, nejstarší neotestovanou kritickou službou a stavem licenční rezervy." ]
+    ]
+  },
+  ppdm: {
+    estimated:"8–12 hodin", sources:[
+      ["Dell PPDM 19.22 — licenční metody","https://www.dell.com/support/manuals/en-us/enterprise-copy-data-management/pp-dm_19.22_ag/licensing-powerprotect-data-manager"],
+      ["Dell PPDM — licenční typy","https://www.dell.com/support/manuals/en-us/powerprotect-software/pp-dm_ag/license-types"],
+      ["Dell PPDM 19.22 — dokumentační sada","https://www.dell.com/support/kbdoc/en-us/000196987/dell-powerprotect-data-manager-info-hub-product-documents-and-information"]
+    ],
+    chapters:[
+      ["1. Assets, discovery a protection policies","PPDM objevuje podporované assets a přiřazuje jim ochranné politiky. Asset může být VM, databáze, filesystem, NAS share nebo Kubernetes objekt. Discovery je dynamická: nově vytvořený workload musí být nalezen, klasifikován a zařazen do správné politiky.||Policy spojuje schedule, cíl, retenci, replikační či cloudové kroky a recovery požadavek. Technicky úspěšný job není důkaz úplného coverage; SDM porovnává PPDM inventář s CMDB a katalogem kritických služeb.",["Asset bez policy je mezera v ochraně.","Coverage se měří proti autoritativnímu inventáři.","Policy vyjadřuje obchodní požadavek technickými kroky."],"Automatizace vytvořila deset VM, ale tag dostalo jen devět. Navrhni denní kontrolu, která odhalí chybějící desátou VM."],
+      ["2. Konzistence a recovery point","Crash-consistent kopie odpovídá stavu po náhlém výpadku napájení. Application-consistent ochrana koordinuje zápisy aplikace a může pracovat s databázovými logy. Image-level ochrana VM proto nemusí sama splnit požadavek na point-in-time obnovu databáze.||RPO se vztahuje ke stáří použitelného recovery pointu, RTO k době obnovení služby. Obě hodnoty musí být definovány pro službu a scénář; čas stažení dat není celé RTO, pokud následuje konfigurace, validace a rozhodnutí vlastníka aplikace.",["Konzistence musí odpovídat workloadu.","RPO měří možnou ztrátu dat, RTO dobu obnovy.","Použitelný recovery point se prokazuje testem."],"VM se obnoví za 20 minut, databáze však dvě hodiny aplikuje logy a aplikace čeká na kontrolu vlastníka. Vyhodnoť skutečné RTO."],
+      ["3. Protection engines a datová cesta","Management appliance plánuje a eviduje operace, zatímco protection engines, proxy nebo aplikační agenti mohou přenášet data. Síťový návrh musí rozlišit management, backup a restore provoz a zahrnout DNS, čas, certifikáty a identity.||Sizing vychází z počtu objektů, paralelních úloh, objemu změn, backup okna a restore cíle. Úzkým místem může být zdroj, proxy, síť, target i cílové recovery prostředí. Pro diagnostiku je nutná společná časová osa všech vrstev.",["Management a datová cesta nejsou totéž.","Restore může mít jiný bottleneck než backup.","Každá integrační identita má lifecycle a vlastníka."],"Backup okno se prodloužilo po přidání VM. Rozděl měření mezi zdroj, protection engine, síť a Data Domain a určete další experiment."],
+      ["4. FETB, BETB a licence","FETB měří chráněnou front-end kapacitu před deduplikací. BETB se vztahuje k backendové protection storage. Deset terabajtů fyzicky uložených dat proto nelze bez dalšího porovnat s deseti terabajty FETB entitlementu.||PPDM podporuje Dynamic Licensing a XML licenci. Dynamic režim může být connected nebo offline; entitlement obsahuje funkce, kapacitu, typ a term. DDVE, Cloud Tier, Cyber Recovery a další komponenty mohou vyžadovat samostatné oprávnění.",["FETB a BETB mají jiný měřicí bod.","Trial není produkční licenční strategie.","Integrace v UI neprokazuje zakoupenou licenci."],"Zákazník chce nacenit PPDM podle obsazenosti Data Domain. Vysvětli, proč je nutné nejprve určit front-end workloady a licenční metric."],
+      ["5. Provoz PPDM a obnova management vrstvy","Denní dohled sleduje failed jobs, SLA compliance, poslední recovery points, nezařazené assets, kapacitu targetů a stav protection engines. Trend opakovaných varování je důležitější než jednorázový zelený dashboard.||Do DR plánu patří PPDM konfigurace, katalog, účty, certifikáty a dokumentace pořadí obnovy. Změny verzí se kontrolují proti kompatibilitě agentů, Data Domain, vCenter a workloadů. Provozní akceptace zahrnuje demonstraci obnovy, nikoli pouze první úspěšný backup.",["Management ochrany dat potřebuje vlastní recovery plán.","Kompatibilita se kontroluje end-to-end.","Akceptace obsahuje měřený restore."],"Po ztrátě management appliance jsou kopie na Data Domain, ale tým nezná mapování politik a účty. Sestav preventivní checklist pro tento scénář." ]
+    ]
+  },
+  "cyber-recovery": {
+    estimated:"8–12 hodin", sources:[
+      ["Dell Cyber Recovery 20.3 — architektura","https://www.dell.com/support/manuals/en-us/cyber-recovery/cyber-recovery_p_20.3_prodg/what-is-the-dell-powerprotect-cyber-recovery-solution"],
+      ["Dell Cyber Recovery — vault architektura","https://www.dell.com/support/manuals/en-us/enterprise-copy-data-management/irs_p_19.16_ppdm_userguide/cyber-recovery-architecture"],
+      ["Dell Cyber Recovery 20.3 — Dynamic Licensing","https://www.dell.com/support/manuals/en-us/cyber-recovery/cyber-recovery_p_20.3_prodg/dynamic-licensing"]
+    ],
+    chapters:[
+      ["1. Hrozba a účel cyber vaultu","Běžná replika řeší poruchu lokality, ale může převzít smazání, šifrování nebo kompromitovaná oprávnění. Cyber Recovery chrání vybranou minimální sadu kritických dat ve vaultu s omezenou konektivitou a odděleným řízením.||Cílem není uložit všechno bez priorit. Organizace musí určit minimální životaschopné služby, jejich závislosti a pořadí obnovy. Tato obchodní rozhodnutí řídí kapacitu vaultu i recovery cvičení.",["DR a cyber recovery mají překryv, ale jiný threat model.","Vault chrání vybraná kritická data.","Priorita obnovy vzniká s vlastníky služeb."],"Dvě služby používají stejnou identitu a DNS. Rozhodni, zda lze obnovit jen jednu, a doplň chybějící závislosti."],
+      ["2. Operational air gap a vault architektura","Produkční Data Domain replikuje přes vyhrazenou cestu do vault Data Domain. Cyber Recovery otevírá spojení jen v definovaném okně a poté je uzavírá. Air gap je tedy řízený stav architektury a procesu, ne pouhé marketingové označení.||Vault má vlastní management, identity, čas, monitoring a přístupové postupy. Pokud používá stejné administrátorské účty jako produkce, izolace je slabší. Každý povolený tok musí mít účel, vlastníka a záznam.",["Konektivita se otevírá jen pro řízené workflow.","Identity jsou součást bezpečnostní izolace.","Vault potřebuje vlastní provozní monitoring."],"Nakresli produkci, replikační linku a vault. Vyznač, kdo smí spojení otevřít a jak se ověří jeho opětovné uzavření."],
+      ["3. PIT kopie, Retention Lock a CyberSense","Vault vytváří point-in-time kopie a chrání je proti změně. Použitý mechanismus závisí na DD OS; dokumentace rozlišuje Retention Lock a u novějších verzí Secure Snapshot. Retenční okno musí pokrýt dobu potřebnou k odhalení útoku.||CyberSense může analyzovat data ve vaultu a hledat známky neobvyklých změn. Jeho výstup pomáhá vybrat recovery point, ale není absolutním důkazem, že je celá aplikace bezpečná. Výběr kopie spojuje analytiku, incident response a vlastníka služby.",["Nejnovější kopie nemusí být nejbezpečnější.","Analytika podporuje rozhodnutí, nenahrazuje ho.","CyberSense je volitelně a samostatně licencovaný."],"Útok byl zjištěn po deseti dnech, vault drží PIT kopie sedm dní. Popiš gap a rozhodnutí pro novou retenci."],
+      ["4. Clean room a obnovení obchodní služby","Clean room je kontrolované prostředí pro bezpečnou obnovu a validaci. Potřebuje compute, storage, síť, segmentaci, DNS, identity, certifikáty, aplikační licence a nástroje pro analýzu. Obnova souborů do prázdného prostoru není obnovení služby.||Runbook určuje pořadí infrastruktury, dat, middleware a aplikací, bezpečnostní kontroly i business acceptance. Cvičení měří technické časy, rozhodovací prodlevy a připravenost lidí. Výsledek se převádí do konkrétních úprav architektury a procesu.",["Clean room musí být připraven před incidentem.","Business acceptance je část RTO.","Cvičení ověřuje technologie, lidi i rozhodnutí."],"Data se obnovila za čtyři hodiny, ale chybí certifikát a vlastník aplikace je nedostupný. Urči skutečný stav a nápravná opatření."],
+      ["5. Governance, licence a krizové řízení","Cyber Recovery vyžaduje vlastní oprávnění; CyberSense, Data Domain kapacita a clean room jsou samostatné části řešení. Offline Dynamic Licensing podporuje izolovaný provoz, ale licenční soubor a renewal musejí mít bezpečný provozní postup.||Před incidentem se schvalují role pro izolaci, otevření vaultu, výběr recovery pointu a návrat služby. War room odděluje fakta, důkazy, rozhodnutí a komunikaci. SDM udržuje kontakty, cvičení, rizika a akční plán; během útoku neimprovizuje autorizační model.",["Licence sama nevytváří připravenost.","Pravomoci a kontakty se testují před krizí.","Každé cvičení musí uzavřít zjištěné mezery."],"Připrav dvouhodinový tabletop ransomware: účastníci, rozhodovací body, důkazy, komunikační interval a kritéria ukončení." ]
+    ]
+  },
   powervault: {
     estimated: "12–16 hodin",
     sources: [
@@ -600,7 +766,8 @@ const productTrainingExtras = {
 const productTrainingPrerequisites = {
   powervault: "datacenter", powerstore: "datacenter", powermax: "datacenter", powerscale: "datacenter", objectscale: "datacenter", powerflex: "virtualization-storage",
   vxrail: "virtualization-storage", datadomain: "virtualization-storage", ppdm: "virtualization-storage", "cyber-recovery": "service-delivery",
-  vsphere: "datacenter", vsan: "virtualization-storage", nsx: "virtualization-storage", vdefend: "virtualization-storage", vcf: "service-delivery", "dell-private-cloud": "service-delivery", san: "datacenter"
+  vsphere: "datacenter", vsan: "virtualization-storage", nsx: "virtualization-storage", vdefend: "virtualization-storage", vcf: "service-delivery", "dell-private-cloud": "service-delivery", san: "datacenter",
+  foreman:"datacenter", landscape:"foundations", gitlab:"foundations", ansible:"foundations", "semaphore-ui":"service-delivery"
 };
 
 const companies = [
@@ -678,8 +845,34 @@ const lukasExpertise = {
   ]
 };
 
+const milanExpertise = {
+  id:"milan-zelenka", name:"Milan Zelenka", role:"Automation specialist", recordedAt:"24. 9. 2026",
+  summary:"Více než 10 let zkušeností s automatizací systémů pomocí Ansible a praktická zkušenost s nasazením a správou Foremanu, GitLabu a Semaphore UI.",
+  certifications:[{vendor:"Certifikace",name:"Nebyly v dodaném profilu uvedeny",status:"Doplnit po interním ověření"}],
+  references:["Fortuna Entertainment Group","T-Mobile","MONETA Money Bank"],
+  skills:[
+    {productId:"ansible",area:"Automatizace systémů",experience:"Více než 10 let zkušeností",certification:"Neuvedena",engagement:"Praktická automatizace systémů pomocí Ansible",level:"strong"},
+    {productId:"foreman",area:"Provisioning a lifecycle hostů",experience:"Praktická zkušenost",certification:"Neuvedena",engagement:"Nasazení a správa v prostředí významných společností",level:"experienced"},
+    {productId:"gitlab",area:"DevSecOps a správa repozitářů",experience:"Praktická zkušenost",certification:"Neuvedena",engagement:"Nasazení a správa v prostředí významných společností",level:"experienced"},
+    {productId:"semaphore-ui",area:"Orchestrace automatizace",experience:"Praktická zkušenost",certification:"Neuvedena",engagement:"Nasazení a správa v prostředí významných společností",level:"experienced"}
+  ]
+};
+
+const josefExpertise = {
+  id:"josef-vyletal", name:"Josef Vyleťal", role:"Linux and automation specialist", recordedAt:"24. 9. 2026",
+  summary:"Více než 10 let zkušeností s nástroji Foreman, Canonical Landscape, GitLab a Ansible včetně jejich nasazení a správy.",
+  certifications:[{vendor:"Certifikace",name:"Nebyly v dodaném profilu uvedeny",status:"Doplnit po interním ověření"}],
+  references:["Fortuna Entertainment Group","Česká spořitelna","MONETA Money Bank","PHOENIX lékárenský velkoobchod"],
+  skills:[
+    {productId:"foreman",area:"Provisioning a lifecycle hostů",experience:"Více než 10 let zkušeností",certification:"Neuvedena",engagement:"Praktické nasazení a správa",level:"strong"},
+    {productId:"landscape",area:"Centrální správa Ubuntu",experience:"Více než 10 let zkušeností",certification:"Neuvedena",engagement:"Praktické nasazení a správa Canonical Landscape",level:"strong"},
+    {productId:"gitlab",area:"DevSecOps a správa repozitářů",experience:"Více než 10 let zkušeností",certification:"Neuvedena",engagement:"Praktické nasazení a správa",level:"strong"},
+    {productId:"ansible",area:"Automatizace systémů",experience:"Více než 10 let zkušeností",certification:"Neuvedena",engagement:"Praktické nasazení a správa automatizace",level:"strong"}
+  ]
+};
+
 // Nové členy týmu přidáváme jako další záznamy se stejnou strukturou.
-const teamMembers = [lukasExpertise];
+const teamMembers = [lukasExpertise,milanExpertise,josefExpertise];
 
 const productCommercialDetails = {
   powervault: {
@@ -807,11 +1000,182 @@ const productCommercialDetails = {
       ["Dell PowerFlex Product Documentation","https://www.dell.com/support/kbdoc/en-us/000308007/powerflex-family-product-documentation"],
       ["Dell PowerFlex 5.x Rack deployment options","https://www.dell.com/support/manuals/en-us/powerflex-rack-hw/flex-rack-admin-guide-5x/powerflex-rack-deployment-options"]
     ]
+  },
+  vxrail: {
+    verified:"22. 9. 2026", scope:"VxRail 8.x/9.x; licenční přechod na VCF/VVF 9 ověřen samostatně",
+    configurations:[
+      "VxRail je integrovaná HCI platforma: Dell PowerEdge hardware, ESXi, vSAN, VxRail Manager a validovaný lifecycle stack. Konkrétní node řady pokrývají obecné, výkonnostní, kapacitní, edge a GPU scénáře.",
+      "Běžný cluster, stretched cluster a dvounodový cluster mají rozdílné požadavky na počet nodů, witness, síť a placement management komponent.",
+      "VxRail může používat VxRail-managed vCenter nebo customer-managed vCenter. Customer-managed varianta umožňuje širší správu, ale lifecycle vCenter zůstává odpovědností zákazníka.",
+      "Síťový návrh zahrnuje management, vMotion, vSAN, VM provoz, případný witness a uplinky. Fyzická síť je součást datové cesty vSAN a musí být dimenzována i pro resync a maintenance."
+    ],
+    licensing:[
+      "VxRail obsahuje licenci VxRail Manageru. VMware-branded software vyžaduje odpovídající VMware/Broadcom oprávnění; ESXi a vSAN nelze považovat za automaticky zahrnuté jen proto, že jsou předinstalované.",
+      "Dell planning guide uvádí dočasná Broadcom oprávnění na 60 dní. Produkční subscription licence je nutné aktivovat před koncem grace period.",
+      "Pro upgrade na VxRail 9 / VCF 9 nebo VVF 9 musí být všechny nody pokryté odpovídající subscription nabídkou. Staré perpetual vSphere/vSAN licence neopravňují k upgradu na release 9.",
+      "Licenci VMware stacku je nutné oddělit od Dell ProSupportu, implementačních služeb, síťových licencí a licencí externích add-onů."
+    ],
+    decisions:["Node řada, CPU, RAM, GPU a disky","Standard, 2-node nebo stretched cluster","VxRail-managed vs. customer-managed vCenter","vSAN protection a kapacitní rezerva","Síťové porty, switche, MTU a failure domains","VCF nebo VVF subscription entitlement","Dell support a odpovědnost za VMware support","Lifecycle třetích komponent"],
+    sources:[
+      ["Dell VxRail Architecture Overview — vCenter a lifecycle","https://www.dell.com/support/manuals/en-us/vxrail-d-series-nodes/vxrail_architecture_guide/vmware-vcenter-server-management-features"],
+      ["Dell VxRail Network Planning Guide — licence","https://www.dell.com/support/manuals/en-us/vxrail-appliance-series/vxrail_planning_guide/planning-overview"],
+      ["Dell KB — VxRail 9 licensing requirements","https://www.dell.com/support/kbdoc/en-ag/000310965/vxrail-licensing-implication-when-upgrading-from-vxrail-8-0-x-to-9-0-x"]
+    ]
+  },
+  vcf: {
+    verified:"22. 9. 2026", scope:"VMware Cloud Foundation 9.x on VxRail 9.x; produktová stránka současně vysvětluje obecný VCF",
+    configurations:[
+      "VCF on VxRail spojuje VCF cloudový stack s VxRail HCI a jeho hardwarovým lifecyclem. Management domain hostuje řídicí komponenty; workload domains nesou aplikační clustery a mohou mít odlišné lifecycle a bezpečnostní hranice.",
+      "Návrh musí určit velikost management domain, počet a typ workload domains, NSX topologii, identity, DNS/NTP, certifikáty, backup management vrstvy a napojení monitoringu.",
+      "VCF 9.x on VxRail 9.x má vlastní Dell support matrix. Není bezpečné kombinovat libovolný VCF build, VxRail release, firmware a ovladače jen podle samostatné podpory jednotlivých komponent.",
+      "Lifecycle není jediný univerzální update. VCF komponenty, VxRail image a solution add-ony mají vlastní vlastníky a pořadí; například NSX se spravuje vlastním lifecycle workflow."
+    ],
+    licensing:[
+      "VCF 9 přístup vyžaduje platnou VCF subscription nabídku. U VxRail musí entitlement pokrývat všechny nody příslušného clusteru před upgradem.",
+      "VCF licence nepokrývá automaticky hardware VxRail, Dell support, implementační služby ani všechny externí služby jako backup, identity, monitoring a bezpečnostní produkty.",
+      "Přechod z perpetual licencí je projekt s licenčním i technickým dopadem. Dell uvádí, že perpetual vSphere/vSAN licence neopravňují k release 9 a úspěšně upgradovaný cluster nelze jednoduše vrátit na předchozí release.",
+      "Pro nabídku je nutné potvrdit aktuální metriku a edici přímo v Broadcom quote; KB uchovává architektonický význam, ne ceník."
+    ],
+    decisions:["Management domain sizing","Workload domains a jejich účel","VCF 9/VxRail 9 support matrix","NSX topologie","VCF subscription a pokrytí nodů","Pořadí full-stack lifecycle","Externí backup, identity a monitoring","Support boundary Dell/Broadcom/partner","Add-ony a custom komponenty"],
+    sources:[
+      ["Dell VxRail Documentation — VCF 9 on VxRail 9 matrix","https://www.dell.com/support/manuals/en-us/vxrail-d-series-nodes/vxr_p_vxrail-doc-list-doc"],
+      ["Dell KB — VCF on VxRail lifecycle guidance","https://www.dell.com/support/kbdoc/en-us/000278934/vxrail-best-practices-for-vlcm-in-vxrail"],
+      ["Dell KB — VxRail 9 licensing requirements","https://www.dell.com/support/kbdoc/en-ag/000310965/vxrail-licensing-implication-when-upgrading-from-vxrail-8-0-x-to-9-0-x"]
+    ]
+  },
+  "dell-private-cloud": {
+    verified:"22. 9. 2026", scope:"Dell Automation Platform 2.1 a Dell Private Cloud compute solutions",
+    configurations:[
+      "Dell Private Cloud používá Dell Automation Platform orchestrator a blueprinty k nasazování a správě privátních cloudových řešení na podporované Dell infrastruktuře.",
+      "Orchestrator lze provozovat jako SaaS, on-premises connected nebo on-premises unconnected. Zvolený model mění identitu, konektivitu, aktivaci licence i provozní odpovědnost.",
+      "Dell Private Cloud licence umožňuje spravovat podporované compute solution stacky, například VMware, Red Hat nebo Nutanix. Konkrétní blueprint určuje podporovaný hardware, software a lifecycle workflow.",
+      "Cluster lifecycle zahrnuje registraci, expanzi, redukci a deregistraci. Uvolněnou node licenci lze znovu použít po korektním odebrání nodu."
+    ],
+    licensing:[
+      "Dell Automation Platform orchestrator má víceleté subscription období podle purchasing agreement. Licence je per customer pro SaaS nebo per instance pro on-premises model.",
+      "Connected nasazení používá Dynamic Licensing; unconnected on-premises používá file-based licenci. Licence orchestratoru je nutná pro přístup k automatizaci a blueprintům.",
+      "Dell Private Cloud se měří per node per server. Licence je znovu použitelná po decommissioningu a uvolnění nodu.",
+      "Onboarding serveru do Dell Automation Platform sám o sobě podle VMware on Dell Private Cloud guide subscription nevyžaduje; spotřeba nastává při vytvoření či rozšíření spravovaného clusteru. Licence DAP/DPC je oddělená od licence zvoleného cloudového stacku."
+    ],
+    decisions:["SaaS, connected nebo unconnected orchestrator","Cílový VMware/Red Hat/Nutanix blueprint","Počet licencovaných nodů","Hardware a storage blueprintu","Konektivita k Dell licensing službám","Licence cílového cloud stacku","Support-aware registrace","Expansion/reduction workflow","Provoz orchestratoru, identit a certifikátů"],
+    sources:[
+      ["Dell Automation Platform 2.1 — licensing categories","https://www.dell.com/support/manuals/en-us/dell-automation-platform-components/dap-p-administration-guide-v-2-1/licensing-categories"],
+      ["Dell Automation Platform — Dynamic Licensing","https://www.dell.com/support/manuals/en-us/dell-automation-platform-components/dap_p_ug/Dell-Dynamic-Licensing"],
+      ["VMware vSphere on Dell Private Cloud — licensing requirements","https://www.dell.com/support/manuals/en-us/vmware-vsphere-on-dell-private-cloud/dap_pc_vmware_admin_guide_1-3/licensing-requirements"]
+    ]
+  },
+  datadomain: {
+    verified:"22. 9. 2026", scope:"PowerProtect Data Domain hardware, DDVE a DD OS 8.x; přesná kapacita se vždy ověřuje pro objednávaný model",
+    configurations:[
+      "Data Domain je protection storage, nikoli řídicí backup software. Přijímá záložní data od PPDM nebo jiného podporovaného produktu, deduplikuje je, ukládá na Active Tier a poskytuje je pro obnovu.",
+      "Současné portfolio zahrnuje fyzické appliance různých velikostí a Data Domain Virtual Edition pro on-premises i cloudová prostředí. Volba není jen o TB: rozhodují ingest a restore výkon, počet streamů, síťová rozhraní, HA, replikační topologie a růst.",
+      "Active Tier drží aktivní záložní data. Cloud Tier je volitelná, licencovaná vrstva pro dlouhodobější data a vyžaduje také odpovídající metadata kapacitu. Nelze jej považovat za libovolný levný bucket bez support matrix a sizingu.",
+      "Vyšší hardware lze navrhnout jako single node nebo u podporovaných modelů active-passive HA. HA chrání dostupnost appliance; nenahrazuje druhou lokalitu, izolovanou kopii ani ověřený restore postup.",
+      "DD Boost rozděluje část práce se segmenty mezi podporovaný backup software a Data Domain. Retention Lock chrání vybraná data po stanovenou dobu; retence současně vytváří kapacitní závazek, protože chráněná data nelze běžně smazat."
+    ],
+    licensing:[
+      "Fyzická appliance používá elektronické licence svázané s Locking ID systému. Dell dokumentuje samostatné oprávnění a rozšíření kapacity pro Active Tier a Cloud Tier; rozšíření polic samo o sobě není dokončené bez odpovídající licence.",
+      "Cloud Tier je volitelně licencovaný a u fyzických systémů vyžaduje podporované metadata disk packs. DDVE má vlastní kapacitní licenci a musí být odlišena od licence hypervisoru nebo veřejného cloudu, na kterém běží.",
+      "Licence Data Domain nepokrývá automaticky PPDM, PowerProtect Cyber Recovery, CyberSense ani všechny konektory třetích stran. Dell u PPDM výslovně uvádí DDVE, Cloud Tier a Cyber Recovery jako komponenty vyžadující vlastní klíč či oprávnění.",
+      "Deduplikační poměr je závislý na datech a není licenční ani kapacitní zárukou. Obchodní návrh musí pracovat s usable fyzickou kapacitou, retencí, změnovostí, rezervou pro cleaning a ověřeným sizingem."
+    ],
+    decisions:["Fyzická appliance vs. DDVE","Model a usable Active Tier kapacita","Single node vs. active-passive HA","Ingest, restore a počet streamů","DD Boost a podporovaný backup software","Retention Lock režim a governance","Replikace a cílová lokalita","Cloud Tier a metadata kapacita","Síťová rozhraní","Support a lifecycle DD OS"],
+    sources:[
+      ["Dell Data Domain — portfolio a modelové kapacity","https://www.dell.com/en-us/shop/powerprotect-data-domain/sf/powerprotect-data-domain"],
+      ["Dell DD9410/DD9910 — konfigurace a HA","https://www.dell.com/support/manuals/en-us/dd9910-appliance/dd_p_dd9410_dd9910_install_guide/dd9410-and-dd9910-system-features"],
+      ["Dell DD — elektronické licence Active/Cloud Tier","https://www.dell.com/support/manuals/en-us/dd9910-appliance/dd_p_dd9410_dd9910_install_guide/license-the-new-storage-with-electronic-licensing"],
+      ["Dell DDVE — produktová dokumentace","https://www.dell.com/support/product-details/en-us/product/dd-virtual-edition/resources/manuals"]
+    ]
+  },
+  ppdm: {
+    verified:"22. 9. 2026", scope:"PowerProtect Data Manager 19.22; komponentové licence doplněny z aktuální dokumentace 20.2",
+    configurations:[
+      "PPDM je řídicí vrstva ochrany dat. Objevuje podporované assets, seskupuje je do protection policies, plánuje backup, retenci a replikaci a řídí recovery workflow. Samotná PPDM appliance není automaticky místem, kde leží všechna záložní data.",
+      "Nasazení musí určit workloady a jejich konzistenci: VMware VM, databáze, filesystémy, NAS, Kubernetes a další zdroje mají odlišné agenty, data movery, discovery i recovery postupy.",
+      "Protection engine a aplikační agenti rozšiřují datovou cestu. Sizing proto zahrnuje nejen kapacitu Data Domain, ale i paralelismus, backup okna, proxy/engine zdroje, síť, katalog a požadovanou rychlost obnovy.",
+      "Coverage se má porovnávat s autoritativním inventářem služby. Zelené joby neodhalí novou VM nebo databázi, která nebyla objevena či zařazena do žádné politiky.",
+      "PPDM musí mít vlastní plán ochrany a obnovy konfigurace, identit a závislostí. Obnova produkčních dat se může zastavit na nedostupném DNS, účtu, certifikátu, klíči nebo katalogu."
+    ],
+    licensing:[
+      "Dell uvádí 90denní trial; u Dynamic Licensing se automaticky aktivuje trial 12 TB. Produkční oprávnění může být perpetual nebo term/subscription podle konkrétní nabídky.",
+      "Hlavní softwarová metrika je FETB, tedy front-end terabytes: kapacita chráněných zdrojových dat před deduplikací. Protection Storage se může měřit BETB na backendu. Tyto dvě metriky se nesmí zaměnit.",
+      "PPDM 19.22 podporuje Dynamic Licensing nebo ruční XML licenci. Dynamic Licensing může být connected nebo offline; po jeho zapnutí jej nelze vypnout a zvolenou registrační metodu nelze libovolně přepnout.",
+      "Entitlement obsahuje funkce, kapacitu, typ a dobu platnosti. Rezervační pool může sdílet oprávnění mezi registracemi. Kapacitní rozšíření a renewal jsou proto současně obchodní i provozní úkol.",
+      "Některé přibalené komponenty mají vlastní licenci: dokumentace uvádí například DDVE, Cloud Tier, Cyber Recovery, Cloud Snapshot Manager a RecoverPoint for VMs. Přítomnost integrace v UI neprokazuje zakoupené oprávnění."
+    ],
+    decisions:["Chráněné workloady a coverage","Application- vs. crash-consistent ochrana","Protection policies, RPO a retence","Data Domain cíle a replikace","Protection engines a síť","Restore výkon a recovery postupy","FETB vs. BETB metrika","Dynamic connected/offline vs. XML licence","Kapacitní entitlement a term","Ochrana PPDM management vrstvy"],
+    sources:[
+      ["Dell PPDM 19.22 — licenční metody","https://www.dell.com/support/manuals/en-us/enterprise-copy-data-management/pp-dm_19.22_ag/licensing-powerprotect-data-manager"],
+      ["Dell PPDM — licenční typy","https://www.dell.com/support/manuals/en-us/powerprotect-software/pp-dm_ag/license-types"],
+      ["Dell PPDM 20.2 — licence softwarových komponent","https://www.dell.com/support/manuals/en-us/powerprotect-software/pp-dm_20.2_ag/licensing-information-for-powerprotect-data-manager-software-components"],
+      ["Dell PPDM 19.22 — dokumentační sada","https://www.dell.com/support/kbdoc/en-us/000196987/dell-powerprotect-data-manager-info-hub-product-documents-and-information"]
+    ]
+  },
+  "cyber-recovery": {
+    verified:"22. 9. 2026", scope:"PowerProtect Cyber Recovery 20.3; CyberSense je veden jako samostatně licencovaná volitelná komponenta",
+    configurations:[
+      "Cyber Recovery vytváří vault oddělený od produkčního prostředí. Řízený operational air gap otevírá replikační cestu jen na potřebné okno, přenese vybraná data a následně vault znovu izoluje.",
+      "Základní topologie obsahuje produkční Data Domain, dedikovanou replikační cestu, vault Data Domain a management host Cyber Recovery. Ve vaultu mohou být další backup nebo analytické aplikace podle podporované architektury.",
+      "Politika určuje kritická data, replikační harmonogram, point-in-time copies a dobu jejich uzamčení. Starší DD OS používá Retention Lock; dokumentace pro DD OS 8.8+ popisuje Secure Snapshot. Přesný mechanismus se ověřuje podle verze.",
+      "Vault lze provozovat on-premises i v podporovaných AWS, Azure a Google Cloud scénářích. Cloudové umístění samo o sobě nevytváří izolaci; rozhoduje síťový a identitní návrh, řízení přístupu a workflow otevření air gapu.",
+      "CyberSense je volitelná, samostatně licencovaná analytická komponenta ve vaultu. Clean room a obnova obchodní služby vyžadují další compute, síť, identity, DNS, licence aplikací a předem nacvičený recovery postup."
+    ],
+    licensing:[
+      "Cyber Recovery vyžaduje vlastní licenci; PPDM nebo Data Domain licence jej automaticky nezahrnuje. CyberSense má samostatnou platnou licenci a nesmí se vykazovat jako automatická součást Cyber Recovery.",
+      "Dell dokumentuje 90denní evaluation a následnou POC, standardní permanentní nebo subscription licenci podle objednávky. Konkrétní entitlement a term se potvrzují v quote a licenčním portálu.",
+      "Cyber Recovery používá offline Dynamic Licensing vhodné pro izolovaný vault. Licenční soubor a jeho bezpečný přenos se musí zahrnout do provozního postupu bez trvalého otevření konektivity vaultu.",
+      "Celkové náklady zahrnují minimálně vault infrastrukturu, Data Domain kapacitu, Cyber Recovery, případný CyberSense, replikační síť, clean room a pravidelná cvičení. Licence sama nedokládá obnovitelnost."
+    ],
+    decisions:["Kritické datasety a obchodní služby","On-prem vs. cloud vault","Fyzická a logická izolace","Replikační okna","PIT kopie a doba uzamčení","Retention Lock vs. Secure Snapshot","CyberSense ano/ne","Clean room kapacita a závislosti","Pravomoci při incidentu","Recovery runbook a testy","Permanent vs. subscription entitlement"],
+    sources:[
+      ["Dell Cyber Recovery 20.3 — architektura řešení","https://www.dell.com/support/manuals/en-us/cyber-recovery/cyber-recovery_p_20.3_prodg/what-is-the-dell-powerprotect-cyber-recovery-solution"],
+      ["Dell Cyber Recovery — vault architektura","https://www.dell.com/support/manuals/en-us/enterprise-copy-data-management/irs_p_19.16_ppdm_userguide/cyber-recovery-architecture"],
+      ["Dell Cyber Recovery 20.3 — Dynamic Licensing","https://www.dell.com/support/manuals/en-us/cyber-recovery/cyber-recovery_p_20.3_prodg/dynamic-licensing"],
+      ["Dell Cyber Recovery — CyberSense licence","https://www.dell.com/support/manuals/en-us/cyber-recovery/irs_p_19.10_installation/cybersense-feature"]
+    ]
+  },
+  foreman: {
+    verified:"24. 9. 2026", scope:"Foreman 5.0 a aktuálně podporované community releases; Katello je volitelné rozšíření",
+    configurations:["Core Foreman poskytuje UI, API, host model, templates a orchestration; databáze a background processing jsou provozní závislosti.","Smart Proxies umísťují DHCP, DNS, TFTP, templates, remote execution nebo další funkce blíže spravovaným lokalitám.","Provisioning může používat PXE, UEFI HTTP a podporované OS installery; compute resources rozšiřují správu do virtualizace a cloudu.","Katello doplňuje content views, lifecycle environments a správu obsahu. Přesná pluginová sada zásadně mění rozsah i složitost platformy."],
+    licensing:["Foreman core a community pluginy jsou open source; jejich použití nevytváří automatický nárok na komerční podporu.","Komerčně podporované distribuce a související content subscription mohou mít vlastní licenční podmínky, které se neposuzují podle licence upstream projektu.","Rozpočet zahrnuje infrastrukturu, databázi, provoz proxy, lifecycle pluginů, zálohu, monitoring a odbornou správu i tehdy, když software nemá pořizovací licenci."],
+    decisions:["Foreman core vs. Foreman + Katello","Lokality a Smart Proxies","Provisioning metody","DNS/DHCP/TFTP ownership","Compute resources","Databáze a HA","Identity a RBAC","Pluginy a upgrade kompatibilita","Community vs. komerční support"],
+    sources:[["Foreman 5.0 documentation","https://docs.theforeman.org/5.0/"],["Foreman plugins","https://theforeman.org/plugins/"],["Foreman provisioning hosts","https://docs.theforeman.org/5.0/Provisioning_Hosts/index-katello.html"]]
+  },
+  landscape: {
+    verified:"24. 9. 2026", scope:"Canonical Landscape SaaS a Self-hosted Landscape; aktuální licenční mechanismus Ubuntu Pro",
+    configurations:["Landscape používá klient-server architekturu s agentem na spravovaných systémech a webovým portálem či API.","Volba zahrnuje Canonical-hosted SaaS, managed řešení nebo self-hosted deployment včetně podporovaných HA a offline scénářů.","Tags, access groups a profiles řídí výběr strojů, oprávnění, repozitáře, balíčky, aktualizace, rebooty, skripty a compliance.","Self-hosted provoz musí zahrnout ochranu a lifecycle samotného Landscape Serveru, databáze a messaging komponent."],
+    licensing:["Hlavním licenčním mechanismem je Ubuntu Pro. Landscape SaaS zahrnuje Ubuntu Pro v subscription; dokumentace uvádí také bezplatný SaaS účet pro až pět strojů s Ubuntu Pro.","Většina self-hosted účtů používá Ubuntu Pro; starší nebo offline deployments mohou používat legacy license.txt workflow.","Support je dostupný v rámci odpovídajícího Ubuntu Pro pokrytí. Přesné počty strojů, typ subscription a rozsah podpory se potvrzují v aktuální nabídce Canonicalu."],
+    decisions:["SaaS, managed nebo self-hosted","Počet a typ spravovaných instancí","Ubuntu Pro pokrytí","Online vs. offline prostředí","Access groups a RBAC","Repository a upgrade profiles","Maintenance/reboot okna","HA, backup a DR management platformy"],
+    sources:[["Canonical Landscape documentation","https://documentation.ubuntu.com/landscape/"],["Landscape licensing","https://ubuntu.com/landscape/docs/explanation/landscape/licenses/"],["Landscape profiles","https://documentation.ubuntu.com/landscape/reference/terms/profiles/removal-profile/"]]
+  },
+  gitlab: {
+    verified:"24. 9. 2026", scope:"GitLab.com, GitLab Dedicated a GitLab Self-Managed; Free, Premium a Ultimate",
+    configurations:["Deployment model může být GitLab.com SaaS, izolovanější GitLab Dedicated nebo zákazníkem provozovaný Self-Managed.","Self-Managed se navrhuje od kompaktní instalace po distribuovanou reference architecture s oddělenými aplikačními, Git, databázovými, cache, storage a observability komponentami.","Runners mohou být GitLab-hosted nebo self-managed a mohou mít rozsah instance, group či project. Executor a síťové umístění určují izolaci i dostupné cíle.","Container/package registry, artifacts, backups a object storage mají vlastní kapacitní a retenční model."],
+    licensing:["GitLab nabízí Free, Premium a Ultimate; dostupnost funkce závisí také na offeringu GitLab.com, Dedicated nebo Self-Managed.","Licence platformy, GitLab-hosted compute minutes a náklady self-managed runners či infrastruktury jsou oddělené položky.","Před nákupem se ověřuje aktuální user model, minimální commitment, add-ons a pravidla true-up přímo v GitLab quote; KB neuchovává ceny."],
+    decisions:["GitLab.com, Dedicated nebo Self-Managed","Free/Premium/Ultimate","Počet uživatelů a skupin","Runner model, executors a kapacita","HA a reference architecture","Repository/registry/artifact storage","Backup a restore","Identity, secrets a compliance","Upgrade cadence a support"],
+    sources:[["GitLab documentation","https://docs.gitlab.com/"],["GitLab reference architectures","https://docs.gitlab.com/administration/reference_architectures/"],["GitLab runners","https://docs.gitlab.com/ci/runners/"],["GitLab pricing","https://about.gitlab.com/pricing/"]]
+  },
+  ansible: {
+    verified:"24. 9. 2026", scope:"Upstream ansible-core a community Ansible package; komerční Red Hat Ansible Automation Platform je samostatný produkt",
+    configurations:["ansible-core poskytuje execution engine a builtin obsah; community Ansible package přidává vybranou sadu kolekcí.","Control node používá inventories, playbooks, roles, collections, variables a credentials k řízení managed nodes.","Připojení je typicky agentless přes SSH nebo WinRM, ale konkrétní moduly mohou používat HTTP API a síťové transporty.","Pro enterprise provoz se doplňuje Git workflow, testy, secrets management, execution environments a případná controller/orchestration vrstva."],
+    licensing:["ansible-core a community obsah jsou open source, přičemž jednotlivé collections mohou mít vlastní licence a support lifecycle.","Red Hat Ansible Automation Platform přidává komerční subscription, podporu a enterprise komponenty; nelze ji považovat za pouhý placený název ansible-core.","Náklady zahrnují vývoj a údržbu automatizace, testovací prostředí, správu credentials, execution infrastrukturu a governance."],
+    decisions:["ansible-core/community vs. AAP","Control nodes a execution environments","Inventory ownership","Git a code review","Collections a version pinning","Secrets a privilege escalation","Paralelismus a blast radius","Testování, approval a rollback","Support model"],
+    sources:[["Ansible documentation","https://docs.ansible.com/ansible/latest/"],["ansible-core documentation","https://docs.ansible.com/projects/ansible-core/devel/"],["Using Ansible collections","https://docs.ansible.com/projects/ansible-core/devel/collections_guide/collections_using_playbooks.html"]]
+  },
+  "semaphore-ui": {
+    verified:"24. 9. 2026", scope:"Semaphore UI Community, Pro a Enterprise podle aktuální projektové dokumentace",
+    configurations:["Self-hosted server je dostupný jako Go binary nebo container a podporuje SQLite, MySQL a PostgreSQL.","Project sdružuje repository, inventories, Key Store, Variable Groups, Task Templates, teams a historii runs.","Task může vykonat hlavní server nebo project runner v jiné síťové či bezpečnostní zóně.","Vedle Ansible jsou podporovány Terraform/OpenTofu, Terragrunt, shell, PowerShell a Python; workflows, schedules a integrace závisí na edici."],
+    licensing:["Community edice je open source. Dokumentace odlišuje Pro a Enterprise funkce a popisuje samostatnou aktivaci licence.","Přesné funkce placených edic a podmínky se potvrzují v aktuálním ceníku; například workflow nebo pokročilé role nemusí být součástí community rozsahu.","Cena platformy nezahrnuje automaticky licence nástrojů a cloudů, které task spouští, ani provoz runners, databáze, identity provideru a secret store."],
+    decisions:["Community, Pro nebo Enterprise","Binary/container/Kubernetes deployment","SQLite vs. MySQL/PostgreSQL","Lokální vs. remote runners","Identity, teams a RBAC","Repositories a revision policy","Key Store a external secrets","Workflows, approvals a schedules","Backup, HA, logging a upgrade"],
+    sources:[["Semaphore UI documentation","https://semaphoreui.com/docs/"],["Semaphore UI core concepts","https://semaphoreui.com/docs/introduction/concepts"],["Semaphore UI user guide","https://semaphoreui.com/docs/user-guide"],["Semaphore UI Ansible integration","https://semaphoreui.com/docs/user-guide/apps/ansible"]]
   }
 };
 
 function expertiseForProduct(productId) {
-  return lukasExpertise.dell.find(item => item.productId === productId);
+  return teamMembers.flatMap(member => {
+    const items=[...(member.dell||[]),...(member.skills||[])];
+    return items.filter(item=>item.productId===productId).map(item=>({member,item}));
+  });
 }
 
 
@@ -1030,6 +1394,35 @@ powerVaultExpansion.terms.forEach(([id,term,definition])=>{ if(!glossary.some(g=
 const powerVaultQuestions = powerVaultExpansion.questions.map(([question,answers,correct,explanation],i)=>({id:200+i,topic:"PowerVault",question,answers,correct,explanation}));
 quizQuestions.push(...powerVaultQuestions);
 
+const protectionGlossary = [
+  ["protection-storage","Protection storage","Úložiště navržené jako cíl záloh a obnov. Optimalizuje kapacitu, ingest, retenci a integraci s backup softwarem; samo neurčuje úplné coverage workloadů."],
+  ["recovery-point","Recovery point","Konkrétní časový bod a sada dat, ze kterých lze provést obnovu. Použitelnost musí potvrdit odpovídající test."],
+  ["mtree","MTree","Logická část filesystému Data Domain používaná k organizaci a oddělení dat. Může být základem storage unit a replikačních vztahů."],
+  ["active-tier","Active Tier","Primární vrstva Data Domain, na které leží aktivní záložní data a probíhají běžné backup a restore operace."],
+  ["cloud-tier","Cloud Tier","Volitelná licencovaná vrstva Data Domain pro přesun vhodných dlouhodobějších dat do podporovaného object storage."],
+  ["ddve","DDVE","Data Domain Virtual Edition: softwarová appliance DD OS provozovaná na podporované virtuální nebo cloudové infrastruktuře."],
+  ["fetb","FETB","Front-End Terabyte: licenční metrika odvozená od objemu chráněných zdrojových dat před deduplikací."],
+  ["betb","BETB","Back-End Terabyte: metrika protection storage měřená na backendové straně. Není zaměnitelná s FETB."],
+  ["protection-engine","Protection engine","PPDM komponenta zajišťující datové operace pro určité workloady. Její výkon, umístění a síť ovlivňují backup i restore."],
+  ["asset","Asset","Objekt objevený systémem ochrany dat, například VM, databáze, filesystem nebo Kubernetes workload, který lze zařadit do politiky."],
+  ["protection-policy","Protection policy","Pravidla určující výběr assets, harmonogram, cíl, retenci a další kroky ochrany dat."],
+  ["operational-air-gap","Operational air gap","Řízené dočasné otevření a opětovné uzavření cesty do cyber vaultu podle schváleného workflow."],
+  ["pit-copy","PIT copy","Point-in-time copy: kopie reprezentující data v určitém časovém bodě, používaná při výběru bezpečného recovery pointu."],
+  ["secure-snapshot","Secure Snapshot","Ochranný mechanismus novějších verzí DD OS pro časově uzamčené snapshotové kopie; použití se ověřuje podle release."],
+  ["clean-room","Clean room","Oddělené a kontrolované prostředí pro bezpečnou obnovu, analýzu a validaci služby po kybernetickém incidentu."],
+  ["cybersense","CyberSense","Volitelná samostatně licencovaná analytická komponenta ve vaultu, která hledá známky neobvyklých změn v chráněných datech."]
+];
+protectionGlossary.forEach(([id,term,definition])=>{
+  if(!glossary.some(g=>g.id===id))glossary.push({id,term,definition,category:"Ochrana dat a kybernetická obnova"});
+  if(!glossaryAliases.some(([label])=>label.toLowerCase()===term.toLowerCase()))glossaryAliases.push([term,id]);
+});
+const protectionTerms = {
+  datadomain:["protection-storage","recovery-point","mtree","active-tier","cloud-tier","ddve"],
+  ppdm:["recovery-point","fetb","betb","protection-engine","asset","protection-policy"],
+  "cyber-recovery":["operational-air-gap","pit-copy","secure-snapshot","clean-room","cybersense"]
+};
+Object.entries(protectionTerms).forEach(([productId,ids])=>{const product=products.find(item=>item.id===productId);ids.forEach(id=>{if(product&&!product.terms.includes(id))product.terms.push(id);});});
+
 const state = {
   route: location.hash.slice(1) || "dashboard",
   productFilter: "Vše",
@@ -1178,7 +1571,7 @@ function productDetail(id) {
   if (!p) return notFound();
   localStorage.setItem("infrabase-last", p.id);
   const note = state.notes[p.id] || "";
-  const expert = expertiseForProduct(p.id);
+  const experts = expertiseForProduct(p.id);
   const commercial = productCommercialDetails[p.id];
   return `<button class="action-link" data-route="products">← Zpět na produkty</button>
   <div class="detail-layout"><article class="detail-main">
@@ -1187,11 +1580,11 @@ function productDetail(id) {
     </header>
     ${p.sections.map(([title, text]) => `<section class="article-section"><h2>${title}</h2><p>${text}</p></section>`).join("")}
     <section class="article-section"><h2>Modelová situace</h2><div class="callout">${p.scenario}</div></section>
-    ${commercial?`<section class="product-commercial"><div class="commercial-head"><div><p class="eyebrow">Konfigurace a licencování</p><h2>Jak se ${p.name} technicky a obchodně skládá</h2></div><span>Ověřeno ${commercial.verified}</span></div><p class="scope-note"><strong>Rozsah:</strong> ${commercial.scope}. Údaje jsou studijní orientace; závazná je konkrétní nabídka, objednávka, entitlement a dokumentace přesného release.</p><div class="commercial-grid"><article><h3>Možnosti konfigurace</h3><ul>${commercial.configurations.map(x=>`<li>${x}</li>`).join("")}</ul></article><article><h3>Licenční a obchodní model</h3><ul>${commercial.licensing.map(x=>`<li>${x}</li>`).join("")}</ul></article></div><h3>Rozhodnutí, která musí projekt potvrdit</h3><div class="decision-tags">${commercial.decisions.map(x=>`<span>${x}</span>`).join("")}</div><div class="commercial-sources"><strong>Oficiální zdroje Dell</strong>${commercial.sources.map(([name,url])=>`<a href="${url}" target="_blank" rel="noreferrer">${name} ↗</a>`).join("")}</div></section>`:""}
+    ${commercial?`<section class="product-commercial"><div class="commercial-head"><div><p class="eyebrow">Konfigurace a licencování</p><h2>Jak se ${p.name} technicky a obchodně skládá</h2></div><span>Ověřeno ${commercial.verified}</span></div><p class="scope-note"><strong>Rozsah:</strong> ${commercial.scope}. Údaje jsou studijní orientace; závazná je konkrétní nabídka, objednávka, entitlement a dokumentace přesného release.</p><div class="commercial-grid"><article><h3>Možnosti konfigurace</h3><ul>${commercial.configurations.map(x=>`<li>${x}</li>`).join("")}</ul></article><article><h3>Licenční a obchodní model</h3><ul>${commercial.licensing.map(x=>`<li>${x}</li>`).join("")}</ul></article></div><h3>Rozhodnutí, která musí projekt potvrdit</h3><div class="decision-tags">${commercial.decisions.map(x=>`<span>${x}</span>`).join("")}</div><div class="commercial-sources"><strong>Oficiální zdroje výrobce nebo projektu</strong>${commercial.sources.map(([name,url])=>`<a href="${url}" target="_blank" rel="noreferrer">${name} ↗</a>`).join("")}</div></section>`:""}
   </article>
   <aside class="detail-aside">
     <div class="side-card"><h3>Produktové školení</h3><p>Projdi výklad, praktický scénář a závěrečný test.</p><button class="primary-button wide" data-product-training="${p.id}">Otevřít školení</button></div>
-    ${expert ? `<div class="side-card expertise-mini"><div class="source-kicker">Interní profil · ${lukasExpertise.recordedAt}</div><h3>${lukasExpertise.name}</h3><span class="expertise-level ${expert.level}">${expert.experience}</span><dl><div><dt>Oblast</dt><dd>${expert.area}</dd></div><div><dt>Certifikace</dt><dd>${expert.certification}</dd></div><div><dt>Aktuální kontext</dt><dd>${expert.engagement}</dd></div></dl><p class="source-note">Profil neurčuje support ownership, projektovou roli ani SLA.</p><button class="secondary-button wide" data-route="expertise">Celý kompetenční profil</button></div>` : ""}
+    ${experts.length ? experts.map(({member,item})=>`<div class="side-card expertise-mini"><div class="source-kicker">Interní profil · ${member.recordedAt}</div><h3>${member.name}</h3><span class="expertise-level ${item.level}">${item.experience}</span><dl><div><dt>Oblast</dt><dd>${item.area}</dd></div><div><dt>Certifikace</dt><dd>${item.certification}</dd></div><div><dt>Aktuální kontext</dt><dd>${item.engagement}</dd></div></dl><p class="source-note">Profil neurčuje dostupnost, support ownership, projektovou roli ani SLA.</p><button class="secondary-button wide" data-route="expertise">Celý kompetenční profil</button></div>`).join("") : ""}
     <div class="side-card"><h3>Související pojmy</h3><div class="term-links">${p.terms.map(id => { const t=glossary.find(g=>g.id===id); return t ? `<button class="term-link" data-term="${id}">${t.term}</button>` : ""; }).join("")}</div></div>
     <div class="side-card"><h3>Moje poznámky</h3><textarea class="note-area" id="productNote" data-note="${p.id}" placeholder="Co si potřebuji zapamatovat?">${escapeHtml(note)}</textarea><button class="secondary-button wide" id="saveNote">Uložit poznámku</button></div>
     <div class="side-card"><h3>Stav modulu</h3><button class="${state.progress[p.id] ? "secondary-button" : "primary-button"} wide" data-mastery="${p.id}">${state.progress[p.id] ? "Označit jako nerozpracované" : "Označit jako zvládnuté"}</button></div>
@@ -1354,6 +1747,36 @@ function powerVaultDiagram(chapter) {
   return result;
 }
 
+function dataProtectionDiagram(productId, chapter) {
+  const diagrams = {
+    datadomain: [
+      ["End-to-end cesta zálohy",["Workload","Backup software","DD Boost / data mover","Data Domain","Restore test"]],
+      ["Kapacitní vztah",["Front-end data","Segmentace","Deduplikace","Fyzická kapacita","Forecast"]],
+      ["Vrstvy uložení",["Active Tier","Replikovaná kopie","Cloud Tier","Vault","Clean room"]],
+      ["Ochrana kopie",["Protection policy","Retence","Retention Lock","Izolace","Ověřená obnova"]],
+      ["Provozní cyklus",["Monitoring","Capacity review","Licence","Lifecycle","Service review"]]
+    ],
+    ppdm: [
+      ["Od inventáře ke kopii",["CMDB / katalog","Discovery assets","Protection policy","Data Domain","Recovery point"]],
+      ["Od kopie ke službě",["Recovery point","Obnova dat","Aplikační recovery","Validace","Business acceptance"]],
+      ["Datová cesta",["Workload","Agent / engine","Backup síť","Data Domain","Restore prostředí"]],
+      ["Licenční měřicí body",["Zdrojová data","FETB entitlement","PPDM","BETB storage","Samostatné add-ony"]],
+      ["Provoz ochrany",["Coverage","Joby","SLA compliance","Restore test","Nápravná akce"]]
+    ],
+    "cyber-recovery": [
+      ["Od produkce k obnovené službě",["Produkce","Řízená replikace","Cyber vault","Clean room","Obnovená služba"]],
+      ["Operational air gap",["Vault uzavřen","Ověření politiky","Krátké otevření","Replikace","Opětovná izolace"]],
+      ["Výběr recovery pointu",["PIT kopie","Immutability","CyberSense","Incident response","Schválený bod"]],
+      ["Clean-room závislosti",["Compute a síť","Identity a DNS","Data","Aplikace","Business test"]],
+      ["Připravenost",["Role","Runbook","Licence","Cvičení","Uzavření mezer"]]
+    ]
+  };
+  const selected=diagrams[productId]?.[chapter];
+  if(!selected)return "";
+  const [title,labels]=selected;
+  return `<figure class="course-diagram"><figcaption><strong>${title}</strong></figcaption><ol class="dependency-chain">${labels.map(label=>`<li>${label}</li>`).join("")}</ol><p>Vlastní výukové schéma. Šipky vyjadřují odpovědnosti a závislosti; konkrétní implementace se ověřuje v dokumentaci uvedené u školení.</p></figure>`;
+}
+
 function productTrainingView(id, requestedChapter=null) {
   const product = products.find(p=>p.id===id);
   if (!product) return notFound();
@@ -1370,7 +1793,7 @@ function productTrainingView(id, requestedChapter=null) {
   const sources = extra?.sources || [[`Oficiální zdroj: ${product.name}`,product.source]];
   return `<button class="action-link" data-route="training">← Zpět na všechna školení</button><header class="course-hero product-course-hero"><div><p class="eyebrow">Produktové školení · ${extra?.estimated||"Úvodní produktový blok"}</p><h1>${product.name}</h1><p>${product.oneLiner}</p></div><div class="course-goal"><span>Doporučený základ</span><p>${prereq?.title||"Jak funguje IT služba"}</p><button class="secondary-button" data-training="${prereq?.id||"foundations"}">Otevřít základní blok</button></div></header>
   ${trainingProgressPanel("product",id,chapters,chapterIndex)}
-  <section class="lesson-chapter single-chapter" id="product-chapter-${id}-${chapterIndex+1}"><div class="chapter-no">${String(chapterIndex+1).padStart(2,"0")}</div><div><p class="eyebrow">${product.name} · kapitola ${chapterIndex+1} z ${total}</p><h2>${title}</h2><div class="lesson-text">${text.split("||").map(paragraph=>`<p>${annotateTrainingText(paragraph)}</p>`).join("")}</div>${id==="powervault"?powerVaultDiagram(chapterIndex):""}${points.length?`<h3>Co si zapamatovat</h3><ul>${points.map(x=>`<li>${annotateTrainingText(x)}</li>`).join("")}</ul>`:""}<div class="lesson-example"><span>MODELOVÉ CVIČENÍ · VLASTNÍ SCÉNÁŘ</span><p>${annotateTrainingText(example)}</p></div></div></section>
+  <section class="lesson-chapter single-chapter" id="product-chapter-${id}-${chapterIndex+1}"><div class="chapter-no">${String(chapterIndex+1).padStart(2,"0")}</div><div><p class="eyebrow">${product.name} · kapitola ${chapterIndex+1} z ${total}</p><h2>${title}</h2><div class="lesson-text">${text.split("||").map(paragraph=>`<p>${annotateTrainingText(paragraph)}</p>`).join("")}</div>${id==="powervault"?powerVaultDiagram(chapterIndex):dataProtectionDiagram(id,chapterIndex)}${points.length?`<h3>Co si zapamatovat</h3><ul>${points.map(x=>`<li>${annotateTrainingText(x)}</li>`).join("")}</ul>`:""}<div class="lesson-example"><span>MODELOVÉ CVIČENÍ · VLASTNÍ SCÉNÁŘ</span><p>${annotateTrainingText(example)}</p></div></div></section>
   <section class="official-study"><div><p class="eyebrow">Primární studijní zdroje</p><h2>Pokračuj v oficiální dokumentaci</h2><p>Pro implementaci vždy ověř přesný model, firmware/software release, build a datum dokumentu.</p></div><div>${sources.map(([name,url])=>`<a href="${url}" target="_blank" rel="noreferrer">${name}<span>↗</span></a>`).join("")}</div></section>
   <section class="course-test-cta"><div><p class="eyebrow">Ověření kapitoly ${chapterIndex+1}</p><h2>${result?.passed?"Kapitola je dokončená":`Odemkni další část školení ${product.name}`}</h2><p>Test má 5 otázek. Pro pokračování potřebuješ alespoň 4 správné odpovědi.</p>${result?`<p><strong>Nejlepší výsledek: ${result.best}%</strong></p>`:""}</div><div class="chapter-actions">${chapterIndex>0?`<button class="secondary-button" data-product-chapter="${id}" data-chapter="${chapterIndex-1}">Předchozí kapitola</button>`:""}<button class="primary-button" data-chapter-test="product" data-training-id="${id}" data-chapter="${chapterIndex}">${result?"Opakovat test":"Spustit test kapitoly"}</button>${result?.passed&&chapterIndex<total-1?`<button class="primary-button" data-product-chapter="${id}" data-chapter="${chapterIndex+1}">Další kapitola</button>`:""}</div></section>
   <p class="course-completion-note">Dokončeno ${done} z ${total} kapitol · ${chapterPercent("product",id,total)} % školení.</p>`;
@@ -1464,13 +1887,14 @@ function companiesView() {
 }
 
 function expertiseView() {
-  return `<div class="page-head"><div><p class="eyebrow">Interní kompetenční mapa týmu</p><h1>Expertní pokrytí produktů</h1><p class="lede">Databáze propojuje produkty, praktické dovednosti a certifikace jednotlivých členů týmu. Slouží pro sestavení projektu, plán rozvoje a přípravu eskalace; sama neurčuje dostupnost člověka ani smluvní odpovědnost.</p></div><span class="status-pill">${teamMembers.length} člen týmu</span></div>
-  <section class="team-roster"><div class="section-heading"><div><p class="eyebrow">Lidé a certifikace</p><h2>Týmový katalog</h2></div><p>Další profily lze přidávat bez změny produktové struktury.</p></div>${teamMembers.map(member=>`<article class="team-member-card"><div><span class="avatar-placeholder">${member.name.split(" ").map(x=>x[0]).join("")}</span><div><h3>${member.name}</h3><p>${member.role} · profil aktualizován ${member.recordedAt}</p></div></div><div class="certification-list">${member.certifications.map(cert=>`<div><strong>${cert.vendor}</strong><span>${cert.name}</span><small>${cert.status}</small></div>`).join("")}</div></article>`).join("")}</section>
+  return `<div class="page-head"><div><p class="eyebrow">Interní kompetenční mapa týmu</p><h1>Expertní pokrytí produktů</h1><p class="lede">Databáze propojuje produkty, praktické dovednosti a certifikace jednotlivých členů týmu. Slouží pro sestavení projektu, plán rozvoje a přípravu eskalace; sama neurčuje dostupnost člověka ani smluvní odpovědnost.</p></div><span class="status-pill">${teamMembers.length} členové týmu</span></div>
+  <section class="team-roster"><div class="section-heading"><div><p class="eyebrow">Lidé a certifikace</p><h2>Týmový katalog</h2></div><p>Další profily lze přidávat bez změny produktové struktury.</p></div>${teamMembers.map(member=>`<article class="team-member-card"><div><span class="avatar-placeholder">${member.name.split(" ").map(x=>x[0]).join("")}</span><div><h3>${member.name}</h3><p>${member.role} · profil aktualizován ${member.recordedAt}</p></div></div>${member.summary?`<p>${member.summary}</p>`:""}${member.references?.length?`<div class="company-tags">${member.references.map(reference=>`<span>${reference}</span>`).join("")}</div>`:""}<div class="certification-list">${member.certifications.map(cert=>`<div><strong>${cert.vendor}</strong><span>${cert.name}</span><small>${cert.status}</small></div>`).join("")}</div></article>`).join("")}</section>
   <section class="expertise-guide"><h2>Jak profil číst</h2><div class="expertise-axis"><div><strong>Praktická zkušenost</strong><p>Ukazuje kontakt s návrhem, implementací nebo provozem. Historická zkušenost vyžaduje ověření proti aktuální verzi.</p></div><div><strong>Certifikace</strong><p>U každého člověka budeme evidovat přesný název, výrobce, identifikátor, datum získání a platnost. Neúplné údaje zůstávají označené jako nepotvrzené.</p></div><div><strong>Aktuální zaměření</strong><p>Říká, zda se člověk oblasti věnuje nyní. Certifikace bez hands-on zkušenosti z něj automaticky nedělá realizačního vlastníka.</p></div></div></section>
   <section class="expertise-section"><div class="section-heading"><div><p class="eyebrow">Dell Technologies</p><h2>Produkty, zkušenost a certifikace</h2></div><p>Kliknutím na produkt otevřeš jeho studijní detail.</p></div><div class="expertise-table-wrap"><table class="expertise-table"><thead><tr><th>Oblast a produkt</th><th>Praktická zkušenost</th><th>Certifikace</th><th>Aktuální kontext</th></tr></thead><tbody>${lukasExpertise.dell.map(item=>{const product=products.find(p=>p.id===item.productId);return `<tr data-product="${item.productId}" tabindex="0"><td><span>${item.area}</span><strong>${product?.name||item.productId}</strong></td><td><span class="expertise-level ${item.level}">${item.experience}</span></td><td>${item.certification}</td><td>${item.engagement}</td></tr>`}).join("")}</tbody></table></div></section>
   <section class="expertise-section"><div class="section-heading"><div><p class="eyebrow">VMware by Broadcom</p><h2>Technologická hloubka</h2></div><p>VCF je zastřešující platforma; hloubka se liší podle jednotlivých komponent.</p></div><div class="vmware-depth-grid">${lukasExpertise.vmware.map(item=>`<article><span>${item.depth}</span><h3>${item.area}</h3><p>${item.context}</p></article>`).join("")}</div></section>
+  <section class="expertise-section"><div class="section-heading"><div><p class="eyebrow">Linux a automatizace</p><h2>Foreman, Landscape, GitLab, Ansible a Semaphore UI</h2></div><p>Reference popisují prostředí, ve kterých byla podle interně poskytnutého profilu získána praktická zkušenost; samy neurčují aktuální kontrakt ani dostupnost specialisty.</p></div><div class="expertise-table-wrap"><table class="expertise-table"><thead><tr><th>Specialista a produkt</th><th>Praktická zkušenost</th><th>Certifikace</th><th>Kontext</th></tr></thead><tbody>${[milanExpertise,josefExpertise].flatMap(member=>member.skills.map(item=>{const product=products.find(p=>p.id===item.productId);return `<tr data-product="${item.productId}" tabindex="0"><td><span>${member.name} · ${item.area}</span><strong>${product?.name||item.productId}</strong></td><td><span class="expertise-level ${item.level}">${item.experience}</span></td><td>${item.certification}</td><td>${item.engagement}<small class="expertise-references">Reference: ${member.references.join(", ")}</small></td></tr>`;})).join("")}</tbody></table></div></section>
   <section class="expertise-section delivery-use"><p class="eyebrow">Použití pro SDM / PM</p><h2>Jak podle profilu sestavit spolupráci</h2><div class="delivery-grid"><article><h3>Silný praktický sparring</h3><p>VxRail, VCF on VxRail a ObjectScale jsou podle profilu nejsilnější oblasti. I zde se před projektem potvrzuje konkrétní role, dostupnost a zkušenost s nasazovanou verzí.</p></article><article><h3>Zapojení s ověřením rozsahu</h3><p>PowerStore, PowerMax a PowerScale mají praktický základ, jehož aktuálnost a hloubku je vhodné ověřit proti požadovanému scénáři.</p></article><article><h3>Nutný další realizační specialista</h3><p>PowerFlex, Dell Private Cloud, PPDM, Cyber Recovery, Automation a další oblasti bez hands-on zkušenosti nelze personálně pokrýt pouze uvedenou certifikací nebo schopností dohledat dokumentaci.</p></article></div><div class="callout"><strong>Praktická interpretační zásada:</strong> schopnost rychle dohledat a pochopit dokumentaci je cenná pro přípravu debaty, triage a koordinaci. Nenahrazuje oprávnění k zásahu, zkušenost s produkční implementací ani formálně přiřazenou odpovědnost.</div></section>
-  <section class="source-panel"><h2>Původ a hranice informací</h2><p><strong>[INTERNÍ PROFIL]</strong> Poznámky zaslal Lukáš Trávníček a uživatel je vložil do KB dne ${lukasExpertise.recordedAt}. Formulace byly zpřesněny pouze pro čitelnost; význam zkušenosti a aktuálního zaměření zůstává zachovaný.</p><p><strong>[PREZENTACE]</strong> Soubor <em>Dell_Enterprise-portfolio.pptx</em> potvrzuje členění portfolia na Primary Storage, UDS, SDS/HCI, Data Protection a Cloud Platform. Prezentace je interní orientační podklad, nikoli náhrada aktuální dokumentace výrobce.</p></section>`;
+  <section class="source-panel"><h2>Původ a hranice informací</h2><p><strong>[INTERNÍ PROFIL]</strong> Poznámky k Lukáši Trávníčkovi, Milanovi Zelenkovi a Josefu Vyleťalovi vložil uživatel do KB. Formulace byly zpřesněny pouze pro čitelnost; význam uvedené délky praxe, produktové zkušenosti a zákaznických referencí zůstává zachovaný. Reference nejsou veřejně ověřovaným case study ani potvrzením současného smluvního vztahu.</p><p><strong>[PREZENTACE]</strong> Soubor <em>Dell_Enterprise-portfolio.pptx</em> potvrzuje členění portfolia na Primary Storage, UDS, SDS/HCI, Data Protection a Cloud Platform. Prezentace je interní orientační podklad, nikoli náhrada aktuální dokumentace výrobce.</p></section>`;
 }
 
 function quizIntro() {
