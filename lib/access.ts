@@ -1,4 +1,4 @@
-import {authConfigured,getAuth} from './auth';
+import {authConfigured,getAuth,localAccessEnabled} from './auth';
 import {ensureAccessSchema} from './db';
 
 export type AccessStatus='anonymous'|'pending'|'approved'|'rejected';
@@ -37,6 +37,7 @@ export async function accessForUser(user:AccessIdentity):Promise<AccessState> {
 }
 
 export async function getAccessState():Promise<AccessState> {
+  if(localAccessEnabled())return {status:'approved',user:{id:'local-development',email:'localhost@mpkb.local',name:'Lokální studium'},isAdmin:false};
   const user=await sessionIdentity();
   if(!user)return {status:'anonymous',user:null,isAdmin:false};
   return accessForUser(user);

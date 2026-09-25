@@ -4,11 +4,11 @@ MP Knowledge Base je webová studijní aplikace v Next.js pro enterprise infrast
 
 ## Spuštění na macOS
 
-1. V adresáři projektu spusť `npm install` a potom `npm run dev`.
-2. Otevři adresu, kterou vypíše Next.js, standardně `http://localhost:3000`.
+1. Nejjednodušší je dvakrát kliknout na `Spustit MP Knowledge Base.command`; aplikace se otevře na `http://127.0.0.1:4173`.
+2. Při ručním spuštění použij `npm install` a potom `npm run dev`. Otevři přesnou adresu vypsanou Next.js; pokud je port 3000 obsazený, zvolí jiný.
 3. Pro ukončení stiskni v terminálu `Ctrl+C`.
 
-Pokud macOS první spuštění zablokuje, použij na soubor pravé tlačítko → Otevřít. Spouštěcí soubor nepřistupuje k internetu; pouze zpřístupní složku `dist` na lokální adrese `127.0.0.1:4173`.
+Pokud macOS první spuštění zablokuje, použij na soubor pravé tlačítko → Otevřít. Lokální plný náhled lze zapnout proměnnou `MPKB_LOCAL_ACCESS=true` v ignorovaném souboru `.env.local`. Tento režim funguje pouze s vývojovým serverem, nepoužívá produkční přihlášení a postup ukládá do konkrétního prohlížeče.
 
 ## Co aplikace obsahuje
 

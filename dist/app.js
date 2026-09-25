@@ -228,6 +228,126 @@ const products = [
     source: "https://www.dell.com/en-ca/lp/dt/private-cloud"
   },
   {
+    id: "rhel", name: "Red Hat Enterprise Linux", vendor: "Red Hat", category: "Enterprise Linux", level: "Základ",
+    oneLiner: "Podporovaná enterprise linuxová platforma pro provoz aplikací, infrastruktury a navazujících Red Hat produktů.",
+    role: "Operační systém", scaling: "Od jednotlivého serveru po standardizované fleet prostředí", protocols: "SSH, HTTPS, DNS, Kerberos, LDAP a aplikační protokoly",
+    terms: ["rhel", "linux-distribution", "rpm", "repository", "subscription", "selinux", "systemd", "kernel"],
+    sections: [
+      ["Místo v ekosystému", "RHEL je komerčně podporovaná distribuce Linuxu. Fedora je rychle se vyvíjející komunitní distribuce a CentOS Stream průběžně ukazuje vývojovou větev směřující k příštím minor verzím RHEL. Rocky Linux a AlmaLinux jsou samostatné downstream kompatibilní distribuce; nejsou upstreamem RHEL."],
+      ["Operační systém jako služba", "Server není hotový instalací. Provoz zahrnuje repozitáře, patchování, konfiguraci, identity, certifikáty, hardening, monitoring, backup, kapacitu a lifecycle. Kernel řídí procesy, paměť, zařízení a síť; systemd služby; SELinux vynucuje bezpečnostní politiky."],
+      ["Subscription a podpora", "Red Hat subscription spojuje právo používat podporovaný obsah, aktualizace, znalostní bázi a podporu podle smlouvy. Přesná metrika, varianta podpory a pokrytí virtuálních hostů se ověřují v aktuální nabídce. Subscription Manager registruje systémy a jejich přístup k obsahu."],
+      ["Provoz ve větším měřítku", "Ruční správa desítek či tisíců serverů vede k rozdílným konfiguracím. Satellite řídí obsah a lifecycle, IdM identity a politiky a AAP provádí opakovatelnou automatizaci. Tyto vrstvy se doplňují, ale každá má vlastní data, oprávnění a obnovu."],
+      ["Pohled SDM/PM", "Zjišťuj verzi a support lifecycle, vlastnictví repozitářů, patch okna, výjimky, restart po aktualizaci kernelu, vazby na AD/IdM, automatizaci, monitoring a rollback. Úspěšně nainstalovaný balíček ještě neprokazuje funkčnost aplikace."],
+    ],
+    scenario: "Kritická zranitelnost vyžaduje aktualizaci stovek serverů. SDM musí rozlišit distribuci obsahu, automatizované provedení, nutný restart, aplikační ověření a evidenci výjimek; samotný počet úspěšných Ansible tasků nestačí.",
+    source: "https://docs.redhat.com/en/documentation/red_hat_enterprise_linux/10"
+  },
+  {
+    id: "aap", name: "Red Hat Ansible Automation Platform", vendor: "Red Hat", category: "Enterprise automation", level: "Pokročilé",
+    oneLiner: "Podporovaná podniková platforma pro řízení, provádění, škálování a audit automatizace postavené na Ansible.",
+    role: "Automation control plane", scaling: "Controller a execution nodes podle topologie", protocols: "HTTPS/API, SSH, WinRM a rozhraní spravovaných systémů",
+    terms: ["aap", "automation-controller", "playbook", "inventory", "execution-environment", "collection", "credential", "job-template"],
+    sections: [
+      ["Ansible versus AAP", "Ansible Core vykonává playbooky. AAP kolem něj vytváří podporovanou platformu s řízením přístupů, inventářem, credentials, job templates, workflow, API, auditní stopou, execution environments a škálovatelnou execution vrstvou."],
+      ["Automation Controller", "Controller plánuje a spouští joby, propojuje projekt, inventory, credentials a execution environment. Nemá být chápán jako místo pro ruční skripty bez verzování. Zdroj playbooků patří do Git repozitáře a změna má mít vlastní review a test."],
+      ["Execution Environment", "Execution environment je kontejnerový image s ansible-core, Runnerem, kolekcemi, Pythonem a systémovými závislostmi. Fixuje runtime a omezuje situaci, kdy playbook funguje pouze na notebooku autora. Image potřebuje vlastní build, registry, skenování a lifecycle."],
+      ["Governance a bezpečnost", "RBAC, oddělení credentials, schvalování workflow a audit dovolují delegovat automatizaci bez předání univerzálních hesel. Secrets nesmějí být uloženy v playbooku. Organizace musí určit vlastníka inventáře, kódu, runtime image a produkčního oprávnění."],
+      ["Pohled SDM/PM", "Měř vedle úspěšnosti jobů také coverage, délku, změnové okno, retry, stav cílových systémů a aplikační validaci. Ptej se, zda rerun je idempotentní, jak se řeší částečný neúspěch a kdo smí spustit destruktivní šablonu."],
+    ],
+    scenario: "Patch workflow zasáhne tisíce serverů po dávkách. Inventář určuje scope, controller orchestruje běh a execution environment drží závislosti. Po každé dávce musí následovat technická i aplikační kontrola a rozhodnutí o pokračování.",
+    source: "https://docs.redhat.com/en/documentation/red_hat_ansible_automation_platform/2.6"
+  },
+  {
+    id: "satellite", name: "Red Hat Satellite", vendor: "Red Hat", category: "Linux lifecycle management", level: "Pokročilé",
+    oneLiner: "Platforma pro správu obsahu, patchování, provisioning a lifecycle rozsáhlých RHEL prostředí.",
+    role: "Content a host lifecycle", scaling: "Centrální Satellite Server a distribuované Capsules", protocols: "HTTPS, DNS, DHCP, TFTP a další dle funkcí",
+    terms: ["satellite", "capsule", "content-view", "lifecycle-environment", "activation-key", "repository", "patch-management"],
+    sections: [
+      ["Co Satellite řeší", "Satellite synchronizuje podporovaný software obsah, skládá jej do řízených Content Views, propaguje verze přes lifecycle prostředí a eviduje hosty. Podporuje také provisioning a vzdálené řízení podle použité konfigurace."],
+      ["Content View a lifecycle", "Content View je verzovaný a filtrovaný soubor repozitářů. Jedna verze se propaguje například přes Library, Development, Test a Production. Tím lze oddělit okamžik, kdy update existuje u výrobce, od okamžiku, kdy byl otestován a povolen do produkce."],
+      ["Capsule", "Capsule přibližuje obsah a vybrané služby vzdáleným lokalitám a snižuje závislost každého hostu na centrálním serveru. Její role a kapacita závisí na zapnutých funkcích. Capsule není automatická nezávislá záloha Satellite."],
+      ["Satellite a Ansible", "Satellite odpovídá hlavně na otázky jaký obsah, pro které hosty a v jaké lifecycle fázi. Ansible/AAP provádí širší konfiguraci a orchestraci. Produkty se integrují, ale nejsou zaměnitelné."],
+      ["Pohled SDM/PM", "Hlídej sync plan, stáří metadat, publikaci a propagaci Content Views, kapacitu Capsules, registraci hostů, activation keys, certifikáty a obnovu. Patch compliance musí rozlišit dostupný, schválený, nasazený a aplikací ověřený update."],
+    ],
+    scenario: "Výrobce vydá opravu. Tým ji synchronizuje, vytvoří novou verzi Content View, otestuje ji v neprodukčním prostředí a až poté propaguje do produkce. Výjimky zůstávají dohledatelné s vlastníkem a termínem.",
+    source: "https://docs.redhat.com/en/documentation/red_hat_satellite/6.17"
+  },
+  {
+    id: "idm", name: "Red Hat Identity Management", vendor: "Red Hat", category: "Identity & access", level: "Pokročilé",
+    oneLiner: "Centralizovaná správa linuxových identit, autentizace, hostů a bezpečnostních politik založená na projektu FreeIPA.",
+    role: "Linux identity domain", scaling: "Replikované IdM servery a klienti", protocols: "Kerberos, LDAP, DNS, HTTPS, PKI",
+    terms: ["idm", "freeipa", "kerberos", "ldap", "sssd", "hbac", "sudo-rule", "trust"],
+    sections: [
+      ["FreeIPA a IdM", "FreeIPA je upstream projekt; Red Hat Identity Management je podporovaná implementace dodávaná v RHEL. IdM sjednocuje identity, autentizaci, autorizaci a politiky pro linuxovou doménu."],
+      ["Není to jen AD pro Linux", "IdM používá LDAP pro adresářová data, Kerberos pro ticketovou autentizaci, certifikační služby a často integrované DNS. Umí vytvořit trust s Active Directory, ale nenahrazuje všechny role AD ani přímo nespravuje Windows klienty."],
+      ["Politiky", "Host Based Access Control určuje kdo se smí přihlásit na které hosty a přes jakou službu. Centralizovaná sudo pravidla určují povolené administrativní činnosti. SSSD na klientovi zprostředkuje identity a cache."],
+      ["Dostupnost", "Identita je kritická závislost. Návrh řeší replikaci, DNS, synchronizaci času, certifikáty, recovery a dostupnost při síťové izolaci. Chybný čas může zneplatnit Kerberos i při zdravém serveru."],
+      ["Pohled SDM/PM", "Vyjasni zdroj identity, hranici AD a IdM, lifecycle účtů, break-glass přístup, vlastníka DNS/NTP, rotaci certifikátů, audit a obnovu. Změna trustu je průřezová změna, ne izolovaná linuxová konfigurace."],
+    ],
+    scenario: "Linux servery používají IdM a uživatelé pocházejí z AD přes trust. Incident přihlášení vyžaduje společně prověřit DNS, čas, trust, Kerberos ticket, SSSD cache, HBAC a stav účtu.",
+    source: "https://docs.redhat.com/en/documentation/red_hat_enterprise_linux/10/html/managing_idm_users_groups_hosts_and_access_control_rules"
+  },
+  {
+    id: "kubernetes", name: "Kubernetes", vendor: "Cloud Native Computing Foundation", category: "Container orchestration", level: "Pokročilé",
+    oneLiner: "Open-source platforma pro deklarativní nasazování, škálování a řízení kontejnerových workloadů.",
+    role: "Container orchestrator", scaling: "Control plane a worker nodes", protocols: "Kubernetes API, CNI networking, CSI storage",
+    terms: ["kubernetes", "container", "oci", "pod", "control-plane", "worker-node", "etcd", "kubelet", "deployment", "service", "namespace"],
+    sections: [
+      ["Deklarativní model", "Uživatel popíše požadovaný stav objektů přes API. Kontrolery průběžně porovnávají skutečnost s požadavkem a provádějí reconciliation. Úspěšné přijetí manifestu ještě neznamená, že aplikace je připravená nebo dosažitelná."],
+      ["Control plane", "API server je vstupní bod, etcd drží stav clusteru, scheduler vybírá node pro nové Pody a controller manager provozuje řídicí smyčky. Ztráta etcd znamená ztrátu autoritativního stavu, proto vyžaduje konzistentní backup a test obnovy."],
+      ["Worker a Pod", "Kubelet na workeru zajišťuje požadovaný stav Podů a container runtime spouští kontejnery. Pod je nejmenší plánovatelná jednotka a může obsahovat více úzce spojených kontejnerů. Pod je pomíjivý; trvalá data potřebují vhodnou storage vrstvu."],
+      ["Síť a služby", "Service poskytuje stabilní logický endpoint pro měnící se Pody. CNI řeší podovou síť, Ingress nebo Gateway externí přístup a NetworkPolicy omezení komunikace. CSI propojuje persistent volumes se storage systémem."],
+      ["Pohled SDM/PM", "Incident rozděluj na aplikaci, image/registry, scheduler, node, síť, storage, DNS, identity a platformní operátory. Sleduj desired versus available replicas, pending Pody, restarty, události a dopad rolloutů."],
+    ],
+    scenario: "Deployment požaduje pět replik, dvě zůstávají Pending kvůli kapacitě nebo storage. API je zdravé, ale služba běží se sníženou rezervou. SDM koordinuje aplikační a platformní tým podle skutečné příčiny scheduling failure.",
+    source: "https://kubernetes.io/docs/concepts/"
+  },
+  {
+    id: "openshift", name: "Red Hat OpenShift Container Platform", vendor: "Red Hat", category: "Enterprise Kubernetes", level: "Pokročilé",
+    oneLiner: "Podporovaná aplikační platforma nad Kubernetes s integrovaným lifecyclem, bezpečností, registry a vývojářskými funkcemi.",
+    role: "Hybrid cloud application platform", scaling: "Control plane, infrastructure a worker nodes", protocols: "Kubernetes API, Routes/Ingress, CNI/OVN-Kubernetes, CSI",
+    terms: ["openshift", "ocp", "okd", "operator", "cvo", "olm", "rhcos", "route", "scc"],
+    sections: [
+      ["OpenShift a Kubernetes", "OpenShift používá Kubernetes a přidává podporovaný operační model, instalaci, upgrade, Operators, bezpečnostní výchozí nastavení, integrované platformní služby a nástroje pro vývojáře. OKD je komunitní distribuce související s OpenShift; vztah není licence zdarma pro produkční OCP."],
+      ["Nody a RHCOS", "Control-plane nody používají Red Hat CoreOS v podporované topologii. Workery mohou podle verze a architektury používat RHCOS nebo podporované RHEL varianty. Machine Config Operator řídí konzistentní konfiguraci uzlů a může vyvolat rolling reboot."],
+      ["Operators", "Operator převádí doménové provozní znalosti do kontroleru. Cluster Version Operator řídí payload clusterových operátorů; Operator Lifecycle Manager spravuje add-on Operators. Degraded Operator může blokovat upgrade i při běžících aplikacích."],
+      ["Bezpečnost a multitenancy", "Projects/namespaces oddělují objekty, RBAC oprávnění, Security Context Constraints povolený bezpečnostní kontext a NetworkPolicy komunikaci. Oddělení namespace samo o sobě není úplná bezpečnostní hranice."],
+      ["Pohled SDM/PM", "Před změnou ověř support matrix, stav Cluster Operators, zálohu etcd, dostupnou kapacitu, PodDisruptionBudgets, deprecated API a aplikační testy. Upgrade platformy je společný projekt platformy a vlastníků aplikací."],
+    ],
+    scenario: "Cluster upgrade projde prechecks, ale aplikace používá odebrané API. Technická připravenost platformy musí být doplněna skenem manifestů, testem workloadů a rozhodnutím vlastníků aplikací.",
+    source: "https://docs.redhat.com/en/documentation/openshift_container_platform/4.20"
+  },
+  {
+    id: "openshift-ai", name: "Red Hat OpenShift AI", vendor: "Red Hat", category: "AI/ML platform", level: "Pokročilé",
+    oneLiner: "Platforma pro datově-vědecké workbenches, AI pipelines, trénování, ladění a model serving na OpenShiftu.",
+    role: "MLOps a AI platform", scaling: "OpenShift projekty, CPU/GPU workery a model serving", protocols: "HTTPS/API, S3 object storage, inference API",
+    terms: ["openshift-ai", "workbench", "pipeline", "training", "fine-tuning", "model-serving", "inference", "mlops", "gpu"],
+    sections: [
+      ["Životní cyklus modelu", "Platforma pokrývá práci s daty a notebooky, opakovatelné pipelines, trénování či ladění, registraci a nasazení modelu a sledování provozu. Každá fáze má odlišné nároky na data, výpočet, bezpečnost a schvalování."],
+      ["Workbench a pipeline", "Workbench poskytuje izolované vývojové prostředí v kontejneru. Pipeline převádí kroky z interaktivní práce do opakovatelného workflow. Data a artefakty se často sdílejí přes objektové úložiště, takže bucket, credentials a síť jsou kritické závislosti."],
+      ["Model serving a inference", "Model server zpřístupní natrénovaný model aplikacím. Inference je produkční výpočet odpovědi modelu. Sizing sleduje latenci, propustnost, velikost modelu, CPU/GPU paměť, souběh a cold start; počet uživatelů sám nestačí."],
+      ["MLOps a governance", "MLOps přidává verzování kódu, dat, parametrů a modelů, automatizaci, evaluaci, schvalování, monitoring driftu a audit. Ochrana osobních či citlivých dat a licence modelu jsou součástí služby, ne jen právní dodatek."],
+      ["Pohled SDM/PM", "Vyjasni vlastníka dat, modelu, platformy a výsledku, zdroj GPU, kvóty, object storage, registry, bezpečnost promptů a výstupů, SLO inference a postup rollbacku modelu. Zelený Pod neznamená kvalitní model."],
+    ],
+    scenario: "Pilot funguje na sdíleném GPU, ale produkce vyžaduje předvídatelnou latenci. Tým musí změřit profil modelu, dávkování, počet replik, GPU paměť a degradační režim, ne pouze objednat další kartu.",
+    source: "https://docs.redhat.com/en/documentation/red_hat_openshift_ai_self-managed/3.4"
+  },
+  {
+    id: "zabbix", name: "Zabbix", vendor: "Zabbix", category: "Monitoring & observability", level: "Středně pokročilé",
+    oneLiner: "Open-source monitorovací platforma pro sběr metrik, vyhodnocování triggerů, vizualizaci a upozornění.",
+    role: "Infrastructure monitoring", scaling: "Server, databáze, frontend, proxies a agents", protocols: "Agent, SNMP, IPMI, JMX, HTTP a další",
+    terms: ["zabbix", "monitoring", "agent", "proxy", "item", "trigger", "template", "alert"],
+    sections: [
+      ["Architektura", "Zabbix Server centrálně zpracovává data, vyhodnocuje triggery a posílá upozornění. Databáze uchovává konfiguraci a historii, web frontend obsluhuje uživatele, agents sbírají lokální data a volitelné proxies obsluhují vzdálené lokality nebo rozkládají sběr."],
+      ["Od metriky k incidentu", "Item popisuje sbíranou hodnotu, trigger vyhodnocuje podmínku problému, event zaznamená změnu stavu a action určuje notifikaci či automatickou reakci. Špatný threshold může vytvořit šum nebo naopak skrýt dopad."],
+      ["Active a passive checks", "U passive check se server či proxy ptá agenta. U active check agent získá seznam položek a sám data odesílá. Rozdíl ovlivňuje firewall, dostupnost, škálování a troubleshooting."],
+      ["Distribuovaný monitoring", "Proxy ukládá a předává data z lokalit a může přežít dočasný výpadek spojení. Nevyhodnocuje však všechny centrální funkce stejně jako server. Potřebuje vlastní databázi, kapacitu a monitoring."],
+      ["Pohled SDM/PM", "Monitoring služba potřebuje coverage, aktuální templates, správu agentů, retenci historie, kapacitu DB, eskalační matice a pravidelnou revizi alertů. Interní podklad výslovně uvádí personální mezeru pro Zabbix; produkt proto nelze automaticky přiřadit uvedeným specialistům."],
+    ],
+    scenario: "Po síťovém výpadku proxy odešle bufferovaná data. SDM musí rozlišit skutečné historické události od současného stavu a zabránit lavině duplicitních incidentů.",
+    source: "https://www.zabbix.com/documentation/current/en/manual/introduction/overview"
+  },
+  {
     id: "foreman", name: "Foreman", vendor: "The Foreman Project", category: "Infrastructure automation", level: "Středně pokročilé",
     oneLiner: "Open-source platforma pro provisioning, inventář a lifecycle fyzických, virtuálních a cloudových hostů.",
     role: "Host lifecycle management", scaling: "Centrální server a distribuované Smart Proxies", protocols: "HTTPS API, PXE/UEFI HTTP, DHCP, DNS, TFTP, SSH a pluginové integrace",
@@ -314,6 +434,67 @@ const products = [
 ];
 
 const glossary = [
+  ["rhel", "RHEL", "Red Hat Enterprise Linux; komerčně podporovaná enterprise linuxová distribuce."],
+  ["linux-distribution", "Linuxová distribuce", "Operační systém složený z Linux kernelu, nástrojů, balíčků, repozitářů a pravidel lifecycle."],
+  ["fedora", "Fedora Linux", "Rychle se vyvíjející komunitní distribuce a důležitý upstream pro technologie, které později vstupují do RHEL."],
+  ["centos-stream", "CentOS Stream", "Průběžně dodávaná distribuce umístěná ve vývojovém toku těsně před příštími minor verzemi RHEL."],
+  ["rocky-alma", "Rocky Linux / AlmaLinux", "Samostatné komunitní enterprise linuxové distribuce usilující o kompatibilitu s ekosystémem RHEL."],
+  ["rpm", "RPM", "Formát balíčku a nízkoúrovňový package-management mechanismus v rodině RHEL."],
+  ["subscription", "Subscription", "Časově omezené oprávnění k produktovému obsahu, aktualizacím a podpoře podle konkrétní nabídky."],
+  ["selinux", "SELinux", "Mandatory Access Control vrstva v Linuxu, která vynucuje bezpečnostní politiky nad rámec běžných oprávnění."],
+  ["systemd", "systemd", "Init a service manager používaný pro spouštění, dohled a závislosti systémových služeb."],
+  ["kernel", "Kernel", "Jádro operačního systému, které řídí procesy, paměť, hardware, storage a síť."],
+  ["aap", "AAP", "Red Hat Ansible Automation Platform; podporovaná platforma pro podnikovou automatizaci."],
+  ["automation-controller", "Automation Controller", "Řídicí komponenta AAP pro inventory, credentials, job templates, workflow, plánování, RBAC a API."],
+  ["execution-environment", "Execution Environment", "Kontejnerový image s Ansible runtime, kolekcemi a závislostmi pro opakovatelné joby."],
+  ["credential", "Credential", "Řízená přihlašovací informace nebo token použitý automatizací."],
+  ["job-template", "Job Template", "Opakovaně použitelná definice projektu, playbooku, inventory, credentials a runtime pro spuštění jobu."],
+  ["satellite", "Red Hat Satellite", "Platforma pro content, patch, provisioning a lifecycle management RHEL systémů."],
+  ["capsule", "Satellite Capsule", "Distribuovaná komponenta Satellite poskytující obsah a vybrané služby vzdáleným hostům či lokalitám."],
+  ["content-view", "Content View", "Verzovaný, volitelně filtrovaný soubor repozitářů publikovaný v Satellite."],
+  ["lifecycle-environment", "Lifecycle Environment", "Fáze cesty schváleného obsahu, například Development, Test a Production."],
+  ["activation-key", "Activation Key", "Předdefinovaný registrační profil hostu v Satellite."],
+  ["idm", "Red Hat IdM", "Red Hat Identity Management; podporovaná linuxová identity, authentication a policy platforma založená na FreeIPA."],
+  ["freeipa", "FreeIPA", "Upstream open-source projekt kombinující adresář, Kerberos, PKI, DNS a správu politik."],
+  ["kerberos", "Kerberos", "Ticketový autentizační protokol, který omezuje přenos hesel mezi službami."],
+  ["ldap", "LDAP", "Protokol pro práci s hierarchickým adresářem identit a dalších objektů."],
+  ["sssd", "SSSD", "Klientská služba Linuxu pro přístup k identitám a autentizačním providerům s podporou cache."],
+  ["hbac", "HBAC", "Host Based Access Control; pravidla kdo smí použít kterou službu na kterém hostu."],
+  ["sudo-rule", "Sudo rule", "Pravidlo určující, kdo smí na vybraných hostech spustit konkrétní příkaz se zvýšenými právy."],
+  ["trust", "Trust", "Vztah důvěry umožňující identitám jedné domény přistupovat ke zdrojům druhé podle politik."],
+  ["container", "Kontejner", "Izolovaný procesový runtime sdílející kernel hostitele a balený s potřebnými uživatelskými závislostmi."],
+  ["oci", "OCI", "Open Container Initiative; specifikace pro formát image a container runtime."],
+  ["kubernetes", "Kubernetes", "Deklarativní orchestrátor kontejnerových workloadů založený na API a řídicích smyčkách."],
+  ["pod", "Pod", "Nejmenší plánovatelná jednotka Kubernetes obsahující jeden či více úzce spojených kontejnerů."],
+  ["control-plane", "Control plane", "Řídicí komponenty clusteru, které uchovávají stav, přijímají API požadavky a plánují workloady."],
+  ["worker-node", "Worker node", "Uzel, na kterém kubelet a container runtime provozují aplikační Pody."],
+  ["etcd", "etcd", "Konzistentní distribuované key-value úložiště autoritativního stavu Kubernetes clusteru."],
+  ["kubelet", "kubelet", "Agent na nodu, který komunikuje s API a zajišťuje běh požadovaných Podů."],
+  ["deployment", "Deployment", "Kubernetes workload objekt řídící deklarovaný počet replik a rolling aktualizace Podů."],
+  ["openshift", "OpenShift", "Red Hat enterprise aplikační platforma založená na Kubernetes."],
+  ["ocp", "OCP", "OpenShift Container Platform; běžná zkratka produktu Red Hat OpenShift."],
+  ["okd", "OKD", "Komunitní distribuce Kubernetes, která je upstreamovou komunitou související s OpenShift."],
+  ["operator", "Operator", "Kubernetes controller rozšiřující API a automatizující lifecycle konkrétní platformní nebo aplikační komponenty."],
+  ["cvo", "CVO", "Cluster Version Operator; komponenta řídící instalaci a upgrade payloadu OpenShift clusteru."],
+  ["olm", "OLM", "Operator Lifecycle Manager; framework pro instalaci, oprávnění a upgrade add-on Operators."],
+  ["rhcos", "RHCOS", "Red Hat Enterprise Linux CoreOS; účelový operační systém pro OpenShift nody spravovaný platformním lifecyclem."],
+  ["route", "OpenShift Route", "OpenShift objekt pro zveřejnění služby mimo cluster přes router."],
+  ["scc", "SCC", "Security Context Constraints; OpenShift pravidla povolující či zakazující bezpečnostní parametry Podu."],
+  ["openshift-ai", "OpenShift AI", "Red Hat platforma pro data-science workbenches, pipelines, training a model serving na OpenShiftu."],
+  ["workbench", "AI workbench", "Izolované interaktivní vývojové prostředí s IDE, knihovnami a výpočetními prostředky."],
+  ["training", "Model training", "Proces učení parametrů modelu z trénovacích dat."],
+  ["fine-tuning", "Fine-tuning", "Další trénování existujícího modelu na užším datasetu nebo úloze."],
+  ["model-serving", "Model serving", "Provozní zpřístupnění modelu aplikacím prostřednictvím stabilního endpointu."],
+  ["inference", "Inference", "Použití natrénovaného modelu k vytvoření predikce nebo odpovědi."],
+  ["mlops", "MLOps", "Procesy a nástroje pro reprodukovatelný, řízený a monitorovaný lifecycle ML modelů."],
+  ["gpu", "GPU", "Paralelní akcelerátor vhodný pro mnoho trénovacích a inference úloh."],
+  ["zabbix", "Zabbix", "Open-source platforma pro sběr metrik, vyhodnocování triggerů, události a upozornění."],
+  ["monitoring", "Monitoring", "Průběžné měření stavu a chování systémů s cílem odhalit odchylky a dopad."],
+  ["agent", "Monitoring agent", "Proces na sledovaném systému, který sbírá lokální metriky a stav."],
+  ["proxy", "Zabbix Proxy", "Volitelný sběrný bod, který bufferuje a předává data vzdálené lokality centrálnímu serveru."],
+  ["item", "Zabbix item", "Definice jedné sbírané hodnoty, jejího zdroje a intervalu."],
+  ["trigger", "Zabbix trigger", "Výraz vyhodnocující data itemů a rozhodující o problému či návratu do normálu."],
+  ["template", "Monitoring template", "Znovupoužitelný balík itemů, triggerů, grafů a discovery pravidel."],
   ["active-active", "Active/active", "Obě řídicí nebo servisní strany mohou současně obsluhovat provoz. Konkrétní rozložení I/O a failover se liší podle produktu; název negarantuje rovnoměrné využití všech cest."],
   ["air-gap", "Air gap", "Fyzické nebo logické oddělení chráněného prostředí. Operational air gap otevírá spojení pouze na řízenou dobu a za stanovených podmínek."],
   ["api", "API", "Programové rozhraní, přes které aplikace používá funkce jiné služby. Kompatibilita se posuzuje podle konkrétních operací a verzí."],
@@ -555,8 +736,12 @@ const glossaryCategories = {
   "Virtualizace a cloud": ["hypervisor","vm","vcpu","vcenter","vmotion","vsan","storage-policy","datastore","cluster","readynode","private-cloud","vcf","workload-domain","sddc-manager","orchestration"],
   "Dostupnost a ochrana dat": ["availability","redundancy","spof","ha","rpo","rto","backup","restore","snapshot","replication","retention-lock","ransomware","air-gap","cyber-recovery"],
   "Provoz a observability": ["service","sla","incident","problem-management","capacity","lead-time","support-matrix","metric","log","event","alert","trace","observability","baseline","qos"],
-  "Bezpečnost a identita": ["rbac","zero-trust","microsegmentation","identity","encryption","object-lock"]
-  ,"Automatizace a lifecycle": ["provisioning","host-group","smart-proxy","pxe","uefi-http","dhcp","tftp","kickstart","katello","hammer-cli","ubuntu-pro","landscape-client","patch-management","repository-profile","upgrade-profile","access-group","usn","compliance","git","repository","merge-request","pipeline","gitlab-runner","executor","artifact","container-registry","devsecops","cicd","ansible-core","control-node","managed-node","inventory","playbook","play","task","module","role","collection","idempotence","ansible-vault","semaphore-project","task-template","task-run","key-store","variable-group","workflow","schedule","runner"]
+  "Bezpečnost a identita": ["rbac","zero-trust","microsegmentation","identity","encryption","object-lock","idm","freeipa","kerberos","ldap","sssd","hbac","sudo-rule","trust","credential","scc"],
+  "Linux a správa systémů": ["rhel","linux-distribution","fedora","centos-stream","rocky-alma","rpm","subscription","selinux","systemd","kernel","satellite","capsule","content-view","lifecycle-environment","activation-key"],
+  "Cloud native a kontejnery": ["container","oci","kubernetes","pod","control-plane","worker-node","etcd","kubelet","deployment","service","namespace","openshift","ocp","okd","operator","cvo","olm","rhcos","route"],
+  "AI a MLOps": ["openshift-ai","workbench","training","fine-tuning","model-serving","inference","mlops","gpu"],
+  "Monitoring": ["zabbix","monitoring","agent","proxy","item","trigger","template","alert"],
+  "Automatizace a lifecycle": ["aap","automation-controller","execution-environment","job-template","provisioning","host-group","smart-proxy","pxe","uefi-http","dhcp","tftp","kickstart","katello","hammer-cli","ubuntu-pro","landscape-client","patch-management","repository-profile","upgrade-profile","access-group","usn","compliance","git","repository","merge-request","pipeline","gitlab-runner","executor","artifact","container-registry","devsecops","cicd","ansible-core","control-node","managed-node","inventory","playbook","play","task","module","role","collection","idempotence","ansible-vault","semaphore-project","task-template","task-run","key-store","variable-group","workflow","schedule","runner"]
 };
 
 for (const item of glossary) {
@@ -576,6 +761,7 @@ const glossaryAliases = [
   ["Git","git"],["repository","repository"],["merge request","merge-request"],["pipeline","pipeline"],["GitLab Runner","gitlab-runner"],["CI/CD","cicd"],
   ["control node","control-node"],["managed node","managed-node"],["inventory","inventory"],["playbook","playbook"],["Ansible role","role"],["collection","collection"],["idempotence","idempotence"],["Ansible Vault","ansible-vault"],
   ["task template","task-template"],["task run","task-run"],["Key Store","key-store"],["Variable Group","variable-group"],["workflow","workflow"],["schedule","schedule"],["runner","runner"]
+  ,["RHEL","rhel"],["Fedora","fedora"],["CentOS Stream","centos-stream"],["SELinux","selinux"],["systemd","systemd"],["AAP","aap"],["Automation Controller","automation-controller"],["execution environment","execution-environment"],["Satellite","satellite"],["Capsule","capsule"],["Content View","content-view"],["lifecycle environment","lifecycle-environment"],["IdM","idm"],["FreeIPA","freeipa"],["Kerberos","kerberos"],["LDAP","ldap"],["SSSD","sssd"],["HBAC","hbac"],["kontejner","container"],["OCI","oci"],["Kubernetes","kubernetes"],["Pod","pod"],["control plane","control-plane"],["worker node","worker-node"],["etcd","etcd"],["kubelet","kubelet"],["OpenShift","openshift"],["OCP","ocp"],["OKD","okd"],["Operator","operator"],["CVO","cvo"],["OLM","olm"],["RHCOS","rhcos"],["OpenShift AI","openshift-ai"],["workbench","workbench"],["model serving","model-serving"],["inference","inference"],["MLOps","mlops"],["GPU","gpu"],["Zabbix","zabbix"],["trigger","trigger"]
 ].filter(([,id])=>glossary.some(item=>item.id===id));
 
 const quizQuestions = [
@@ -767,6 +953,7 @@ const productTrainingPrerequisites = {
   powervault: "datacenter", powerstore: "datacenter", powermax: "datacenter", powerscale: "datacenter", objectscale: "datacenter", powerflex: "virtualization-storage",
   vxrail: "virtualization-storage", datadomain: "virtualization-storage", ppdm: "virtualization-storage", "cyber-recovery": "service-delivery",
   vsphere: "datacenter", vsan: "virtualization-storage", nsx: "virtualization-storage", vdefend: "virtualization-storage", vcf: "service-delivery", "dell-private-cloud": "service-delivery", san: "datacenter",
+  rhel:"foundations", aap:"service-delivery", satellite:"service-delivery", idm:"datacenter", kubernetes:"datacenter", openshift:"datacenter", "openshift-ai":"service-delivery", zabbix:"service-delivery",
   foreman:"datacenter", landscape:"foundations", gitlab:"foundations", ansible:"foundations", "semaphore-ui":"service-delivery"
 };
 
@@ -846,12 +1033,15 @@ const lukasExpertise = {
 };
 
 const milanExpertise = {
-  id:"milan-zelenka", name:"Milan Zelenka", role:"Automation specialist", recordedAt:"24. 9. 2026",
-  summary:"Více než 10 let zkušeností s automatizací systémů pomocí Ansible a praktická zkušenost s nasazením a správou Foremanu, GitLabu a Semaphore UI.",
+  id:"milan-zelenka", name:"Milan Zelenka", role:"Presales · Senior Architect", recordedAt:"24. 9. 2026",
+  summary:"Podle interního rozhovoru zajišťuje presales a architektonickou podporu. Má více než 10 let zkušeností s automatizací systémů pomocí Ansible a praktickou zkušenost s Foremanem, GitLabem a Semaphore UI.",
   certifications:[{vendor:"Certifikace",name:"Nebyly v dodaném profilu uvedeny",status:"Doplnit po interním ověření"}],
   references:["Fortuna Entertainment Group","T-Mobile","MONETA Money Bank"],
   skills:[
-    {productId:"ansible",area:"Automatizace systémů",experience:"Více než 10 let zkušeností",certification:"Neuvedena",engagement:"Praktická automatizace systémů pomocí Ansible",level:"strong"},
+    {productId:"ansible",area:"Automatizace systémů",experience:"Více než 10 let zkušeností",certification:"Neuvedena",engagement:"Nejsilnější interně zaznamenaná oblast: Ansible / AAP",level:"strong"},
+    {productId:"aap",area:"Enterprise automatizace",experience:"Silná znalost podle interního rozhovoru",certification:"Přesný titul ověřit",engagement:"Architektura a presales; konkrétní hands-on rozsah po projektech doplnit",level:"strong"},
+    {productId:"satellite",area:"RHEL content a lifecycle",experience:"Praktická projektová zkušenost zaznamenána",certification:"Přesný titul ověřit",engagement:"Vazba na T-Mobile a ČEZ Distribuce; rozsah a role doplnit",level:"experienced"},
+    {productId:"rhel",area:"Enterprise Linux",experience:"Architektonická znalost ekosystému",certification:"Přesný titul ověřit",engagement:"Presales a návrh navazujících management nástrojů",level:"experienced"},
     {productId:"foreman",area:"Provisioning a lifecycle hostů",experience:"Praktická zkušenost",certification:"Neuvedena",engagement:"Nasazení a správa v prostředí významných společností",level:"experienced"},
     {productId:"gitlab",area:"DevSecOps a správa repozitářů",experience:"Praktická zkušenost",certification:"Neuvedena",engagement:"Nasazení a správa v prostředí významných společností",level:"experienced"},
     {productId:"semaphore-ui",area:"Orchestrace automatizace",experience:"Praktická zkušenost",certification:"Neuvedena",engagement:"Nasazení a správa v prostředí významných společností",level:"experienced"}
@@ -859,7 +1049,7 @@ const milanExpertise = {
 };
 
 const josefExpertise = {
-  id:"josef-vyletal", name:"Josef Vyleťal", role:"Linux and automation specialist", recordedAt:"24. 9. 2026",
+  id:"josef-vyletal", name:"Josef Vyleťal", role:"Senior Architect · Linux a automatizace", recordedAt:"24. 9. 2026",
   summary:"Více než 10 let zkušeností s nástroji Foreman, Canonical Landscape, GitLab a Ansible včetně jejich nasazení a správy.",
   certifications:[{vendor:"Certifikace",name:"Nebyly v dodaném profilu uvedeny",status:"Doplnit po interním ověření"}],
   references:["Fortuna Entertainment Group","Česká spořitelna","MONETA Money Bank","PHOENIX lékárenský velkoobchod"],
@@ -871,8 +1061,36 @@ const josefExpertise = {
   ]
 };
 
+const jjExpertise = {
+  id:"jj", name:"JJ", role:"Specialista na kontejnerizaci, OpenShift a Red Hat AI", recordedAt:"24. 9. 2026",
+  summary:"Interní rozhovor uvádí zaměření na Red Hat kontejnerizaci, OpenShift a AI / Red Hat AI. Plné jméno, přesný projektový rozsah, certifikace a dostupnost je nutné doplnit.",
+  certifications:[{vendor:"Red Hat",name:"Konkrétní certifikace neuvedeny",status:"TODO — interně ověřit"}],
+  references:["Karla / Gentec — vazba neověřena","ČEPS — vazba neověřena"],
+  skills:[
+    {productId:"kubernetes",area:"Kontejnerové platformy",experience:"Specializace uvedena interním zdrojem",certification:"Neuvedena",engagement:"Konkrétní hands-on rozsah doplnit",level:"experienced"},
+    {productId:"openshift",area:"Red Hat OpenShift",experience:"Specializace uvedena interním zdrojem",certification:"Neuvedena",engagement:"Projekty a role doplnit",level:"strong"},
+    {productId:"openshift-ai",area:"AI / Red Hat AI",experience:"Aktuální odborné zaměření",certification:"Neuvedena",engagement:"Modely, AI platforma a související OpenShift provoz; rozsah doplnit",level:"experienced"}
+  ]
+};
+
 // Nové členy týmu přidáváme jako další záznamy se stejnou strukturou.
-const teamMembers = [lukasExpertise,milanExpertise,josefExpertise];
+const teamMembers = [lukasExpertise,milanExpertise,josefExpertise,jjExpertise];
+
+const redHatInternalNotes = {
+  recordedAt:"24. 9. 2026",
+  source:"Interní rozhovor s Milanem; průběžný pracovní záznam",
+  strongest:"Ansible a Red Hat Ansible Automation Platform",
+  gap:"Pro Zabbix a monitoring nebyl v podkladu určen specialista.",
+  internalProduct:"Ansible-CM: interní označení, kde CM podle podkladu znamená Control Management. Funkce, vztah k AAP, licence, vlastník a zákazníci zůstávají k ověření.",
+  projects:[
+    {customer:"T-Mobile",products:"Ansible, playbooky, Satellite",context:"Automatizace patchování",todo:"Rozsah, verze, architektura, SLA a role týmu"},
+    {customer:"ČEZ Distribuce",products:"Ansible, částečně AAP, Satellite",context:"Projektová vazba zaznamenána",todo:"Use case, rozsah, verze a role"},
+    {customer:"MONETA Money Bank",products:"Ansible / AAP",context:"Projektová vazba zaznamenána",todo:"Use case, rozsah, verze a role"},
+    {customer:"Česká spořitelna",products:"Ansible / AAP",context:"Projektová vazba zaznamenána",todo:"Use case, rozsah, verze a role"},
+    {customer:"Karla / Gentec",products:"Cloud native / OpenShift?",context:"Název a technologická vazba jsou nejasné",todo:"Potvrdit zákazníka, produkt i rozsah"},
+    {customer:"ČEPS",products:"Cloud native / OpenShift?",context:"Možná projektová vazba",todo:"Potvrdit produkt, use case a tým"}
+  ]
+};
 
 const productCommercialDetails = {
   powervault: {
@@ -1133,6 +1351,62 @@ const productCommercialDetails = {
       ["Dell Cyber Recovery 20.3 — Dynamic Licensing","https://www.dell.com/support/manuals/en-us/cyber-recovery/cyber-recovery_p_20.3_prodg/dynamic-licensing"],
       ["Dell Cyber Recovery — CyberSense licence","https://www.dell.com/support/manuals/en-us/cyber-recovery/irs_p_19.10_installation/cybersense-feature"]
     ]
+  },
+  rhel: {
+    verified:"24. 9. 2026", scope:"RHEL 10 produktová dokumentace; konkrétní nabídku potvrdit v Red Hat quote",
+    configurations:["Fyzické servery, virtuální stroje i podporované cloudové obrazy.","Varianty a role systému se skládají z repozitářů a balíčků; Standard/Minimal instalace nejsou samostatným provozním modelem.","Fleet správa se typicky propojuje se Satellite, AAP, IdM a monitoringem.","Návrh určuje architekturu CPU, support lifecycle, high availability, hardening a patch model."],
+    licensing:["RHEL se pořizuje formou subscription s úrovní podpory, dobou trvání a metrikou podle konkrétní nabídky.","Pokrytí virtuálních workloadů, fyzických nodů, veřejného cloudu a add-onů nelze zaměňovat.","Subscription Manager a konzole evidují registraci a entitlement; technická registrace nenahrazuje obchodní kontrolu compliance."],
+    decisions:["Verze a lifecycle","Fyzický, virtuální nebo cloud deployment","Support úroveň","Počet pokrytých systémů/hostů","Repozitáře a patch proces","HA a add-ony","Satellite/AAP/IdM integrace"],
+    sources:[["Red Hat Enterprise Linux 10 documentation","https://docs.redhat.com/en/documentation/red_hat_enterprise_linux/10"],["Managing subscriptions in the web console","https://docs.redhat.com/en/documentation/red_hat_enterprise_linux/10/html/managing_systems_in_the_rhel_web_console/managing-subscriptions-in-the-web-console"]]
+  },
+  aap: {
+    verified:"24. 9. 2026", scope:"Red Hat Ansible Automation Platform 2.6",
+    configurations:["Platform gateway a automation controller jako řídicí vrstva.","Execution nodes a případně hop nodes pro distribuované automation mesh topologie.","Private Automation Hub pro řízený automation content a execution environment registry.","Execution environments jako verzované kontejnerové runtimes pro joby.","Event-Driven Ansible a další služby pouze podle zakoupené a podporované konfigurace."],
+    licensing:["AAP je subscription produkt; přesná metrika, edice, managed-node entitlement a support se ověřují v aktuální Red Hat nabídce.","Open-source ansible-core není obchodně totožný s AAP subscription.","Počet controllerů nebo execution nodů není jediným podkladem pro licencování; scope spravovaných prostředků a nabídka jsou rozhodující."],
+    decisions:["Počet managed nodes","Controller a execution topologie","Disconnected provoz","Private Automation Hub","Execution environment registry","RBAC a credentials","HA/DR","Support a subscription"],
+    sources:[["AAP 2.6 documentation","https://docs.redhat.com/en/documentation/red_hat_ansible_automation_platform/2.6"],["Execution environments","https://docs.redhat.com/en/documentation/red_hat_ansible_automation_platform/2.6/administer-define__create__and_build_execution_environments"]]
+  },
+  satellite: {
+    verified:"24. 9. 2026", scope:"Red Hat Satellite 6.17",
+    configurations:["Centrální Satellite Server s integrovanými management službami.","Capsules pro vzdálené lokality, distribuci obsahu a volitelné infrastrukturní služby.","Organizace a lokace oddělují administrativní scope; Content Views a lifecycle environments řídí tok obsahu.","Connected a disconnected/content-export scénáře vyžadují odlišný provozní návrh."],
+    licensing:["Satellite je součástí konkrétních Red Hat subscription scénářů; pokrytí spravovaných hostů a Capsules se potvrzuje podle aktuálních podmínek.","Open-source Foreman/Katello a podporovaný Satellite nejsou zaměnitelné z hlediska podpory a lifecycle.","Infrastrukturní kapacita Satellite/Capsules, databáze, backup a implementace jsou oddělené od samotného entitlementu."],
+    decisions:["Počet hostů a lokací","Connected/disconnected režim","Capsule topologie","Content Views a lifecycle","Provisioning služby","Backup/restore","Integrace AAP/IdM","Subscription coverage"],
+    sources:[["Satellite 6.17 documentation","https://docs.redhat.com/en/documentation/red_hat_satellite/6.17"],["Satellite overview and deployment considerations","https://docs.redhat.com/en/documentation/red_hat_satellite/6.17/html/overview_concepts_and_deployment_considerations/index"]]
+  },
+  idm: {
+    verified:"24. 9. 2026", scope:"Red Hat Identity Management dodávané v RHEL",
+    configurations:["Více replikovaných IdM serverů pro dostupnost a geografii.","Integrované DNS nebo napojení na externí DNS podle návrhu.","Certificate Authority a případně KRA podle požadavků na certifikáty a escrow.","Trust s Active Directory pro sdílení identit bez přímé správy Windows klientů."],
+    licensing:["IdM se dodává jako součást podporovaného RHEL ekosystému; konkrétní práva a support závisejí na RHEL subscription.","FreeIPA je upstream komunitní projekt bez stejného support modelu.","Microsoft AD licence, DNS/NTP služby, infrastruktura a implementace trustu zůstávají samostatnými položkami."],
+    decisions:["Počet replik a lokality","DNS model","CA/KRA","AD trust","HBAC a sudo policies","Break-glass přístup","Backup a recovery","RHEL subscription"],
+    sources:[["Red Hat IdM introduction","https://docs.redhat.com/en/documentation/red_hat_enterprise_linux/9/html/planning_identity_management/introduction-to-ipa_planning-identity-management"],["Managing IdM in RHEL 10","https://docs.redhat.com/en/documentation/red_hat_enterprise_linux/10/html/managing_idm_users_groups_hosts_and_access_control_rules"]]
+  },
+  kubernetes: {
+    verified:"24. 9. 2026", scope:"Upstream Kubernetes koncepty; distribuce a support se volí samostatně",
+    configurations:["Vysoce dostupný control plane a etcd nebo menší neprodukční topologie.","Worker pools podle CPU, RAM, GPU, failure domains a workloadu.","CNI síťový plugin, CSI storage drivery, ingress/gateway a registry jsou zásadní volby distribuce.","Managed cloudová služba a self-managed cluster mají výrazně odlišnou hranici odpovědnosti."],
+    licensing:["Kubernetes je open-source software; produkční řešení ale zahrnuje licenci či subscription distribuce, podporu, infrastrukturu a provoz.","CNI, CSI, registry, backup, security a observability mohou mít samostatné licence.","Náklady se nesmí odvozovat pouze z počtu workerů bez control plane, storage, přenosů a platformního týmu."],
+    decisions:["Distribuce/managed service","Control plane ownership","Worker pools a GPU","CNI/CSI","Ingress a DNS","Registry","Backup etcd a aplikací","Support boundary"],
+    sources:[["Kubernetes concepts","https://kubernetes.io/docs/concepts/"],["Kubernetes components","https://kubernetes.io/docs/concepts/overview/components/"]]
+  },
+  openshift: {
+    verified:"24. 9. 2026", scope:"OpenShift Container Platform 4.20",
+    configurations:["Self-managed OCP na podporované fyzické, virtuální nebo cloudové infrastruktuře.","Control plane, infrastructure a worker role lze podle velikosti kombinovat nebo oddělit.","Worker pools mohou být specializované pro výkon, GPU, compliance nebo failure domains.","Connected/disconnected instalace mění registry, aktualizace a provozní procesy."],
+    licensing:["OCP je Red Hat subscription; metrika a edice se musí potvrdit v aktuální nabídce.","Subscription platformy nemusí zahrnovat infrastrukturu, veřejný cloud, externí storage, load balancer ani všechny Operators třetích stran.","OKD je komunitní distribuce a není náhradou support entitlementu OCP."],
+    decisions:["Platforma a instalační metoda","Počet a role nodů","Connected/disconnected","Storage classes","Síť a ingress","Registry","Operators","Backup/DR","Subscription a support"],
+    sources:[["OpenShift 4.20 documentation","https://docs.redhat.com/en/documentation/openshift_container_platform/4.20"],["OpenShift architecture","https://docs.redhat.com/en/documentation/openshift_container_platform/4.20/html-single/architecture/index"]]
+  },
+  "openshift-ai": {
+    verified:"24. 9. 2026", scope:"Red Hat OpenShift AI Self-Managed 3.4",
+    configurations:["Nasazení jako podporovaný Operator nad kompatibilním OpenShift clusterem.","Data science projects, workbenches, pipelines a model serving runtimes podle use case.","CPU a GPU node pools, storage classes, S3 object storage a registry pro artefakty.","Single-model a multi-model serving volby se posuzují podle modelů, izolace a provozního profilu."],
+    licensing:["OpenShift AI používá samostatnou Red Hat subscription podle aktuální nabídky; OCP entitlement a infrastruktura se posuzují zvlášť.","GPU hardware a případné NVIDIA software entitlementy, object storage, modely a datové licence nejsou automaticky součástí platformy.","Pilotní kapacita a licence se nesmí bez sizingu převést na produkční SLA."],
+    decisions:["OCP kompatibilita","GPU/CPU sizing","Workbench images","Pipelines","Object storage","Model serving runtime","Model/data licence","MLOps governance","Support"],
+    sources:[["OpenShift AI Self-Managed 3.4 docs","https://docs.redhat.com/en/documentation/red_hat_openshift_ai_self-managed/3.4"],["Projects, workbenches and pipelines","https://docs.redhat.com/en/documentation/red_hat_openshift_ai_self-managed/3.4/html-single/getting_started_with_red_hat_openshift_ai_self-managed/"]]
+  },
+  zabbix: {
+    verified:"24. 9. 2026", scope:"Zabbix current documentation 7.4; interní personální coverage je neobsazená",
+    configurations:["Zabbix Server, samostatná databáze a web frontend.","Agents nebo Agent 2 na sledovaných hostech; agentless SNMP, IPMI, JMX a HTTP scénáře.","Proxies pro lokality, buffering a rozložení sběru; proxy používá vlastní databázi.","HA, DB partitioning, retention a proxy groups podle rozsahu a požadované dostupnosti."],
+    licensing:["Zabbix je open-source software; komerční support, školení, implementace a vybrané služby se pořizují samostatně.","Databáze, operační systémy, cloud, SMS/notifikační brány a integrace mohou mít vlastní náklady či licence.","Interní zdroj neuvádí Zabbix specialistu, proto nelze z produktové dostupnosti odvodit personální schopnost dodat službu."],
+    decisions:["Počet hostů/items a intervaly","Server/DB sizing","Proxy topologie","Agent vs. agentless","Retence a trendy","HA/DR","Alert routing","Support model","Vlastník služby"],
+    sources:[["Zabbix current overview","https://www.zabbix.com/documentation/current/en/manual/introduction/overview"],["Zabbix agent","https://www.zabbix.com/documentation/current/en/manual/concepts/agent"]]
   },
   foreman: {
     verified:"24. 9. 2026", scope:"Foreman 5.0 a aktuálně podporované community releases; Katello je volitelné rozšíření",
@@ -1491,9 +1765,22 @@ function routeTo(route) {
   scrollTo({ top: 0, behavior: "smooth" });
 }
 
+function productBrand(p) {
+  const byId={
+    foreman:["foreman","FM"], landscape:["canonical","◎"], gitlab:["gitlab","GL"], ansible:["redhat","A"], "semaphore-ui":["semaphore","S"],
+    rhel:["redhat","RH"], aap:["redhat","AAP"], satellite:["redhat","SAT"], idm:["redhat","IdM"], openshift:["redhat","OCP"], "openshift-ai":["redhat","AI"], kubernetes:["kubernetes","K8s"], zabbix:["zabbix","Z"],
+    san:["neutral","SAN"]
+  };
+  if(byId[p.id])return {theme:byId[p.id][0],mark:byId[p.id][1]};
+  if(p.vendor.includes("Dell"))return {theme:"dell",mark:"DELL"};
+  if(p.vendor.includes("VMware"))return {theme:"vmware",mark:"VM"};
+  return {theme:"neutral",mark:p.name.split(/\s+/).map(word=>word[0]).join("").slice(0,3).toUpperCase()};
+}
+
 function productCard(p) {
-  return `<button class="product-card" data-product="${p.id}">
-    <span class="category">${p.category}</span>
+  const brand=productBrand(p);
+  return `<button class="product-card vendor-${brand.theme}" data-product="${p.id}">
+    <div class="product-card-top"><span class="product-mark" aria-hidden="true">${brand.mark}</span><div><span class="vendor-name">${p.vendor}</span><span class="category">${p.category}</span></div></div>
     <h3>${p.name}</h3><p>${p.oneLiner}</p>
     <footer><span>${p.vendor}</span><span class="${state.progress[p.id] ? "mastery" : ""}">${state.progress[p.id] ? "✓ zvládnuto" : p.level}</span></footer>
   </button>`;
@@ -1528,7 +1815,7 @@ function dashboardView() {
 }
 
 function architectureView() {
-  return `<div class="page-head"><div><p class="eyebrow">Vizuální mapa infrastruktury</p><h1>Architektury a datové toky</h1><p class="lede">Diagramy ukazují logické vztahy. Nejsou fyzickým návrhem konkrétního zákazníka ani sizingem. Kliknutím na pojmy se můžeš přesunout do souvisejících produktových modulů.</p></div><span class="status-pill">5 studijních map</span></div>
+  return `<div class="page-head"><div><p class="eyebrow">Vizuální mapa infrastruktury</p><h1>Architektury a datové toky</h1><p class="lede">Diagramy ukazují logické vztahy. Nejsou fyzickým návrhem konkrétního zákazníka ani sizingem. Kliknutím na pojmy se můžeš přesunout do souvisejících produktových modulů.</p></div><span class="status-pill">6 studijních map</span></div>
 
   <section class="diagram-card"><div class="diagram-copy"><p class="diagram-number">01</p><h2>Klasická 3-tier architektura</h2><p>Compute, síť a storage jsou samostatné vrstvy s vlastním lifecyclem. Virtualizace běží na serverech, data VM leží na externím poli a SAN přenáší blokový provoz mezi nimi.</p><div class="diagram-questions"><strong>SDM sleduje:</strong> odpovědnosti týmů, redundantní cesty, kompatibilitu firmware a driverů, dopad změn a společné SLA.</div></div><div class="tier-diagram">
     <button data-product="vsphere" class="tier-layer tier-compute"><small>TIER 1</small><b>COMPUTE</b><span>x86 servery · ESXi · VM · cluster</span></button>
@@ -1555,7 +1842,11 @@ function architectureView() {
 
   <section class="diagram-card"><div class="diagram-copy"><p class="diagram-number">05</p><h2>Čtyři různé významy škálování</h2><p>Slovo „rozšíření“ neříká, co přesně se mění. Každý model má jiný dopad na objednávku, implementaci, migraci, síť, licence, podporu a změnové okno.</p><div class="diagram-questions"><strong>Před schválením změny:</strong> potvrď, zda roste kapacita appliance, počet nodů, HCI cluster, workload domain nebo celá lokalita.</div></div><div class="scale-grid">
     <button data-product="powervault"><span>01</span><b>Scale-up</b><small>disky / kapacita</small></button><button data-product="powerflex"><span>02</span><b>Scale-out</b><small>nody / appliance</small></button><button data-product="vxrail"><span>03</span><b>HCI cluster</b><small>compute + storage</small></button><button data-product="dell-private-cloud"><span>04</span><b>Cloud domény</b><small>clustery / workloady</small></button>
-  </div></section>`;
+  </div></section>
+
+  <section class="diagram-card reverse"><div class="diagram-copy"><p class="diagram-number">06</p><h2>Red Hat: od operačního systému k aplikaci a AI</h2><p>Produkty netvoří jednu povinnou věž. Jde o vrstvy, které se mohou kombinovat: RHEL je základ hostů, Satellite řídí obsah, IdM identity, AAP provádí automatizaci a OpenShift provozuje kontejnerové aplikace. OpenShift AI nad platformou přidává AI/ML workflow.</p><div class="diagram-questions"><strong>SDM sleduje:</strong> který tým vlastní zdroj konfigurace, obsah, credentials, platformní lifecycle, aplikaci a obnovu. Zabbix je průřezová monitorovací služba; interní coverage je zatím otevřená mezera.</div></div><div class="data-path redhat-path">
+    <button data-product="rhel"><span>1</span><b>RHEL</b><small>OS a hosty</small></button><i>→</i><button data-product="satellite"><span>2</span><b>Satellite</b><small>content a lifecycle</small></button><i>→</i><button data-product="aap"><span>3</span><b>AAP</b><small>automatizace</small></button><i>→</i><button data-product="openshift"><span>4</span><b>OpenShift</b><small>aplikace</small></button><i>→</i><button data-product="openshift-ai"><span>5</span><b>OpenShift AI</b><small>model lifecycle</small></button>
+  </div><div class="external-services"><button data-product="idm">Identity · IdM</button><button data-product="gitlab">Git a CI/CD · GitLab</button><button data-product="zabbix">Monitoring · Zabbix</button></div></section>`;
 }
 
 function productsView() {
@@ -1573,9 +1864,10 @@ function productDetail(id) {
   const note = state.notes[p.id] || "";
   const experts = expertiseForProduct(p.id);
   const commercial = productCommercialDetails[p.id];
+  const brand = productBrand(p);
   return `<button class="action-link" data-route="products">← Zpět na produkty</button>
   <div class="detail-layout"><article class="detail-main">
-    <header class="detail-hero"><span class="tag">${p.category}</span><h1>${p.name}</h1><p class="one-liner">${p.oneLiner}</p>
+    <header class="detail-hero product-detail-brand vendor-${brand.theme}"><div class="detail-brand-lockup"><span class="product-mark" aria-hidden="true">${brand.mark}</span><div><span class="vendor-name">${p.vendor}</span><span class="tag">${p.category}</span></div></div><h1>${p.name}</h1><p class="one-liner">${p.oneLiner}</p>
       <div class="key-points"><div class="key-point"><span>Role</span><strong>${p.role}</strong></div><div class="key-point"><span>Škálování</span><strong>${p.scaling}</strong></div><div class="key-point"><span>Rozhraní</span><strong>${p.protocols}</strong></div></div>
     </header>
     ${p.sections.map(([title, text]) => `<section class="article-section"><h2>${title}</h2><p>${text}</p></section>`).join("")}
@@ -1892,7 +2184,8 @@ function expertiseView() {
   <section class="expertise-guide"><h2>Jak profil číst</h2><div class="expertise-axis"><div><strong>Praktická zkušenost</strong><p>Ukazuje kontakt s návrhem, implementací nebo provozem. Historická zkušenost vyžaduje ověření proti aktuální verzi.</p></div><div><strong>Certifikace</strong><p>U každého člověka budeme evidovat přesný název, výrobce, identifikátor, datum získání a platnost. Neúplné údaje zůstávají označené jako nepotvrzené.</p></div><div><strong>Aktuální zaměření</strong><p>Říká, zda se člověk oblasti věnuje nyní. Certifikace bez hands-on zkušenosti z něj automaticky nedělá realizačního vlastníka.</p></div></div></section>
   <section class="expertise-section"><div class="section-heading"><div><p class="eyebrow">Dell Technologies</p><h2>Produkty, zkušenost a certifikace</h2></div><p>Kliknutím na produkt otevřeš jeho studijní detail.</p></div><div class="expertise-table-wrap"><table class="expertise-table"><thead><tr><th>Oblast a produkt</th><th>Praktická zkušenost</th><th>Certifikace</th><th>Aktuální kontext</th></tr></thead><tbody>${lukasExpertise.dell.map(item=>{const product=products.find(p=>p.id===item.productId);return `<tr data-product="${item.productId}" tabindex="0"><td><span>${item.area}</span><strong>${product?.name||item.productId}</strong></td><td><span class="expertise-level ${item.level}">${item.experience}</span></td><td>${item.certification}</td><td>${item.engagement}</td></tr>`}).join("")}</tbody></table></div></section>
   <section class="expertise-section"><div class="section-heading"><div><p class="eyebrow">VMware by Broadcom</p><h2>Technologická hloubka</h2></div><p>VCF je zastřešující platforma; hloubka se liší podle jednotlivých komponent.</p></div><div class="vmware-depth-grid">${lukasExpertise.vmware.map(item=>`<article><span>${item.depth}</span><h3>${item.area}</h3><p>${item.context}</p></article>`).join("")}</div></section>
-  <section class="expertise-section"><div class="section-heading"><div><p class="eyebrow">Linux a automatizace</p><h2>Foreman, Landscape, GitLab, Ansible a Semaphore UI</h2></div><p>Reference popisují prostředí, ve kterých byla podle interně poskytnutého profilu získána praktická zkušenost; samy neurčují aktuální kontrakt ani dostupnost specialisty.</p></div><div class="expertise-table-wrap"><table class="expertise-table"><thead><tr><th>Specialista a produkt</th><th>Praktická zkušenost</th><th>Certifikace</th><th>Kontext</th></tr></thead><tbody>${[milanExpertise,josefExpertise].flatMap(member=>member.skills.map(item=>{const product=products.find(p=>p.id===item.productId);return `<tr data-product="${item.productId}" tabindex="0"><td><span>${member.name} · ${item.area}</span><strong>${product?.name||item.productId}</strong></td><td><span class="expertise-level ${item.level}">${item.experience}</span></td><td>${item.certification}</td><td>${item.engagement}<small class="expertise-references">Reference: ${member.references.join(", ")}</small></td></tr>`;})).join("")}</tbody></table></div></section>
+  <section class="expertise-section"><div class="section-heading"><div><p class="eyebrow">Red Hat, Linux, cloud native a automatizace</p><h2>Produktové pokrytí specialistů</h2></div><p>Reference popisují interně zaznamenané prostředí nebo zaměření; samy neurčují aktuální kontrakt, přesnou projektovou roli ani dostupnost specialisty.</p></div><div class="expertise-table-wrap"><table class="expertise-table"><thead><tr><th>Specialista a produkt</th><th>Praktická zkušenost</th><th>Certifikace</th><th>Kontext</th></tr></thead><tbody>${[milanExpertise,josefExpertise,jjExpertise].flatMap(member=>member.skills.map(item=>{const product=products.find(p=>p.id===item.productId);return `<tr data-product="${item.productId}" tabindex="0"><td><span>${member.name} · ${item.area}</span><strong>${product?.name||item.productId}</strong></td><td><span class="expertise-level ${item.level}">${item.experience}</span></td><td>${item.certification}</td><td>${item.engagement}<small class="expertise-references">Reference/poznámky: ${member.references.join(", ")}</small></td></tr>`;})).join("")}</tbody></table></div></section>
+  <section class="expertise-section"><div class="section-heading"><div><p class="eyebrow">Interní zdroj · ${redHatInternalNotes.recordedAt}</p><h2>Red Hat projekty a otevřené body</h2></div><p>${redHatInternalNotes.source}. Záznamy níže nejsou veřejnými case studies ani potvrzením aktuálního kontraktu.</p></div><div class="callout"><strong>Nejsilnější oblast:</strong> ${redHatInternalNotes.strongest}<br><strong>Personální mezera:</strong> ${redHatInternalNotes.gap}<br><strong>Interní označení:</strong> ${redHatInternalNotes.internalProduct}</div><div class="expertise-table-wrap"><table class="expertise-table"><thead><tr><th>Zákazník / pracovní označení</th><th>Zaznamenané technologie</th><th>Zaznamenaný kontext</th><th>TODO před použitím</th></tr></thead><tbody>${redHatInternalNotes.projects.map(item=>`<tr><td><strong>${item.customer}</strong></td><td>${item.products}</td><td>${item.context}</td><td>${item.todo}</td></tr>`).join("")}</tbody></table></div></section>
   <section class="expertise-section delivery-use"><p class="eyebrow">Použití pro SDM / PM</p><h2>Jak podle profilu sestavit spolupráci</h2><div class="delivery-grid"><article><h3>Silný praktický sparring</h3><p>VxRail, VCF on VxRail a ObjectScale jsou podle profilu nejsilnější oblasti. I zde se před projektem potvrzuje konkrétní role, dostupnost a zkušenost s nasazovanou verzí.</p></article><article><h3>Zapojení s ověřením rozsahu</h3><p>PowerStore, PowerMax a PowerScale mají praktický základ, jehož aktuálnost a hloubku je vhodné ověřit proti požadovanému scénáři.</p></article><article><h3>Nutný další realizační specialista</h3><p>PowerFlex, Dell Private Cloud, PPDM, Cyber Recovery, Automation a další oblasti bez hands-on zkušenosti nelze personálně pokrýt pouze uvedenou certifikací nebo schopností dohledat dokumentaci.</p></article></div><div class="callout"><strong>Praktická interpretační zásada:</strong> schopnost rychle dohledat a pochopit dokumentaci je cenná pro přípravu debaty, triage a koordinaci. Nenahrazuje oprávnění k zásahu, zkušenost s produkční implementací ani formálně přiřazenou odpovědnost.</div></section>
   <section class="source-panel"><h2>Původ a hranice informací</h2><p><strong>[INTERNÍ PROFIL]</strong> Poznámky k Lukáši Trávníčkovi, Milanovi Zelenkovi a Josefu Vyleťalovi vložil uživatel do KB. Formulace byly zpřesněny pouze pro čitelnost; význam uvedené délky praxe, produktové zkušenosti a zákaznických referencí zůstává zachovaný. Reference nejsou veřejně ověřovaným case study ani potvrzením současného smluvního vztahu.</p><p><strong>[PREZENTACE]</strong> Soubor <em>Dell_Enterprise-portfolio.pptx</em> potvrzuje členění portfolia na Primary Storage, UDS, SDS/HCI, Data Protection a Cloud Platform. Prezentace je interní orientační podklad, nikoli náhrada aktuální dokumentace výrobce.</p></section>`;
 }

@@ -1,4 +1,4 @@
-import {authConfigured} from '../../../lib/auth';
+import {authConfigured,localAccessEnabled} from '../../../lib/auth';
 import {requireApproved} from '../../../lib/access';
 import {ensureProgressSchema} from '../../../lib/db';
 import { emptyProgress, validProgress } from '../../../lib/progress';
@@ -6,6 +6,7 @@ export const dynamic = 'force-dynamic';
 const json=(body:unknown,status=200)=>Response.json(body,{status,headers:{'Cache-Control':'private, no-store'}});
 export async function GET(){
   try {
+    if(localAccessEnabled())return json({configured:false,user:null,local:true});
     if(!authConfigured())return json({configured:false,user:null});
     const access=await requireApproved();
     if(!access?.user)return json({configured:true,user:null,error:'Přístup není schválený.'},403);
@@ -16,6 +17,7 @@ export async function GET(){
   }catch{return json({error:'Synchronizace není dostupná. Lokální výsledky zůstávají zachované.'},503);}
 }
 export async function PUT(request: Request){
+  if(localAccessEnabled())return json({error:'Lokální režim používá úložiště prohlížeče.'},403);
   // Cookie-authenticated mutations must originate on this application.
   if(request.headers.get('origin')!==new URL(request.url).origin)return json({error:'Invalid origin'},403);
   try {

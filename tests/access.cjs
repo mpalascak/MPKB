@@ -3,7 +3,7 @@ function load(path,imports={}){const module={exports:{}};vm.runInNewContext(ts.t
 let selected='pending',calls=[];
 const sql=async(strings,...values)=>{const text=strings.join('?');calls.push({text,values});return text.startsWith('SELECT')?[{status:selected}]:[];};
 const access=load('lib/access.ts',{
- './auth':{authConfigured:()=>false,getAuth:()=>({})},
+ './auth':{authConfigured:()=>false,localAccessEnabled:()=>false,getAuth:()=>({})},
  './db':{ensureAccessSchema:async()=>sql}
 });
 (async()=>{

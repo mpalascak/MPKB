@@ -8,7 +8,7 @@ assert.ok(!model.validProgress({...model.emptyProgress,progress:{constructor:tru
 let approved=false,configured=true,queries=[],rows=[];
 const sql=async(strings,...values)=>{queries.push({text:strings.join('?'),values});return rows;};
 const api=load('app/api/progress/route.ts',{
- '../../../lib/auth':{authConfigured:()=>configured},
+ '../../../lib/auth':{authConfigured:()=>configured,localAccessEnabled:()=>false},
  '../../../lib/access':{requireApproved:async()=>approved?{status:'approved',user:{id:'verified-user',email:'user@example.com'}}:null},
  '../../../lib/db':{ensureProgressSchema:async()=>sql},
  '../../../lib/progress':model

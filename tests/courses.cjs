@@ -48,16 +48,20 @@ for(const item of a.lukasExpertise.dell) assert.ok(a.products.some(p=>p.id===ite
 assert.equal(a.lukasExpertise.vmware.length,8);
 assert.ok(a.expertiseView().includes('Interní kompetenční mapa'));
 assert.ok(a.productDetail('powervault').includes('Malá praktická zkušenost'));
-assert.equal(a.teamMembers.length,3);
-assert.deepEqual(Array.from(a.teamMembers.map(member=>member.name)),['Lukáš Trávníček','Milan Zelenka','Josef Vyleťal']);
+assert.equal(a.teamMembers.length,4);
+assert.deepEqual(Array.from(a.teamMembers.map(member=>member.name)),['Lukáš Trávníček','Milan Zelenka','Josef Vyleťal','JJ']);
 assert.ok(a.productDetail('ansible').includes('Milan Zelenka'));
 assert.ok(a.productDetail('ansible').includes('Josef Vyleťal'));
 assert.ok(a.productDetail('landscape').includes('Josef Vyleťal'));
 assert.ok(a.productDetail('semaphore-ui').includes('Milan Zelenka'));
+assert.ok(a.productDetail('aap').includes('Milan Zelenka'));
+assert.ok(a.productDetail('openshift').includes('JJ'));
+assert.ok(a.expertiseView().includes('Zabbix a monitoring nebyl'));
+assert.ok(a.expertiseView().includes('Ansible-CM'));
 assert.ok(a.expertiseView().includes('Fortuna Entertainment Group'));
 assert.ok(a.expertiseView().includes('PHOENIX lékárenský velkoobchod'));
-assert.equal(Object.keys(a.productCommercialDetails).join(','),'powervault,powerstore,powermax,powerscale,objectscale,powerflex,vxrail,vcf,dell-private-cloud,datadomain,ppdm,cyber-recovery,foreman,landscape,gitlab,ansible,semaphore-ui');
-for(const id of ['foreman','landscape','gitlab','ansible','semaphore-ui'])assert.ok(a.products.some(p=>p.id===id),id);
+assert.equal(Object.keys(a.productCommercialDetails).join(','),'powervault,powerstore,powermax,powerscale,objectscale,powerflex,vxrail,vcf,dell-private-cloud,datadomain,ppdm,cyber-recovery,rhel,aap,satellite,idm,kubernetes,openshift,openshift-ai,zabbix,foreman,landscape,gitlab,ansible,semaphore-ui');
+for(const id of ['rhel','aap','satellite','idm','kubernetes','openshift','openshift-ai','zabbix','foreman','landscape','gitlab','ansible','semaphore-ui'])assert.ok(a.products.some(p=>p.id===id),id);
 for(const id of Object.keys(a.productCommercialDetails)){
  const html=a.productDetail(id);assert.ok(html.includes('Možnosti konfigurace'),id);assert.ok(html.includes('Licenční a obchodní model'),id);assert.ok(a.productCommercialDetails[id].sources.every(([,url])=>url.startsWith('https://')),id);
 }
